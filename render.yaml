@@ -1,0 +1,6 @@
+services:
+  - name: owlbear-sd-char-sheet-plus
+    type: web
+    runtime: static
+    buildCommand: npm run build
+    staticPublishPath: dist
