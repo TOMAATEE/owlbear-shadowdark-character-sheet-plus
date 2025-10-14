@@ -1,5 +1,4 @@
 <script lang="ts">
-    import type {Player} from "@owlbear-rodeo/sdk";
     import {
         isGM,
         PartyStore,

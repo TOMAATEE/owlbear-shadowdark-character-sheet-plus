@@ -27,3 +27,7 @@ button, .btn {
 .blk-btn {
   @apply bg-black text-white p-1;
 }
+
+body {
+    white-space: pre-line;
+}

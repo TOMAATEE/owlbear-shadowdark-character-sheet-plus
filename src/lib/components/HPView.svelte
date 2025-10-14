@@ -1,8 +1,39 @@
 <script lang="ts">
     import {
-        calculateTotalHitPointsForPlayer,
+        calculateTotalHitPointsForPlayer, hasAdvantageOn,
         PlayerCharacterStore as pc,
     } from "../model/PlayerCharacter";
+    import RollButton from "./RollButton.svelte";
+    import type {Class} from "../types";
+
+    function getClassHpDice(c: Class) {
+        switch (c) {
+            case "Thief":
+            case "Witch":
+            case "Wizard":
+                return "d4";
+            case "Bard":
+            case "Knight of St. Ydris":
+            case "Priest":
+            case "Ras-Godai":
+            case "Seer":
+            case "Warlock":
+            default: // Custom classes
+                return "d6";
+            case "Basilisk Warrior":
+            case "Desert Rider":
+            case "Pit Fighter":
+            case "Fighter":
+            case "Ranger":
+            case "Sea Wolf":
+                return "d8";
+        }
+    }
+
+    function addRolledHp(e: CustomEvent<{ result: number }>) {
+        $pc.maxHitPoints += e.detail.result;
+        $pc.hitPoints += e.detail.result;
+    }
 
     function incrMaxHp() {
         $pc.maxHitPoints += 1;
@@ -17,11 +48,17 @@
 
     function longRest() {
         $pc.hitPoints = $pc.maxHitPoints;
-        $pc.spells = $pc.spells.map((s) => ({name: s.name, failed: false}));
+        $pc.spells = $pc.spells.map(s => ({
+            ...s,
+            uses: s.uses ? { ...s.uses, used: 0 } : s.uses,
+            disabled: false
+        }));
     }
 </script>
 
-<h2>HP</h2>
+<div class="items-center flex gap-7">
+    <h2>HP</h2>&nbsp;&nbsp;<RollButton diceType={getClassHpDice($pc.class)} display="dice" advantage={hasAdvantageOn($pc, "hpRoll")} on:rolled={addRolledHp}/>
+</div>
 <label for="hitpoints"/>
 <input
         id="hitpoints"
@@ -43,5 +80,4 @@
 <button
         class="bg-black text-white rounded-md text-sm self-center px-2"
         on:click={longRest}>Long Rest
-</button
->
+</button>

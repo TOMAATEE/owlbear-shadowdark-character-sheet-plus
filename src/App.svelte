@@ -26,6 +26,7 @@
     import {isSaveInProgress} from "./lib/services/LocalStorageSaver";
     import NotificationsButton from "./lib/components/NotificationsButton.svelte";
     import {initSettings} from "./lib/services/SettingsTracker";
+    import BackgroundView from "./lib/components/BackgroundView.svelte";
 
     const {isGM} = OBRHelper;
 
@@ -62,15 +63,10 @@
     }
 </script>
 
-<div class="flex items-center justify-center bg-black">
+<div class="flex items-center justify-center max-w-[1000px] max-h-[720px]">
     <main>
-        <div
-                id="sheet"
-                class="bg-black min-w-[277px] max-w-[1000px] p-2 flex flex-wrap gap-2"
-        >
-            <div
-                    class="flex-[2] min-w-[257px] h-[700px] grid grid-rows-8 grid-cols-2 gap-2"
-            >
+        <div id="sheet" class=" min-w-[277px] max-w-[1000px] p-2 flex flex-wrap gap-2">
+            <div class="flex-[2] min-w-[257px] h-[700px] grid grid-rows-8 grid-cols-2 gap-2">
                 <div class="col-span-full cell">
                     <div class="flex gap-1 justify-around">
                         <div class="flex flex-col items-center">
@@ -81,7 +77,7 @@
                             {#if $isSaveInProgress}
                                 <div
                                         title="save in progress..."
-                                        class="absolute top-0 left-0 opacity-20 bg-black text-white p-1 rounded-md flex items-center"
+                                        class="absolute top-0 left-0 opacity-20  text-white p-1 rounded-md flex items-center"
                                 >
                                     <i class="material-icons">save</i>...
                                 </div>
@@ -143,14 +139,11 @@
                     <AttacksView/>
                 </div>
             </div>
-            <div
-                    class="flex-[2] min-w-[257px] h-[700px] grid grid-rows-8 grid-cols-2 gap-2"
-            >
+            <div class="flex-[2] min-w-[257px] h-[700px] grid grid-rows-8 grid-cols-2 gap-2">
                 <div class="col-span-full cell">
-                    <label>
-                        <h2>NAME</h2>
-                        <input type="text" bind:value={$pc.name}/>
-                    </label>
+                    <label for="name"/>
+                    <h2>NAME</h2>
+                    <input id="name" type="text" bind:value={$pc.name}/>
                 </div>
                 <div class="col-span-full cell">
                     <AncestryView/>
@@ -159,21 +152,21 @@
                     <ClassView/>
                 </div>
                 <div class="cell">
-                    <label>
-                        <h2>LEVEL</h2>
-                        <input
-                                type="number"
-                                inputmode="numeric"
-                                bind:value={$pc.level}
-                                max="10"
-                                min="1"
-                        />
-                    </label>
+                    <h2>LEVEL</h2>
+                    <label for="level"/>
+                    <input
+                            id="level"
+                            type="number"
+                            inputmode="numeric"
+                            bind:value={$pc.level}
+                            max="10"
+                            min="1"
+                    />
                 </div>
                 <div class="cell">
                     <h2>XP</h2>
                     <label for="xp"/>
-                    <div class="sheet-stat flex gap-1">
+                    <div class="sheet-stat items-center h-8 flex gap-1">
                         {#if $pc.level < 10}
                             <input
                                     id="xp"
@@ -182,7 +175,7 @@
                                     min="0"
                                     bind:value={$pc.xp}
                             />
-                            /
+                            <span>/</span>
                             <div>{xpCap}</div>
                         {:else}
                             MAX LEVEL
@@ -192,11 +185,10 @@
                                 class:opacity-20={!canLevel}
                                 disabled={!canLevel}
                                 on:click={() => {
-                levelUpPlayer($pc);
-                $pc = $pc;
-              }}>🆙
-                        </button
-                        >
+                                    levelUpPlayer($pc);
+                                    $pc = $pc;
+                            }}>🆙
+                        </button>
                     </div>
                 </div>
                 <div class="col-span-full cell">
@@ -222,8 +214,7 @@
                     </select>
                 </div>
                 <div class="col-span-full cell">
-                    <h2>BACKGROUND</h2>
-                    <input type="text" bind:value={$pc.background}/>
+                    <BackgroundView/>
                 </div>
 
                 <div class="col-span-full cell">
@@ -231,9 +222,7 @@
                     <input bind:value={$pc.deity}/>
                 </div>
             </div>
-            <div
-                    class="flex-[3] min-w-[257px] min-[805px]:h-[700px] grid grid-rows-2 gap-2"
-            >
+            <div class="flex-[3] min-w-[257px] min-[805px]:h-[700px] grid grid-rows-2 gap-2">
                 <div class="cell">
                     <TalentsSpellsView/>
                 </div>

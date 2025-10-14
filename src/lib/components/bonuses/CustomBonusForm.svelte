@@ -111,8 +111,7 @@
                 break;
         }
         b.editable = true; // custom bonuses are editable
-        addBonusToPlayer($pc, b);
-        $pc = $pc;
+        $pc = addBonusToPlayer($pc, b);
         dispatch("finish");
     }
 </script>

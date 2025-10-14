@@ -58,7 +58,7 @@
                 currSpell.name = s.name;
             }
         } else {
-            $pc.spells.push({name: s.name});
+            $pc.spells.push(s);
             $pc.customSpells.push(s);
         }
 
@@ -75,7 +75,7 @@
     <select bind:value={spellClass}>
         <option>Priest</option>
         <option>Wizard</option>
-        <option value="PriestWizard">Priest or Wizard</option>
+        <option value="Priest, Wizard">Priest or Wizard</option>
         <option>Other</option>
     </select>
 

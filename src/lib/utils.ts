@@ -6,10 +6,22 @@ export function clamp(n: number, min: number, max: number): number {
     return Math.max(Math.min(max, n), min);
 }
 
+export function sum(numbers: number[]): number {
+    return numbers.reduce((acc, x) => acc + x, 0);
+}
+
 export function rollDice(diceType: DiceType, numDice = 1): number {
     let result = 0;
     for (let i = 0; i < numDice; i++) {
         result += Math.floor(Math.random() * ValueForDiceType[diceType]) + 1;
+    }
+    return result;
+}
+
+export function rollDiceA(diceType: DiceType, numDice = 1): number[] {
+    const result: number[] = [];
+    for (let i = 0; i < numDice; i++) {
+        result.push(rollDice(diceType));
     }
     return result;
 }

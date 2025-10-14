@@ -7,6 +7,7 @@
     let spellInput: string = "";
     let showFilters = true;
 
+    let showTier0 = true;
     let showTier1 = true;
     let showTier2 = true;
     let showTier3 = true;
@@ -15,32 +16,48 @@
 
     let showPriest = true;
     let showWizard = true;
+    let showWitch = true;
+    let showSeer = true;
     let showOther = true;
 
     let showSelf = true;
     let showClose = true;
     let showNear = true;
     let showFar = true;
+    let showPlane = true;
+    let showUnlimited = true;
 
     let showCustom = false;
 
     $: spells = Object.values(SPELL_COMPENDIUM)
         .concat($pc.customSpells ?? [])
         .filter((s) => {
+            if (!showTier0 && s.tier === 0) return false;
             if (!showTier1 && s.tier === 1) return false;
             if (!showTier2 && s.tier === 2) return false;
             if (!showTier3 && s.tier === 3) return false;
             if (!showTier4 && s.tier === 4) return false;
             if (!showTier5 && s.tier === 5) return false;
-            if (!showPriest && s.class === "Priest") return false;
-            if (!showWizard && s.class === "Wizard") return false;
-            if (!showOther && s.class === "Other") return false;
+
             if (!showSelf && s.range === "Self") return false;
             if (!showClose && s.range === "Close") return false;
             if (!showNear && s.range === "Near") return false;
             if (!showFar && s.range === "Far") return false;
-            if (showCustom && !$pc.customSpells.find((cs) => cs.name === s.name))
-                return false;
+            if (!showPlane && s.range === "Plane") return false;
+            if (!showUnlimited && s.range === "Unlimited") return false;
+
+            if (showCustom && !$pc.customSpells.find((cs) => cs.name === s.name)) return false;
+
+            const allowedClasses = [];
+            if (showPriest) allowedClasses.push("Priest");
+            if (showWizard) allowedClasses.push("Wizard");
+            if (showWitch) allowedClasses.push("Witch");
+            if (showSeer) allowedClasses.push("Seer");
+            if (showOther) allowedClasses.push("Bard", "Basilisk Warrior", "Desert Rider", "Knight of St. Ydris", "Pit Fighter", "Ras-Godai");
+            if (allowedClasses.length === 0) return false;
+
+            const spellClasses = s.class.split(",").map(c => c.trim());
+            if (!spellClasses.some(c => allowedClasses.includes(c))) return false;
 
             const term = spellInput.toLowerCase();
             return (
@@ -65,6 +82,8 @@
         {#if showFilters}
             <div class="flex gap-1 items-center">
                 <div class="font-bold">Tier:</div>
+                <input id="showTier0" type="checkbox" bind:checked={showTier0}/>
+                <label for="showTier0">Class</label>
                 <input id="showTier1" type="checkbox" bind:checked={showTier1}/>
                 <label for="showTier1">1</label>
                 <input id="showTier2" type="checkbox" bind:checked={showTier2}/>
@@ -82,8 +101,12 @@
                 <label for="showPriest">Priest</label>
                 <input id="showWizard" type="checkbox" bind:checked={showWizard}/>
                 <label for="showWizard">Wizard</label>
+                <input id="showWitch" type="checkbox" bind:checked={showWitch}/>
+                <label for="showWitch">Witch</label>
+                <input id="showSeer" type="checkbox" bind:checked={showSeer}/>
+                <label for="showSeer">Seer</label>
                 <input id="showOther" type="checkbox" bind:checked={showOther}/>
-                <label for="showWizard">Other</label>
+                <label for="showOther">Other</label>
             </div>
             <div class="flex gap-1 items-center">
                 <div class="font-bold">Range:</div>
@@ -95,6 +118,10 @@
                 <label for="showNear">Near</label>
                 <input id="showFar" type="checkbox" bind:checked={showFar}/>
                 <label for="showFar">Far</label>
+                <input id="showPlane" type="checkbox" bind:checked={showPlane}/>
+                <label for="showPlane">Plane</label>
+                <input id="showUnlimited" type="checkbox" bind:checked={showUnlimited}/>
+                <label for="showUnlimited">Unlimited</label>
             </div>
             <div class="flex gap-1 items-center">
                 <label for="showCustom" class="font-bold">Custom</label>

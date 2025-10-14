@@ -1,64 +1,87 @@
 <script lang="ts">
-  import { findSpell } from "../../compendium";
-  import {
-    calculateSpellCastingModifierForPlayer,
-    pc,
-  } from "../../model/PlayerCharacter";
-  import CustomSpellButton from "./CustomSpellButton.svelte";
-  import RollButton from "../RollButton.svelte";
-  import SpellsButton from "./SpellsButton.svelte";
-  import SpellInfoButton from "./SpellInfoButton.svelte";
-  import type { SpellInfo } from "../../types";
+    import {
+        calculateSpellCastingModifierForPlayer, calculateSpellDiceAmount, calculateSpellMax,
+        pc,
+    } from "../../model/PlayerCharacter";
+    import CustomSpellButton from "./CustomSpellButton.svelte";
+    import RollButton from "../RollButton.svelte";
+    import SpellsButton from "./SpellsButton.svelte";
+    import SpellInfoButton from "./SpellInfoButton.svelte";
+    import type {SpellInfo} from "../../types";
 
-  $: spells = $pc.spells.map((s) => findSpell(s.name)).filter(Boolean);
-  $: hasSpells = spells?.length > 0;
+    $: spells = $pc.spells.map(
+        (spell) => {
+            if (!spell) return null;
 
-  function toggleFailed(s: SpellInfo) {
-    const idx = $pc.spells.findIndex((spell) => spell.name === s.name);
+            console.log(spell.uses?.used)
+            if (spell.uses && spell.uses.used == null) {
+                spell.uses.used = 0;
+            }
+            return spell;
+        }).filter(Boolean);
+    $: hasSpells = spells?.length > 0;
 
-    if (idx === -1) {
-      $pc.spells.push({ name: s.name, failed: true });
-    } else {
-      $pc.spells[idx].failed = !$pc.spells[idx].failed;
+    function toggleFailed(s: SpellInfo) {
+        const idx = $pc.spells.findIndex((spell) => spell.name === s.name);
+
+        if (idx === -1) {
+            s.disabled = true;
+            $pc.spells.push(s);
+        } else {
+            $pc.spells[idx].disabled = !$pc.spells[idx].disabled;
+        }
     }
 
-    $pc = $pc;
-  }
+    function hasFailedSpellcast(s: SpellInfo): boolean {
+        const idx = $pc.spells.findIndex((spell) => spell.name === s.name);
+        return idx !== -1 && $pc.spells[idx].disabled;
+    }
 
-  function hasFailedSpellcast(s: SpellInfo): boolean {
-    const idx = $pc.spells.findIndex((spell) => spell.name === s.name);
-    return idx !== -1 && $pc.spells[idx].failed;
-  }
+    function isDisabled(s: SpellInfo) {
+        return hasFailedSpellcast(s) || (s.uses && s.uses.used >= s.uses.max)
+    }
 </script>
 
 <h2>Spells</h2>
 {#if hasSpells}
-  <ul class="flex flex-col gap-1">
-    {#each spells as spell}
-      {@const mod = calculateSpellCastingModifierForPlayer($pc, spell)}
-      <li>
-        <div class="flex justify-between border-b border-gray-400 items-center">
-          <div class="flex gap-1">
-            <div>{spell.name}</div>
-            <SpellInfoButton {spell} />
-          </div>
-          <div class="flex items-center gap-2">
-            <input
-              title="spellcasting failed"
-              type="checkbox"
-              class="w-6 h-6"
-              checked={hasFailedSpellcast(spell)}
-              on:click={() => toggleFailed(spell)}
-            />
-            <RollButton disabled={hasFailedSpellcast(spell)} modifier={mod} />
-          </div>
-        </div>
-      </li>
-    {/each}
-  </ul>
+    <ul class="flex flex-col gap-1">
+        {#each spells as spell}
+            {@const mod = calculateSpellCastingModifierForPlayer($pc, spell)}
+            <li>
+                <div class="flex justify-between border-b border-gray-400 items-center">
+                    <div class="flex gap-1">
+                        <div>{spell.name}</div>
+                        <SpellInfoButton {spell}/>
+                    </div>
+                    {#if spell.uses}
+                        <div class="ml-auto mr-4">
+                            <input class="w-12 text-right" type="number" bind:value="{spell.uses.used}"> /{calculateSpellMax($pc, spell)}
+                        </div>
+                    {/if}
+                    <div class="flex items-center gap-2">
+                        <input
+                                title="spellcasting failed"
+                                type="checkbox"
+                                class="w-6 h-6"
+                                checked={isDisabled(spell)}
+                                on:click={() => toggleFailed(spell)}
+                        />
+                        <RollButton
+                                spell={spell}
+                                disabled={isDisabled(spell)}
+                                modifier={mod}
+                                numDice={calculateSpellDiceAmount($pc, spell)}
+                                diceType={spell.roll?.diceType ?? "d20"}
+                                on:rolled={() => {if (spell.uses) spell.uses.used += 1}}
+                        />
+                    </div>
+                </div>
+            </li>
+        {/each}
+    </ul>
 {/if}
 
 <div class="flex gap-1">
-  <SpellsButton />
-  <CustomSpellButton />
+    <SpellsButton/>
+    <CustomSpellButton/>
 </div>

@@ -6,7 +6,7 @@
     } from "../model/PlayerCharacter";
     import {
         ensureClassBonuses,
-        ensureClassGear,
+        ensureClassGear, ensureClassSpells,
     } from "../services/AncestryClassEnsurer";
     import type {Class} from "../types";
 
@@ -22,6 +22,7 @@
         $pc.hasCustomClass = (e.target as HTMLInputElement).checked;
         ensureClassBonuses($pc);
         ensureClassGear($pc);
+        ensureClassSpells($pc);
     }
 </script>
 

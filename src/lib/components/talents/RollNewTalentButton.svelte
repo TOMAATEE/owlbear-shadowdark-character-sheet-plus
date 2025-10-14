@@ -29,7 +29,7 @@
     let highlight = -1;
 
     function rollTalent() {
-        const result = rollDice("d6") + rollDice("d6");
+        const result = rollDice("d6", 2);
 
         canRoll = false;
 
@@ -59,7 +59,7 @@
         switch (highlightedTalent?.type) {
             case "generic":
                 updateAction = () => {
-                    addBonusToPlayer($pc, {
+                    $pc = addBonusToPlayer($pc, {
                         name: highlightedTalent.name,
                         desc: highlightedTalent.name,
                         type: "generic",
@@ -70,7 +70,7 @@
             case "bonus":
                 updateAction = () => {
                     for (const b of highlightedTalent.bonuses) {
-                        addBonusToPlayer($pc, b);
+                        $pc = addBonusToPlayer($pc, b);
                     }
                 };
                 break;
@@ -121,6 +121,8 @@
             INT: $pc.stats.INT,
             WIS: $pc.stats.WIS,
             CHA: $pc.stats.CHA,
+            LVL: $pc.stats.LVL,
+            None: $pc.stats.None,
         };
     }
 
@@ -131,6 +133,8 @@
         INT: $pc.stats.INT,
         WIS: $pc.stats.WIS,
         CHA: $pc.stats.CHA,
+        LVL: $pc.stats.LVL,
+        None: $pc.stats.None,
     };
 
     function updateSheet() {
@@ -139,10 +143,10 @@
         } else if (selectedOption) {
             if (Array.isArray(selectedOption)) {
                 for (const b of selectedOption) {
-                    addBonusToPlayer($pc, b);
+                    $pc = addBonusToPlayer($pc, b);
                 }
             } else {
-                addBonusToPlayer($pc, selectedOption);
+                $pc = addBonusToPlayer($pc, selectedOption);
             }
         } else {
             updateAction();
