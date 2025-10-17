@@ -11,25 +11,20 @@ export function ensureLanguages(pc: PlayerCharacter) {
             break;
         case "Human":
             break;
-        case "Dwarf": {
+        case "Dwarf":
             languages.push("Dwarvish");
             break;
-        }
-        case "Goblin": {
+        case "Goblin":
             languages.push("Goblin");
             break;
-        }
-        case "Halfling": {
+        case "Halfling":
             break;
-        }
-        case "Half-Orc": {
+        case "Half-Orc":
             languages.push("Orcish");
             break;
-        }
-        case "Kobold": {
+        case "Kobold":
             languages.push("Draconic");
             break;
-        }
     }
     switch (pc.class) {
         case "Knight of St. Ydris":
@@ -43,6 +38,20 @@ export function ensureLanguages(pc: PlayerCharacter) {
         if (!pc.languages.includes(l)) {
             pc.languages.push(l);
         }
+    }
+}
+
+export function setMishapTable(pc: PlayerCharacter) {
+    switch (pc.class) {
+        case "Wizard":
+            pc.mishapTable = "Wizard"
+            break
+        case "Knight of St. Ydris":
+        case "Witch":
+            pc.mishapTable = "Diabolical"
+            break
+        default:
+            pc.mishapTable = undefined
     }
 }
 
@@ -73,17 +82,6 @@ function clearClassSpells(pc: PlayerCharacter) {
     pc.spells = pc.spells.filter(
         (spell) =>
             spell.tier !== 0
-            /*![
-                "Charge",
-                "Demonic Possession",
-                "Flourish",
-                "Relentless",
-                "Revive Familiar",
-                "Smoke Step",
-                "Turn Undead",
-                "Omen",
-                "Petrifying Gaze"
-            ].includes(spell.name)*/
     );
 }
 
@@ -305,7 +303,7 @@ function addClassBonuses(bonuses: Bonus[], c: Class) {
                 bonuses.push({
                     name,
                     bonusSource: "Class",
-                    desc: "Study a scroll (1 Day) + DC 15 check to permanently learn scroll",
+                    desc: "Study a scroll (1 Day) + DC 15 INT check to permanently learn scroll",
                     type: "generic",
                 });
             }

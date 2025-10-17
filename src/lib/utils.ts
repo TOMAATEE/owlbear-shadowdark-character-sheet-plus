@@ -26,6 +26,12 @@ export function rollDiceA(diceType: DiceType, numDice = 1): number[] {
     return result;
 }
 
+export function toPlusString(numbers: number[], brackets: boolean = null): string {
+    if (brackets === null) brackets = numbers.length > 1
+    const diceS = numbers.reduce((prev, current) => prev + current + " + ", brackets ? "(" : "")
+    return diceS.substring(0, diceS.length - 3) + (brackets ? ")" : "");
+}
+
 export function addSign(n: number): string {
     return `${n >= 0 ? "+" : ""}${n}`;
 }

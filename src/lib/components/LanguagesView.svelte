@@ -1,15 +1,16 @@
 <script lang="ts">
     import {LANGUAGES} from "../constants";
     import {PlayerCharacterStore as pc} from "../model/PlayerCharacter";
+    import type {Language} from "../types";
 
     let addingNewLanguage = false;
 
     function doesNotKnowLanguage(l: string) {
-        return !$pc.languages.includes(l);
+        return !$pc.languages.includes(l as Language);
     }
 
     function onAddNewLanguage(l: string) {
-        $pc.languages.push(l);
+        $pc.languages.push(l as Language);
         addingNewLanguage = false;
         $pc = $pc;
     }

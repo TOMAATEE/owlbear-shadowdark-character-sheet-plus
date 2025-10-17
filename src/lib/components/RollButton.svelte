@@ -1,6 +1,6 @@
 <script lang="ts">
     import type {DiceType, SpellInfo} from "../types";
-    import {addSign, rollDiceA, sum} from "../utils";
+    import {addSign, rollDiceA, sum, toPlusString} from "../utils";
     import Menu from "./Menu/Menu.svelte";
     import MenuOption from "./Menu/MenuOption.svelte";
     import {notifiy} from "../services/Notifier";
@@ -35,12 +35,6 @@
         }
     }
 
-    function toPlusString(numbers: number[], brackets: boolean = null): string {
-        if (brackets === null) brackets = numbers.length > 1
-        const diceS = numbers.reduce((prev, current) => prev += current + " + ", brackets ? "(" : "")
-        return diceS.substring(0, diceS.length - 3) + (brackets ? ")" : "");
-    }
-
     function rolled() {
         if (advantage) {
             rollWithAdvantage()
@@ -66,13 +60,9 @@
                     const duration = rollDiceA(spell.duration.roll.diceType, spell.duration.roll.numDice)
                     msg += "\nDuration: " + toPlusString(duration, false) + " = " + spell.duration.type + (sum(duration) > 1) ? "s" : ""
                 }
-                if (spell.damage) {
-                    const dmg = rollDiceA(spell.damage.diceType, spell.damage.numDice)
-                    msg += "\nDamage: " + toPlusString(dmg, false) + " = " + sum(dmg)
-                }
-                if (spell.heal) {
-                    const heal = rollDiceA(spell.heal.diceType, spell.heal.numDice)
-                    msg += "\nHeal: " + toPlusString(heal, false) + " = " + sum(heal)
+                if (spell.effect) {
+                    const dmg = rollDiceA(spell.effect.diceType, spell.effect.numDice)
+                    msg += `\n${spell.effect.type}: ${toPlusString(dmg, false)} = ${sum(dmg)}`
                 }
             } else if (result > 1) {
                 msg += "\nFAILED! Required: " + required

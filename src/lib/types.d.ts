@@ -30,6 +30,9 @@ export type Roll = {
     diceType: DiceType;
     numDice: number;
 };
+export type EffectRoll = Merge<Roll, {
+    type: "Damage" | "Heal" | "Amount" | "Round" | TimeUnit
+}>
 
 ///// Talent
 export type GenericTalent = {
@@ -65,8 +68,7 @@ export type SpellInfo = {
     tier: SpellTier;
     range: RangeType;
     roll?: Roll;
-    damage?: Roll;
-    heal?: Roll;
+    effect?: EffectRoll
     uses?: {
         type: DurationType;
         max: number;
@@ -83,6 +85,19 @@ export type SpellInfo = {
     desc: string;
     disabled?: boolean; //  spellcasting check failed or daily uses reached
 };
+
+export type MishapClass = Extract<Class, "Wizard"> | "Diabolical"
+export type Mishap = {
+    name: string;
+    tiers: SpellTier[];
+    roll?: EffectRoll;
+    target?: {
+        category: "Gear" | "Spell" | "Ally" | "Area" | "Self",
+        type: "disable" | "delete" | "damage",
+        amount?: number | "tier" | "randomTier"
+    }
+    desc: string;
+}
 
 ///// PlayerCharacter
 export type Alignment = (typeof ALIGNMENTS)[number];
@@ -121,11 +136,12 @@ export type PlayerCharacter = {
     gold: number;
     silver: number;
     copper: number;
-    languages: string[];
+    languages: Language[];
     customLanguages: string[];
     xp: number;
     spells: SpellInfo[];
     customSpells: SpellInfo[];
+    mishapTable?: MishapClass;
     hitPoints: number;
 };
 

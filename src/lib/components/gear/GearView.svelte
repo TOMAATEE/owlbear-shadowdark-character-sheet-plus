@@ -133,11 +133,11 @@
     <ul>
         {#each costlyGear as g, i}
             <li>
-                <div class="flex gap-1 items-center justify-between border-b border-gray-400">
+                <div class="flex items-center justify-between border-b border-gray-400">
                     <div class="flex justify-between">
-            <span>
-              {i + 1}. {g.name} x {g.quantity} ({slotsForGear(g)} slots)
-            </span>
+                        <span>
+                          {i + 1}. {g.name} x {g.quantity} ({slotsForGear(g)} slots)
+                        </span>
                     </div>
                     {#if g.name !== COIN_NAME}
                         <div class="flex gap-1 items-center">
@@ -151,9 +151,8 @@
                                         on:click={() => toggleEquipped(g)}
                                 />
                             {/if}
-                            <button on:click={() => deleteGear(g.name)}
-                                    class="px-1 pt-1 rounded-md bg-black text-white"><i
-                                    class="material-icons">delete</i>
+                            <button on:click={() => deleteGear(g.name)} class="px-1 pt-1 rounded-md bg-black text-white">
+                                <i class="material-icons">delete</i>
                             </button>
                             <button on:click={() => sellGear(g.name)} class="px-1 pt-1 rounded-md bg-black text-white">
                                 <i class="material-icons translate-y-0.5">attach_money</i>

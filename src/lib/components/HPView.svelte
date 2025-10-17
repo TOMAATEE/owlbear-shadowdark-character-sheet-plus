@@ -5,6 +5,7 @@
     } from "../model/PlayerCharacter";
     import RollButton from "./RollButton.svelte";
     import type {Class} from "../types";
+    import {clamp} from "../utils";
 
     function getClassHpDice(c: Class) {
         switch (c) {
@@ -54,6 +55,11 @@
             disabled: false
         }));
     }
+
+    function clampHp() {
+        $pc.hitPoints = clamp($pc.hitPoints, 0, $pc.maxHitPoints)
+    }
+    $: clampHp()
 </script>
 
 <div class="items-center flex gap-7">

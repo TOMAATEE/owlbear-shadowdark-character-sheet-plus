@@ -8,12 +8,13 @@
     import SpellsButton from "./SpellsButton.svelte";
     import SpellInfoButton from "./SpellInfoButton.svelte";
     import type {SpellInfo} from "../../types";
+    import RollMishapButton from "./RollMishapButton.svelte";
+    import {MISHAPS} from "../../compendium/mishapCompendium.js";
 
     $: spells = $pc.spells.map(
         (spell) => {
             if (!spell) return null;
 
-            console.log(spell.uses?.used)
             if (spell.uses && spell.uses.used == null) {
                 spell.uses.used = 0;
             }
@@ -42,13 +43,18 @@
     }
 </script>
 
-<h2>Spells</h2>
+<div class="flex justify-between my-0.5">
+    <h2>Spells</h2>
+    {#if $pc.mishapTable in MISHAPS}
+        <RollMishapButton/>
+    {/if}
+</div>
 {#if hasSpells}
-    <ul class="flex flex-col gap-1">
+    <ul>
         {#each spells as spell}
             {@const mod = calculateSpellCastingModifierForPlayer($pc, spell)}
             <li>
-                <div class="flex justify-between border-b border-gray-400 items-center">
+                <div class="flex items-center justify-between border-b border-gray-400">
                     <div class="flex gap-1">
                         <div>{spell.name}</div>
                         <SpellInfoButton {spell}/>
@@ -81,7 +87,7 @@
     </ul>
 {/if}
 
-<div class="flex gap-1">
+<div class="flex gap-1 my-0.5">
     <SpellsButton/>
     <CustomSpellButton/>
 </div>

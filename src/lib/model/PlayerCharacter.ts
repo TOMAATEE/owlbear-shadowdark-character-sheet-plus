@@ -6,7 +6,7 @@ import {
     ensureClassBonuses,
     ensureClassGear,
     ensureClassSpells,
-    ensureLanguages,
+    ensureLanguages, setMishapTable,
 } from "../services/AncestryClassEnsurer";
 import {createUndoRedoStore} from "../services/PlayerHistoryTracker";
 import type {
@@ -91,6 +91,7 @@ export function setClassForPlayer(pc: PlayerCharacter, c: Class) {
     ensureClassSpells(pc);
     ensureClassGear(pc);
     ensureLanguages(pc);
+    setMishapTable(pc);
 }
 
 export function setAncestryForPlayer(pc: PlayerCharacter, a: Ancestry | "") {

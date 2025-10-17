@@ -24,14 +24,14 @@
         {min: 10, max: 11},
     ];
 
-    let canRoll = true;
+    let rolled = false;
     let showDone = false;
     let highlight = -1;
 
     function rollTalent() {
         const result = rollDice("d6", 2);
 
-        canRoll = false;
+        rolled = true;
 
         if (result === 12) {
             highlight = 4;
@@ -54,6 +54,7 @@
     };
 
     function setOptionsForHighlight(highlight: number) {
+        options = []
         const highlightedTalent = CLASS_TALENTS[$pc.class][highlight];
 
         switch (highlightedTalent?.type) {
@@ -107,7 +108,7 @@
     }
 
     function reset() {
-        canRoll = true;
+        rolled = false;
         highlight = -1;
         showDone = false;
         options = [];
@@ -180,8 +181,7 @@
 <button
         class="bg-black text-white w-full p-2"
         on:click={() => (showModal = true)}>Roll New Talent
-</button
->
+</button>
 
 <Modal bind:showModal>
     <h2 slot="header" class="text-lg">Roll New Talent</h2>
@@ -201,11 +201,9 @@
             <td>Choose a talent or +2 points to distribute to stats</td>
         </tr>
     </table>
-    {#if canRoll}
-        <button class="w-full bg-black text-white p-1" on:click={rollTalent}>
-            ROLL
-        </button>
-    {/if}
+    <button class="w-full bg-black text-white p-1" on:click={rollTalent}>
+        {rolled ? "REROLL" : "ROLL"}
+    </button>
     <div class="flex flex-col gap-1">
         {#if highlight === 4}
             <div class="flex gap-5 items-center justify-center p-2">
@@ -240,21 +238,23 @@
             </div>
             <div class="flex flex-col gap-1 items-center">
                 {#each STATS as s}
-                    <div class="flex items-center">
-                        <div class="w-12">{s}</div>
-                        <div
-                                class="p-1 bg-gray-200 rounded-md"
-                                class:text-green-600={newStats[s] > $pc.stats[s]}
-                        >
-                            {newStats[s]}
+                    {#if !(s === "LVL" || s === "None")}
+                        <div class="flex items-center">
+                            <div class="w-12">{s}</div>
+                            <div
+                                    class="p-1 bg-gray-200 rounded-md"
+                                    class:text-green-600={newStats[s] > $pc.stats[s]}
+                            >
+                                {newStats[s]}
+                            </div>
+                            <button on:click={() => onStatSubtract(s)}>
+                                <i class="material-icons">remove</i>
+                            </button>
+                            <button on:click={() => onStatAdd(s)}>
+                                <i class="material-icons">add</i>
+                            </button>
                         </div>
-                        <button on:click={() => onStatSubtract(s)}
-                        ><i class="material-icons">remove</i></button
-                        >
-                        <button on:click={() => onStatAdd(s)}
-                        ><i class="material-icons">add</i></button
-                        >
-                    </div>
+                    {/if}
                 {/each}
             </div>
         {/if}

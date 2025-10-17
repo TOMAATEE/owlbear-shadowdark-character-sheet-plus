@@ -7,10 +7,9 @@
 
 <button class="bg-black text-white px-3 rounded-md"
         on:click={() => {
-    showShop = true;
-  }}>Gear
-</button
->
+            showShop = true;
+        }}>Gear
+</button>
 
 <!-- Always Keep this rendered because we want to preserve the state of the shop's filters etc... -->
 <Modal bind:showModal={showShop} vh={90}>

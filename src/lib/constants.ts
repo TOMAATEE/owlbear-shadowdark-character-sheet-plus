@@ -1,4 +1,4 @@
-import type {Class} from "./types";
+import type {Class, SpellTier} from "./types";
 
 export const GEAR_TYPES = ["Basic", "Armor", "Weapon"] as const;
 export const SHIELD_PROPERTIES = [
@@ -275,3 +275,5 @@ export const ValueForDiceType = {
     d12: 12,
     d20: 20,
 } as const;
+
+export const SPELL_TIERS: SpellTier[] = [0, 1, 2, 3, 4, 5];
