@@ -509,7 +509,7 @@ export function unlearnSpellForPlayer(pc: PlayerCharacter, spell: SpellInfo) {
 
 export function addBonusToPlayer(pc: PlayerCharacter, b: Bonus, customAmount: number = null): PlayerCharacter {
     const bonuses = pc.bonuses.filter((bonus) => bonus.name === b.name);
-    if (bonuses.length === 0) {pc.bonuses.push(b); return;}
+    if (bonuses.length === 0) {pc.bonuses.push(b); return pc;}
     if (b.type === "modifyAmt") {
         (bonuses[0] as ModifyBonus).bonusAmount += customAmount ?? b.bonusAmount
     } else if (b.type === "diceAmount") {

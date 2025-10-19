@@ -11,12 +11,28 @@
     import type {SpellInfo} from "../../types";
     import Modal from "../Modal.svelte";
     import CustomSpellForm from "./CustomSpellForm.svelte";
+    import {findSpell} from "../../compendium";
 
     export let s: SpellInfo;
+    $: Object.assign(s, fixSpell(s))
     $: duration = s.duration.amt > 0 ? s.duration.amt : "";
     $: theS = Boolean(s.duration.amt > 1 || s.duration.roll) ? "s" : "";
     let dispatch = createEventDispatcher();
     let showCustomSpellEditModal = false;
+
+    function fixSpell(spell: SpellInfo) { // for compatibility with old/ShadowDarklings char-sheet
+        if (spell.duration) return spell // all new spells have a duration
+        console.log(spell)
+
+        const reference = findSpell(spell.name);
+        if (!reference) {
+            console.warn(`Unknown spell "${spell.name}" found in old data`);
+        }
+        return {
+            ...reference,  // get full SpellInfo
+            ...spell       // overwrite/add other data
+        };
+    }
 
     function learnSpell(s: SpellInfo) {
         learnSpellForPlayer($pc, s);

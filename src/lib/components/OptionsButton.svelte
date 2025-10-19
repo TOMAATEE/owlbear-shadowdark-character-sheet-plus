@@ -34,8 +34,8 @@
                     <button
                             class:green={$CurrentSaveSlot === i + 1}
                             on:click={() => {
-              $CurrentSaveSlot = i + 1;
-            }}>{i + 1}</button
+                                $CurrentSaveSlot = i + 1;
+                            }}>{i + 1}</button
                     >
                 {/each}
             </div>
@@ -66,17 +66,16 @@
                     disabled={isSheetReadOnly}
                     bind:files
                     on:click={(e) => {
-          e.currentTarget.value = "";
-          files = undefined;
-        }}
+                        e.currentTarget.value = "";
+                        files = undefined;
+                    }}
             />
         </label>
         <button
                 on:click={() => {
-        savePlayerToFile($pc);
-      }}>Export JSON
-        </button
-        >
+                    savePlayerToFile($pc);
+                }}>Export JSON
+        </button>
         <a
                 class="btn"
                 href="https://github.com/maxpaulus43/owlbear-shadowdark-character-sheet/issues/new"
@@ -86,17 +85,15 @@
             <div>Advanced Options (Proceed with caution)</div>
             <button
                     on:click={() => {
-          $pc = defaultPC();
-        }}>Clear Current Save Slot
-            </button
-            >
+                        $pc = defaultPC();
+                    }}>Clear Current Save Slot
+            </button>
             <button
                     on:click={() => {
-          $pc = defaultPC();
-          clearLocalStorage();
-        }}>Clear Storage (Proceed with caution)
-            </button
-            >
+                        $pc = defaultPC();
+                        clearLocalStorage();
+                    }}>Clear Storage (Proceed with caution)
+            </button>
         {/if}
     </div>
 </Modal>
