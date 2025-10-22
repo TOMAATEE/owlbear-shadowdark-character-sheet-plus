@@ -561,12 +561,16 @@ export const CLASS_TALENTS: { [key in Class]: Talent[] } = {
                 ],
             ] as ModifyBonus[][],
         },
-        { // TODO weil Barde ne Extrawurst braucht
-            name: "+2 points to distribute to any stats",
+        {
+            name: "+2 points to distribute to stats",
             type: "generic",
         },
         {
             name: "Your Presence effects become DC 9 to enact (reroll duplicates)",
+            type: "generic",
+        },
+        {
+            name: "Choose a talent",
             type: "generic",
         },
     ],
@@ -698,7 +702,7 @@ export const CLASS_TALENTS: { [key in Class]: Talent[] } = {
             type: "generic",
         },
         {
-            name: "Add +1 point to two stats (they must be different)", // TODO
+            name: "+2 points to distribute to stats (they must be different)",
             type: "generic",
         },
         {
@@ -740,7 +744,7 @@ export const CLASS_TALENTS: { [key in Class]: Talent[] } = {
     ],
     "Witch": [
         {
-            name: "1/day, teleport to your familiar's location as a move", // TODO
+            name: "1/day, teleport to your familiar's location as a move",
             type: "generic",
         },
         {
@@ -1059,7 +1063,7 @@ export const CLASS_TALENTS: { [key in Class]: Talent[] } = {
     ],
     "Sea Wolf": [
         {
-            name: "1/day, go berserk: immune to damage for 3 rounds", // TODO
+            name: "1/day, go berserk: immune to damage for 3 rounds",
             type: "generic",
         },
         {
@@ -1086,7 +1090,6 @@ export const CLASS_TALENTS: { [key in Class]: Talent[] } = {
             type: "chooseBonus",
             choices: [
                 [
-
                     {
                         name: "+2 to STR",
                         type: "modifyAmt",
@@ -1225,7 +1228,8 @@ export const CLASS_TALENTS: { [key in Class]: Talent[] } = {
                     desc: "+1 to dice category Destined",
                     type: "diceType",
                     bonusTo: "spellcastRoll",
-                    diceType: "d8", // TODO
+                    diceType: "d8",
+                    bonusSteps: 1,
                     bonusSource: "Talent",
                     editable: true,
                     metadata: {
@@ -1339,3 +1343,22 @@ export const CLASS_TALENTS: { [key in Class]: Talent[] } = {
         },
     ],
 };
+
+for (const key in CLASS_TALENTS) {
+    if (CLASS_TALENTS[key].length === 4) {
+        CLASS_TALENTS[key].push({ // (almost) every class has this as their 12 roll option
+            name: "Choose a talent or +2 points to distribute to stats",
+            type: "chooseBonus",
+            choices: [
+                {
+                    name: "Choose a talent",
+                    type: "generic",
+                },
+                {
+                    name: "+2 points to distribute to stats",
+                    type: "generic",
+                },
+            ]
+        })
+    }
+}

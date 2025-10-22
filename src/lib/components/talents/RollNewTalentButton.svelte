@@ -22,36 +22,34 @@
         {min: 3, max: 7},
         {min: 8, max: 9},
         {min: 10, max: 11},
+        {min: 12, max: 12},
     ];
 
     let rolled = false;
-    let showDone = false;
     let highlight = -1;
 
     function rollTalent() {
+        if (rolled) reset()
         const result = rollDice("d6", 2);
 
         rolled = true;
 
-        if (result === 12) {
-            highlight = 4;
-            showDone = true;
-            return;
-        }
         for (let i = 0; i < ranges.length; i++) {
             const r = ranges[i];
             if (result >= r.min && result <= r.max) {
                 highlight = i;
-                showDone = true;
                 break;
             }
         }
+        if ($pc.class === "Bard") {
+            if (highlight === 2) talentChoiceOrStatsChoice = "stats"
+            if (highlight === 4) talentChoiceOrStatsChoice = "talent"
+        } else if ($pc.class === "Warlock" && highlight === 1) talentChoiceOrStatsChoice = "stats"
     }
 
     let options: (Bonus | Bonus[])[] = [];
     let selectedOption: Bonus | Bonus[];
-    let updateAction = () => {
-    };
+    let updateAction = () => {};
 
     function setOptionsForHighlight(highlight: number) {
         options = []
@@ -78,11 +76,7 @@
             case "chooseBonus":
                 const firstChoice = highlightedTalent.choices[0];
                 // hacky solution to filter out known spells
-                if (
-                    !Array.isArray(firstChoice) &&
-                    firstChoice.metadata &&
-                    firstChoice.metadata.type === "spell"
-                ) {
+                if (!Array.isArray(firstChoice) && firstChoice.metadata && firstChoice.metadata.type === "spell") {
                     options = (highlightedTalent.choices as ModifyBonus[]).filter((b) =>
                         $pc.spells.find(
                             (s) => s.name === (b.metadata as SpellBonusMetaData)?.spell,
@@ -110,7 +104,6 @@
     function reset() {
         rolled = false;
         highlight = -1;
-        showDone = false;
         options = [];
         selectedOption = undefined;
         talentChoiceOrStatsChoice = undefined;
@@ -192,26 +185,21 @@
         </tr>
         {#each ranges as r, i}
             <tr class="border-b border-black" class:bg-yellow-300={highlight === i}>
-                <td>{r.min === r.max ? r.min : `${r.min}-${r.max}`}</td>
+                <td>{r.min === r.max ? r.min : `${r.min} - ${r.max}`}</td>
                 <td>{CLASS_TALENTS[$pc.class][i]?.name}</td>
             </tr>
         {/each}
-        <tr class="border-b border-black" class:bg-yellow-300={highlight === 4}>
-            <td>12</td>
-            <td>Choose a talent or +2 points to distribute to stats</td>
-        </tr>
     </table>
     <button class="w-full bg-black text-white p-1" on:click={rollTalent}>
         {rolled ? "REROLL" : "ROLL"}
     </button>
     <div class="flex flex-col gap-1">
-        {#if highlight === 4}
+        {#if highlight === 4 && $pc.class !== "Bard"}
             <div class="flex gap-5 items-center justify-center p-2">
                 <label for="chooseTalentCheckBox">Choose Talent</label>
                 <input
                         id="chooseTalentCheckBox"
                         type="radio"
-                        name="pick"
                         bind:group={talentChoiceOrStatsChoice}
                         value="talent"
                 />
@@ -219,20 +207,26 @@
                 <input
                         id="distributeStatsCheckBox"
                         type="radio"
-                        name="pick"
                         bind:group={talentChoiceOrStatsChoice}
                         value="stats"
                 />
             </div>
+        {:else if options.length}
+            <select bind:value={selectedOption}>
+                {#each options as o}
+                    <option value={o}>{stringForOption(o)}</option>
+                {/each}
+            </select>
         {/if}
         {#if talentChoiceOrStatsChoice === "talent"}
             <select on:change={onTalentSelectChange} value={highlight} class="w-full">
                 {#each CLASS_TALENTS[$pc.class].map((t) => t.name) as t, i}
-                    <option value={i}>{t}</option>
+                    {#if i < 4}
+                        <option value={i}>{t}</option>
+                    {/if}
                 {/each}
             </select>
-        {/if}
-        {#if talentChoiceOrStatsChoice === "stats"}
+        {:else if talentChoiceOrStatsChoice === "stats"}
             <div class="self-center">
                 Stats Points remaining: {statDistributionRemaining}
             </div>
@@ -258,14 +252,7 @@
                 {/each}
             </div>
         {/if}
-        {#if options.length}
-            <select bind:value={selectedOption}>
-                {#each options as o}
-                    <option value={o}>{stringForOption(o)}</option>
-                {/each}
-            </select>
-        {/if}
-        {#if showDone}
+        {#if rolled}
             <button class="w-full bg-black text-white p-1" on:click={updateSheet}>
                 Update Sheet
             </button>

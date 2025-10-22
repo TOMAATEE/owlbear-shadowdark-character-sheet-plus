@@ -58,7 +58,7 @@ export type Talent = GenericTalent | BonusTalent | ChooseBonusTalent;
 ///// Spell
 export type SpellTier = 0 | 1 | 2 | 3 | 4 | 5;
 export type SpellClass =
-    | Extract<Class, "Bard" | "Basilisk Warrior" | "Desert Rider" | "Knight of St. Ydris" | "Pit Fighter" | "Priest" | "Ras-Godai" | "Seer" | "Wizard" | "Witch">
+    | Extract<Class, "Bard" | "Basilisk Warrior" | "Desert Rider" | "Knight of St. Ydris" | "Pit Fighter" | "Priest" | "Ras-Godai" | "Sea Wolf" | "Seer" | "Wizard" | "Witch">
     | "Priest, Wizard" | "Wizard, Witch" | "Priest, Witch"
     | "Other";
 export type SpellInfo = {

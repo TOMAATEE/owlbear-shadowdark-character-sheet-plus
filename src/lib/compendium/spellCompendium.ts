@@ -1263,6 +1263,36 @@ export const SPELLS: SpellInfo[] = [
         desc: "3/day, you can make a DC 9 WIS check. On a success, gain a luck token (you can't have more than one luck token at a time).",
         duration: {type: "Instant"},
     },
+    // #################################################################################################################
+    // ----------------------------------------------Talent "Spells"----------------------------------------------------
+    // #################################################################################################################
+    {
+        name: "Berserk",
+        tier: 0,
+        class: "Sea Wolf",
+        uses: {type: "Day", max: 1},
+        range: "Self",
+        desc: "1/day, go berserk: immune to damage for 3 rounds.",
+        duration: {type: "Round", amt: 3},
+    },
+    {
+        name: "Familiar TP",
+        tier: 0,
+        class: "Witch",
+        uses: {type: "Day", max: 1},
+        range: "Self",
+        desc: "1/day, teleport to your familiar's location as a move.",
+        duration: {type: "Instant"},
+    },
+    {
+        name: "Ignore Damage",
+        tier: 0,
+        class: "Pit Fighter",
+        uses: {type: "Day", max: 1},
+        range: "Self",
+        desc: "1/day, ignore all damage and effects from one attack.",
+        duration: {type: "Instant"},
+    },
 ];
 
 const SPELL_COMPENDIUM: { [name: string]: SpellInfo } = {};
