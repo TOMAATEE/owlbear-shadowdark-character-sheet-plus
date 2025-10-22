@@ -1,4 +1,4 @@
-import {get, writable} from "svelte/store";
+import {writable} from "svelte/store";
 import {PlayerCharacterStore} from "../model/PlayerCharacter";
 import {defaultPC} from "../model/PlayerCharacter";
 import {debounce} from "../utils";
@@ -8,20 +8,6 @@ import type {PlayerCharacter} from "../types";
 
 export const isSaveInProgress = writable(false);
 
-const saveToLocalStorage = debounce(
-    savePlayerToLocalStorage,
-    2000,
-    () => isSaveInProgress.set(true),
-    () => isSaveInProgress.set(false),
-);
-
-export function trackAndSavePlayerToLocalStorage(
-    pc: PlayerCharacter,
-    saveSlot: number,
-) {
-    saveToLocalStorage(pc, saveSlot);
-}
-
 export async function clearLocalStorage() {
     for (let i = 0; i < NUM_SLOTS; i++) {
         await asyncLocalStorage.removeItem(getStorageKey(i + 1));
@@ -29,23 +15,33 @@ export async function clearLocalStorage() {
 }
 
 export async function init() {
-    CurrentSaveSlot.subscribe((slot) =>
-        saveToLocalStorage(get(PlayerCharacterStore), slot),
-    );
-    PlayerCharacterStore.subscribe((pc) =>
-        saveToLocalStorage(pc, get(CurrentSaveSlot)),
-    );
-    CurrentSaveSlot.subscribe(async (slot) => {
-        PlayerCharacterStore.set(await loadPlayerFromLocalStorage(slot));
+    const slot = await getSaveSlot();
+    CurrentSaveSlot.set(slot);
+
+    await setupPlayerCharacterStore(slot);
+
+    CurrentSaveSlot.subscribe(async (newSlot) => {
+        const pc = await loadPlayerFromLocalStorage(newSlot);
+        PlayerCharacterStore.set(pc);
+        saveSaveSlot(newSlot);
     });
+}
 
-    CurrentSaveSlot.set(await getSaveSlot());
+export async function setupPlayerCharacterStore(saveSlot: number) {
+    const pc = await loadPlayerFromLocalStorage(saveSlot);
 
-    CurrentSaveSlot.subscribe(saveSaveSlot);
+    PlayerCharacterStore.set(pc);
+
+    PlayerCharacterStore.subscribe(
+        debounce((pc) => {
+            if (!pc || typeof pc !== "object") return;
+            savePlayerToLocalStorage(pc, saveSlot);
+        }, 1000)
+    );
 }
 
 export async function savePlayerToLocalStorage(pc: PlayerCharacter, saveSlot: number) {
-    if (!pc) return;
+    if (!pc || typeof pc !== "object") return
     try {
         asyncLocalStorage.setItem(getStorageKey(saveSlot), JSON.stringify(pc));
     } catch (err) {
@@ -70,10 +66,15 @@ export async function saveSaveSlot(slot: number) {
 export async function loadPlayerFromLocalStorage(saveSlot: number): Promise<PlayerCharacter> {
     await maintainBackwardsCompatSlot(saveSlot);
     const pcJson = await asyncLocalStorage.getItem(getStorageKey(saveSlot));
-    if (!pcJson) return defaultPC();
-    const pc = JSON.parse(pcJson) as PlayerCharacter;
-    maintainBackwardsCompatPlayer(pc);
-    return pc;
+    if (!pcJson || pcJson === "undefined") return defaultPC();
+    try {
+        const pc = JSON.parse(pcJson) as PlayerCharacter;
+        maintainBackwardsCompatPlayer(pc);
+        return pc;
+    } catch (err) {
+        console.error("Failed to parse localStorage entry:", pcJson, err)
+        return null
+    }
 }
 
 async function maintainBackwardsCompatSlot(saveSlot: number) {
