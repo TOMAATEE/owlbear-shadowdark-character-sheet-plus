@@ -13,6 +13,7 @@ import {
     ensureAncestryBonuses,
     ensureClassBonuses,
     ensureClassGear,
+    ensureClassSpells,
     ensureLanguages,
 } from "./AncestryClassEnsurer";
 
@@ -67,11 +68,13 @@ export function maintainBackwardsCompat(pc: PlayerCharacter) {
     // eslint-disable-next-line
     // @ts-ignore
     if (pc.class === "Level 0") pc.class = "";
+    if (CLASSES.includes(pc.class) && pc.hasCustomClass) pc.hasCustomClass = false // https://192.168.178.24:5173/manifest.json
 
     // ensure player has proper bonuses every time we load json
     ensureAncestryBonuses(pc);
     ensureClassBonuses(pc);
     ensureClassGear(pc);
+    ensureClassSpells(pc);
     ensureLanguages(pc);
 
     ensureProperWeaponNamesInBonuses(pc);

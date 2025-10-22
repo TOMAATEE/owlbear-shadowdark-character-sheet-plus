@@ -44,11 +44,13 @@ export async function init() {
     CurrentSaveSlot.subscribe(saveSaveSlot);
 }
 
-export async function savePlayerToLocalStorage(
-    pc: PlayerCharacter,
-    saveSlot: number,
-) {
-    asyncLocalStorage.setItem(getStorageKey(saveSlot), JSON.stringify(pc));
+export async function savePlayerToLocalStorage(pc: PlayerCharacter, saveSlot: number) {
+    if (!pc) return;
+    try {
+        asyncLocalStorage.setItem(getStorageKey(saveSlot), JSON.stringify(pc));
+    } catch (err) {
+        console.error("LocalStorage write failed", err);
+    }
 }
 
 function getStorageKey(saveSlot: number) {
@@ -65,9 +67,7 @@ export async function saveSaveSlot(slot: number) {
     asyncLocalStorage.setItem("sd-character-sheet-chosen-slot", `${slot}`);
 }
 
-export async function loadPlayerFromLocalStorage(
-    saveSlot: number,
-): Promise<PlayerCharacter> {
+export async function loadPlayerFromLocalStorage(saveSlot: number): Promise<PlayerCharacter> {
     await maintainBackwardsCompatSlot(saveSlot);
     const pcJson = await asyncLocalStorage.getItem(getStorageKey(saveSlot));
     if (!pcJson) return defaultPC();

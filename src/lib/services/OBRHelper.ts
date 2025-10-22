@@ -14,12 +14,12 @@ import {CurrentSaveSlot, NUM_SLOTS} from "./SaveSlotTracker";
 import type {PlayerCharacter} from "../types";
 import {NOTIFICATION_KEY, showPopover} from "./Notifier";
 
-const PLUGIN_ID = "com.maxpaulus.sd-character-sheet";
+const PLUGIN_ID = "com.tomaatee.sd-character-sheet-plus";
 
 const PlayerMetaDataMapStore = writable<{ [pId: string]: PlayerMetaData }>({});
 const PlayerMetaDataStore = writable<PlayerMetaData>({});
 type PlayerMetaData = {
-    [key in `slot-${1 | 2 | 3 | 4 | 5}`]?: PlayerCharacter;
+    [key in `slot-${1 | 2 | 3 | 4 | 5 | 6 | 7 | 8}`]?: PlayerCharacter;
 };
 
 export function pluginId(s: string) {
@@ -125,12 +125,17 @@ async function initPlayer() {
     PlayerCharacterStore.subscribe(
         debounce((pc) => {
             if (get(isGM) && !get(isTrackedPlayerGM)) return;
+            if (!pc || typeof pc !== 'object') return;
 
             const pmd = get(PlayerMetaDataStore);
             const slot = get(CurrentSaveSlot);
-            savePlayerToLocalStorage(pc, slot);
-            pmd[`slot-${slot}`] = pc;
-            PlayerMetaDataStore.set(pmd);
+            try {
+                savePlayerToLocalStorage(pc, slot);
+                pmd[`slot-${slot}`] = pc;
+                PlayerMetaDataStore.set(pmd);
+            } catch (e) {
+                console.error("Failed to save player data:", e);
+            }
         }, 1000),
     );
 
