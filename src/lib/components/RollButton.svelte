@@ -5,6 +5,7 @@
     import MenuOption from "./Menu/MenuOption.svelte";
     import {notify} from "../services/Notifier";
     import {createEventDispatcher} from "svelte";
+    import {pc} from "../model/PlayerCharacter";
 
     export let modifier: number = 0;
     export let numDice: number = 1;
@@ -47,30 +48,12 @@
         let result: number;
         if (numDice >= 1) {
             const n = rollDiceA(diceType, numDice)
-            result = sum(n) + modifier
-            msg = `rolled ${numDice}${diceType}: ${toPlusString(n)} + ${modifier} = ${result}`;
+            result = sum(n)
+            msg = `rolled ${numDice}${diceType}: ${toPlusString(n)} + ${modifier} = ${result + modifier}`;
         } else {
             msg = "not rollable, no dice defined"
         }
-        if (result && spell && spell.tier > 0) {
-            const required = spell.tier + 10
-            if (result >= required) {
-                msg += "\nSUCCESS!"
-                if (spell.duration.roll) {
-                    const duration = rollDiceA(spell.duration.roll.diceType, spell.duration.roll.numDice)
-                    msg += "\nDuration: " + toPlusString(duration, false) + " = " + spell.duration.type + (sum(duration) > 1) ? "s" : ""
-                }
-                if (spell.effect) {
-                    const dmg = rollDiceA(spell.effect.diceType, spell.effect.numDice)
-                    msg += `\n${spell.effect.type}: ${toPlusString(dmg, false)} = ${sum(dmg)}`
-                }
-            } else if (result > 1) {
-                msg += "\nFAILED! Required: " + required
-            } else {
-                msg += "\nCRITICAL FAILURE!"
-                spell.disabled = true
-            }
-        }
+        msg = evaluateSuccess(result, msg)
         notify(msg);
         dispatch("rolled", { result });
     }
@@ -79,7 +62,8 @@
         const outcome1 = rollDiceA(diceType, numDice);
         const outcome2 = rollDiceA(diceType, numDice);
         const result = Math.max(sum(outcome1), sum(outcome2));
-        const msg = `rolled ${numDice}${diceType}: ${toPlusString(outcome1)} vs. ${toPlusString(outcome2)};\n ${result} + ${modifier} = ${result + modifier}`;
+        let msg = `rolled ${numDice}${diceType}: ${toPlusString(outcome1)} vs. ${toPlusString(outcome2)};\n ${result} + ${modifier} = ${result + modifier}`;
+        msg = evaluateSuccess(result, msg)
         notify(msg);
         dispatch("rolled", { result });
     }
@@ -88,15 +72,43 @@
         const outcome1 = rollDiceA(diceType, numDice);
         const outcome2 = rollDiceA(diceType, numDice);
         const result = Math.min(sum(outcome1), sum(outcome2));
-        const msg = `rolled ${numDice}${diceType}: ${toPlusString(outcome1)} vs. ${toPlusString(outcome2)};\n ${result} + ${modifier} = ${result + modifier}`;
+        let msg = `rolled ${numDice}${diceType}: ${toPlusString(outcome1)} vs. ${toPlusString(outcome2)};\n ${result} + ${modifier} = ${result + modifier}`;
+        msg = evaluateSuccess(result, msg)
         notify(msg);
         dispatch("rolled", { result });
     }
 
     function rollSecretly() {
         const outcome = rollDiceA(diceType, numDice);
-        const msg = `rolled ${numDice}${diceType}: ${toPlusString(outcome)} + ${modifier} = ${sum(outcome) + modifier}`;
+        const result = sum(outcome)
+        let msg = `rolled ${numDice}${diceType}: ${toPlusString(outcome)} + ${modifier} = ${sum(outcome) + modifier}`;
+        msg = evaluateSuccess(result, msg)
         notify(msg, {secret: true});
+    }
+
+    function evaluateSuccess(result: number, msg: string): string {
+        if (result && spell && spell.tier > 0) {
+            const required = spell.tier + 10
+            if (result === 1) {
+                msg += "\nCRITICAL FAILURE!"
+                spell.disabled = true
+            } else if (result + modifier >= required) {
+                msg += "\nSUCCESS!"
+                if (spell.duration.roll) {
+                    const duration = rollDiceA(spell.duration.roll.diceType, spell.duration.roll.numDice)
+                    msg += `\nDuration: ${toPlusString(duration, false)} = ${sum(duration)} ${spell.duration.type}${(sum(duration) > 1) ? "s" : ""}`
+                }
+                if (spell.effect) {
+                    const amount = rollDiceA(spell.effect.diceType, spell.effect.numDice)
+                    msg += `\n${spell.effect.type}: ${toPlusString(amount, false)} = ${sum(amount)}`
+                }
+            } else {
+                msg += `\nFAILED! Required: ${required}`
+                spell.disabled = true
+            }
+            $pc = $pc
+        }
+        return msg
     }
 
     async function onRightClick(e: MouseEvent) {
