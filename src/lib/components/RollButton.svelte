@@ -3,7 +3,7 @@
     import {addSign, rollDiceA, sum, toPlusString} from "../utils";
     import Menu from "./Menu/Menu.svelte";
     import MenuOption from "./Menu/MenuOption.svelte";
-    import {notifiy} from "../services/Notifier";
+    import {notify} from "../services/Notifier";
     import {createEventDispatcher} from "svelte";
 
     export let modifier: number = 0;
@@ -71,7 +71,7 @@
                 spell.disabled = true
             }
         }
-        notifiy(msg);
+        notify(msg);
         dispatch("rolled", { result });
     }
 
@@ -80,7 +80,7 @@
         const outcome2 = rollDiceA(diceType, numDice);
         const result = Math.max(sum(outcome1), sum(outcome2));
         const msg = `rolled ${numDice}${diceType}: ${toPlusString(outcome1)} vs. ${toPlusString(outcome2)};\n ${result} + ${modifier} = ${result + modifier}`;
-        notifiy(msg);
+        notify(msg);
         dispatch("rolled", { result });
     }
 
@@ -89,14 +89,14 @@
         const outcome2 = rollDiceA(diceType, numDice);
         const result = Math.min(sum(outcome1), sum(outcome2));
         const msg = `rolled ${numDice}${diceType}: ${toPlusString(outcome1)} vs. ${toPlusString(outcome2)};\n ${result} + ${modifier} = ${result + modifier}`;
-        notifiy(msg);
+        notify(msg);
         dispatch("rolled", { result });
     }
 
     function rollSecretly() {
         const outcome = rollDiceA(diceType, numDice);
         const msg = `rolled ${numDice}${diceType}: ${toPlusString(outcome)} + ${modifier} = ${sum(outcome) + modifier}`;
-        notifiy(msg, {secret: true});
+        notify(msg, {secret: true});
     }
 
     async function onRightClick(e: MouseEvent) {

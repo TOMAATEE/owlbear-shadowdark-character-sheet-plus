@@ -10,7 +10,7 @@ export type NotifyOptions = {
     secret?: boolean;
 };
 
-export async function notifiy(msg: string, options: NotifyOptions = {}) {
+export async function notify(msg: string, options: NotifyOptions = {}) {
     if (!OBR.isAvailable) {
         alert(msg);
         return;
@@ -20,35 +20,29 @@ export async function notifiy(msg: string, options: NotifyOptions = {}) {
     const m = `${myName}: ${msg}`;
 
     if (options.secret) {
-        showPopover(`Secret: ${m}`);
+        await showNotification(`Secret: ${m}`);
     } else {
-        OBR.broadcast.sendMessage(NOTIFICATION_KEY, m);
-        showPopover(m);
+        await OBR.broadcast.sendMessage(NOTIFICATION_KEY, m);
+        await showNotification(m);
     }
 }
 
 let timeoutHandle: NodeJS.Timeout;
 
-export async function showPopover(msg: string) {
+export async function showNotification(msg: string) {
     pushNotification(msg);
-    const popoverId = pluginId("popover");
     if (timeoutHandle) {
         clearTimeout(timeoutHandle);
         timeoutHandle = null;
     }
     try {
-        await OBR.popover.open({
-            id: popoverId,
-            url: `/popover.html?msg=${encodeURIComponent(msg)}`,
-            height: 100,
-            width: 400,
-        });
+        const popoverId = await OBR.notification.show(msg)
         timeoutHandle = setTimeout(
             () => {
-                OBR.popover.close(popoverId);
+                OBR.notification.close(popoverId)
             },
-            (get(Settings).popoverDuration ?? 5) * 1000,
-        );
+            (get(Settings).popoverDuration ?? 5) * 1000
+        ) as unknown as NodeJS.Timeout
     } catch {
         alert(msg);
     }

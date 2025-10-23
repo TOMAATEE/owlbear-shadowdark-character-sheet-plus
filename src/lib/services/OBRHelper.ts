@@ -12,7 +12,7 @@ import {
 } from "./LocalStorageSaver";
 import {CurrentSaveSlot, NUM_SLOTS} from "./SaveSlotTracker";
 import type {PlayerCharacter} from "../types";
-import {NOTIFICATION_KEY, showPopover} from "./Notifier";
+import {NOTIFICATION_KEY, showNotification} from "./Notifier";
 
 const PLUGIN_ID = "com.tomaatee.sd-character-sheet-plus";
 
@@ -56,7 +56,7 @@ export async function init() {
 function subscribeToRoomNotifications() {
     OBR.broadcast.onMessage(NOTIFICATION_KEY, ({data: notif}) => {
         if (typeof notif !== "string") return;
-        showPopover(notif);
+        showNotification(notif);
     });
 }
 
