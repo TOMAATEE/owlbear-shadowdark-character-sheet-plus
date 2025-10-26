@@ -81,7 +81,7 @@ export function ensureClassSpells(pc: PlayerCharacter) {
 function clearClassSpells(pc: PlayerCharacter) {
     pc.spells = pc.spells.filter(
         (spell) =>
-            spell.tier !== 0
+            spell.tier !== 0 || pc.class === spell.class
     );
 }
 
