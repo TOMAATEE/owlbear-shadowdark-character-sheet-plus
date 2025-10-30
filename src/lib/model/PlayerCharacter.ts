@@ -570,9 +570,9 @@ function isWearableArmor(g: GearInfo): boolean {
     return g.type === "Armor" && !g.properties?.includes("OneHanded")
 }
 
-export function canPlayerAffordGear(pc: PlayerCharacter, g: GearInfo) {
+export function canPlayerAffordGear(pc: PlayerCharacter, g: GearInfo, quantity = 1) {
     const {gp, sp, cp} = g.cost
-    const convertedCost = gp * 100 + sp * 10 + cp
+    const convertedCost = gp * 100 + sp * 10 + cp * quantity
     const pcConverted = pc.gold * 100 + pc.silver * 10 + pc.copper
     return pcConverted >= convertedCost
 }

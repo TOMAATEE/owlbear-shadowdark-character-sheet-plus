@@ -33,29 +33,41 @@
             return g.name.toLowerCase().includes(gearInput.toLowerCase())
         }).sort((a, b) => a.name.localeCompare(b.name))
 
-    function addGear(g: GearInfo) {
+    let resultGear: Gear[] = []
+    $: if (resultGear.length === 0 && allResults.length > 0) {
+        resultGear = allResults.map(g => ({ name: g.name, quantity: 1 }))
+    }
+    $: if (allResults.length > 0) {
+        for (const g of allResults) {
+            if (!resultGear.find(gear => gear.name === g.name)) {
+                resultGear.push({ name: g.name, quantity: 1 });
+            }
+        }
+    }
+
+    function addGear(g: GearInfo, quantity: number) {
         const existingGear = $pc.gear.find(
             (existingG) => existingG.name === g.name
         )
         if (existingGear) {
-            existingGear.quantity++
+            existingGear.quantity += quantity
         } else {
-            const gear: Gear = {name: g.name, quantity: 1}
+            const gear: Gear = {name: g.name, quantity: quantity}
             $pc.gear.push(gear)
         }
         $pc = $pc
     }
 
-    function buyGear(g: GearInfo) {
-        if (canPlayerAffordGear($pc, g)) {
+    function buyGear(g: GearInfo, quantity: number) {
+        if (canPlayerAffordGear($pc, g, quantity)) {
             let pcTotal = $pc.copper + $pc.silver * 10 + $pc.gold * 100
-            let costTotal = g.cost.cp + g.cost.sp * 10 + g.cost.gp * 100
+            let costTotal = g.cost.cp + g.cost.sp * 10 + g.cost.gp * 100 * quantity
             pcTotal -= costTotal
             $pc.gold = Math.floor(pcTotal / 100)
             pcTotal %= 100
             $pc.silver = Math.floor(pcTotal / 10)
             $pc.copper = pcTotal % 10
-            addGear(g)
+            addGear(g, quantity)
         }
     }
 
@@ -95,11 +107,7 @@
         <label for="showBasic">Basic</label>
         <input id="showCustom" type="checkbox" bind:checked={showCustom}/>
         <label for="showCustom">Custom</label>
-        <input
-                id="showAffordable"
-                type="checkbox"
-                bind:checked={showOnlyWhatICanAfford}
-        />
+        <input id="showAffordable" type="checkbox" bind:checked={showOnlyWhatICanAfford}/>
         <label for="showAffordable">Affordable</label>
     </div>
     <div>
@@ -107,35 +115,42 @@
             <thead class="text-left sticky top-0 bg-white">
             <tr>
                 <th>Name</th>
-                <th>Cost</th>
+                <th class="text-center">Cost</th>
                 <th>Slots</th>
+                <th>Amount</th>
             </tr>
             </thead>
             <tbody>
             {#each allResults as g, i}
                 <tr class="border-b" class:bg-gray-100={i % 2 === 0}>
                     <td class="pl-3">{g.name}</td>
-                    <td>{getCostForGear(g)}</td>
-                    <td>{g.slots.freeCarry ? "Free" : g.slots.slotsUsed}</td>
+                    <td class="justify-end flex mr-2">{getCostForGear(g)}</td>
+                    <td class="pr-3">{
+                        g.slots.freeCarry || g.slots.slotsUsed === 0 ?
+                            "Free" :
+                            (g.slots.perSlot > g.slots.slotsUsed) ?
+                                `${g.slots.slotsUsed}/${g.slots.perSlot}` :
+                                `${g.slots.slotsUsed}`}
+                    </td>
+                    <td><input type="number" class="w-14" bind:value={resultGear[i].quantity} min="0"/></td>
                     <td class="flex justify-end gap-1">
                         {#if g.editable}
                             <button
                                     class="bg-black rounded-md text-white px-1 text-xs"
-                                    on:click={() => deleteCustomGear(g)}
-                            ><i class="material-icons">delete</i></button
-                            >
+                                    on:click={() => deleteCustomGear(g)}><i class="material-icons">delete</i>
+                            </button>
                             <button
                                     class="bg-black rounded-md text-white px-1 text-xs"
                                     on:click={() => {
-                    gear = g
-                    showCustomGearEditModal = true
-                  }}><i class="material-icons">edit</i></button
-                            >
+                                        gear = g
+                                        showCustomGearEditModal = true
+                                    }}><i class="material-icons">edit</i>
+                            </button>
                         {/if}
-                        <button on:click={() => addGear(g)} class="px-1 hover:bg-gray-400">
+                        <button on:click={() => addGear(g, resultGear[i].quantity)} class="px-1 hover:bg-gray-400">
                             <i class="material-icons translate-y-1">add_circle</i>
                         </button>
-                        <button on:click={() => buyGear(g)} class="px-1 hover:bg-gray-400">
+                        <button on:click={() => buyGear(g, resultGear[i].quantity)} class="px-1 hover:bg-gray-400">
                             <i class="material-icons translate-y-1">shopping_cart</i>
                         </button>
                     </td>

@@ -3,7 +3,7 @@ import type {GearInfo} from "../types"
 export const GEAR: GearInfo[] = [
     {
         name: "Arrows",
-        cost: {gp: 1, sp: 0, cp: 0},
+        cost: {gp: 0, sp: 0, cp: 5},
         canBeEquipped: false,
         type: "Basic",
         slots: {perSlot: 20, slotsUsed: 1, freeCarry: 0},
@@ -38,7 +38,7 @@ export const GEAR: GearInfo[] = [
     },
     {
         name: "Crossbow Bolts",
-        cost: {gp: 1, sp: 0, cp: 0},
+        cost: {gp: 0, sp: 0, cp: 5},
         canBeEquipped: false,
         type: "Basic",
         slots: {perSlot: 20, slotsUsed: 1, freeCarry: 0},
@@ -73,7 +73,7 @@ export const GEAR: GearInfo[] = [
     },
     {
         name: "Iron Spikes",
-        cost: {gp: 1, sp: 0, cp: 0},
+        cost: {gp: 0, sp: 1, cp: 0},
         canBeEquipped: false,
         type: "Basic",
         slots: {perSlot: 10, slotsUsed: 1, freeCarry: 0},

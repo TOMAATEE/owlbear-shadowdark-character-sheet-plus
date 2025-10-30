@@ -80,7 +80,7 @@ export const ARMORS: ArmorInfo[] = [
         cost: {gp: 40, sp: 0, cp: 0},
         properties: ["OneHanded"],
         canBeEquipped: true,
-        slots: {freeCarry: 0, perSlot: 1, slotsUsed: 0},
+        slots: {freeCarry: 1, perSlot: 1, slotsUsed: 0},
         ac: {base: 0, modifier: 2},
     },
     {
