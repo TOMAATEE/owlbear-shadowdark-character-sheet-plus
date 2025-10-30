@@ -1,6 +1,8 @@
 <script lang="ts">
     import {
+        addBonusToList,
         calculateBonusAmount,
+        deleteBonusForList,
         deleteBonusForPlayer,
         pc,
     } from "../../model/PlayerCharacter";
@@ -11,46 +13,38 @@
 
     export let bonus: Bonus;
     export let showInfo = true;
+    export let bonuses: Bonus[] = undefined
     let showModal = false;
     $: b = bonus;
 
-    let displayableName = "";
-    $: switch (b.metadata?.type) {
-        case "weapon": {
-            displayableName = b.metadata.weapon + ":";
-            break;
-        }
-        case "weaponType": {
-            displayableName = b.metadata.weaponType + ":";
-            break;
-        }
-        case "armor": {
-            displayableName = b.metadata.armor + ":";
-            break;
-        }
-        case "stat": {
-            displayableName = b.metadata.stat + ":";
-            break;
-        }
-        case "spell": {
-            displayableName = b.metadata.spell + ":";
-            break;
-        }
-        default: {
-            displayableName = "";
+    $: displayableName = b.metadata?.type && b.metadata[b.metadata.type]
+        ? `${b.metadata[b.metadata.type]}:` : ""
+
+    function plusBonus() {
+        if (bonuses?.length >= 0) {
+            bonuses = addBonusToList(bonuses, b, 1)
+            $pc = $pc
+        } else {
+            $pc = addBonusToPlayer($pc, b, 1)
         }
     }
 
-    function plusBonus(b: Bonus) {
-        $pc = addBonusToPlayer($pc, b, 1);
+    function minusBonus() {
+        if (bonuses?.length >= 0) {
+            bonuses = addBonusToList(bonuses, b, -1)
+            $pc = $pc
+        } else {
+            $pc = addBonusToPlayer($pc, b, -1)
+        }
     }
 
-    function minusBonus(b: Bonus) {
-        $pc = addBonusToPlayer($pc, b, -1);
-    }
-
-    function deleteBonus(b: Bonus) {
-        $pc = deleteBonusForPlayer($pc, b);
+    function deleteBonus() {
+        if (bonuses?.length >= 0) {
+            bonuses = deleteBonusForList(bonuses, b)
+            $pc = $pc
+        } else {
+            $pc = deleteBonusForPlayer($pc, b)
+        }
     }
 </script>
 
@@ -79,13 +73,15 @@
     </div>
     {#if b.editable}
         <div class="flex gap-1">
-            <button class="pt-1 px-1 rounded-md bg-black text-white" on:click={() => plusBonus(b)}>
-                <i class="material-icons">add</i>
-            </button>
-            <button class="pt-1 px-1 rounded-md bg-black text-white" on:click={() => minusBonus(b)}>
-                <i class="material-icons">remove</i>
-            </button>
-            <button class="pt-1 px-1 rounded-md bg-black text-white" on:click={() => deleteBonus(b)}>
+            {#if ["modifyAmt", "diceType", "diceAmount"].includes(b.type)}
+                <button class="pt-1 px-1 rounded-md bg-black text-white" on:click={plusBonus}>
+                    <i class="material-icons">add</i>
+                </button>
+                <button class="pt-1 px-1 rounded-md bg-black text-white" on:click={minusBonus}>
+                    <i class="material-icons">remove</i>
+                </button>
+            {/if}
+            <button class="pt-1 px-1 rounded-md bg-black text-white" on:click={deleteBonus}>
                 <i class="material-icons">delete</i>
             </button>
         </div>

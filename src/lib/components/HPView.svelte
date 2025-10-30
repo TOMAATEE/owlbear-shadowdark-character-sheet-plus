@@ -1,5 +1,6 @@
 <script lang="ts">
     import {
+        calculateModifierForHpRoll,
         calculateTotalHitPointsForPlayer, hasAdvantageOn,
         PlayerCharacterStore as pc,
     } from "../model/PlayerCharacter";
@@ -62,8 +63,13 @@
     $: clampHp()
 </script>
 
-<div class="items-center flex gap-7">
-    <h2>HP</h2>&nbsp;&nbsp;<RollButton diceType={getClassHpDice($pc.class)} display="dice" advantage={hasAdvantageOn($pc, "hpRoll")} on:rolled={addRolledHp}/>
+<div class="items-center flex {calculateModifierForHpRoll($pc) !== 0 ? `gap-4` : `gap-7`}">
+    <h2>HP</h2>&nbsp;&nbsp;<RollButton
+        modifier={calculateModifierForHpRoll($pc)}
+        diceType={getClassHpDice($pc.class)}
+        display="dice"
+        advantage={hasAdvantageOn($pc, "hpRoll")}
+        on:rolled={addRolledHp}/>
 </div>
 <label for="hitpoints"/>
 <input

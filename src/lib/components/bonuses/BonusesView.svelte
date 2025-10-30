@@ -1,21 +1,21 @@
 <script lang="ts">
-    import {findAny} from "../../compendium";
-    import {CLASSES} from "../../constants";
-    import {pc} from "../../model/PlayerCharacter";
-    import {alphabetically} from "../../utils";
-    import RollNewTalentButton from "../talents/RollNewTalentButton.svelte";
-    import BonusView from "./BonusView.svelte";
-    import CustomBonusButton from "./CustomBonusButton.svelte";
+    import {findAny} from "../../compendium"
+    import {CLASSES} from "../../constants"
+    import {pc} from "../../model/PlayerCharacter"
+    import {alphabetically} from "../../utils"
+    import RollNewTalentButton from "../talents/RollNewTalentButton.svelte"
+    import BonusView from "./BonusView.svelte"
+    import CustomBonusButton from "./CustomBonusButton.svelte"
 
     $: equippableGearWithBonuses = $pc.gear
         .filter((g) => g.equipped)
         .map((g) => findAny(g.name))
-        .filter((g) => g && g.canBeEquipped && g.playerBonuses?.length > 0);
+        .filter((g) => g && g.canBeEquipped && g.playerBonuses?.length > 0)
 
     $: otherGearWithBonuses = $pc.gear
         .filter((g) => !g.equipped)
         .map((g) => findAny(g.name))
-        .filter((g) => g && g.playerBonuses?.length > 0 && !g.canBeEquipped);
+        .filter((g) => g && g.playerBonuses?.length > 0 && !g.canBeEquipped)
 </script>
 
 <h2>Bonuses</h2>
@@ -34,8 +34,8 @@
             <div class="font-bold bg-gray-300">{g.name}</div>
             <ul>
                 {#each g.playerBonuses as b}
-                    <li class="border-b ps-8 flex gap-1">*
-                        <BonusView bonus={b}/>
+                    <li class="border-b ps-7 pe-1">
+                        <BonusView bonus={b} bind:bonuses={g.playerBonuses}/>
                     </li>
                 {/each}
             </ul>
@@ -46,9 +46,8 @@
             <div class="font-bold bg-gray-300">{g.name}</div>
             <ul>
                 {#each g.playerBonuses as b}
-                    <li class="border-b ps-8 flex gap-1">
-                        *
-                        <BonusView bonus={b} showInfo={false}/>
+                    <li class="border-b ps-7 pe-1">
+                        <BonusView bonus={b} bind:bonuses={g.playerBonuses}/>
                     </li>
                 {/each}
             </ul>

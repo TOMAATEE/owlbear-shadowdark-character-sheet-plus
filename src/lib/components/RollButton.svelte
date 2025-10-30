@@ -143,7 +143,7 @@
                 {#if display === "modifier"}
                     {addSign(modifier)}
                 {:else if display === "dice"}
-                    {numDice}{diceType}
+                    {numDice}{diceType}{#if modifier !== 0}{addSign(modifier)}{/if}
                 {/if}
             </div>
         </slot>

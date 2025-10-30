@@ -53,7 +53,7 @@
             if (showWizard) allowedClasses.push("Wizard");
             if (showWitch) allowedClasses.push("Witch");
             if (showSeer) allowedClasses.push("Seer");
-            if (showOther) allowedClasses.push("Bard", "Basilisk Warrior", "Desert Rider", "Knight of St. Ydris", "Pit Fighter", "Ras-Godai");
+            if (showOther) allowedClasses.push("Fighter", "Thief", "Ranger", "Bard", "Knight of St. Ydris", "Warlock", "Desert Rider", "Pit Fighter", "Ras-Godai", "Sea Wolf", "Basilisk Warrior");
             if (allowedClasses.length === 0) return false;
 
             const spellClasses = s.class.split(",").map(c => c.trim());

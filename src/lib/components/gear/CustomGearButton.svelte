@@ -9,9 +9,9 @@
 <button
         class="bg-black text-white px-2"
         on:click={() => {
-    showForm = true;
-    showModal = true;
-  }}>Custom Gear
+            showForm = true;
+            showModal = true;
+        }}>Custom Gear
 </button
 >
 
@@ -20,8 +20,8 @@
         <h1 slot="header">Custom Gear</h1>
         <CustomGearForm
                 on:finish={() => {
-        showForm = false;
-      }}
+                    showForm = false;
+                }}
         />
     </Modal>
 {/if}

@@ -9,7 +9,7 @@
         DICE_TYPES,
         STATS,
     } from "../../constants";
-    import {addBonusToPlayer, pc} from "../../model/PlayerCharacter";
+    import {addBonusToList, addBonusToPlayer, pc} from "../../model/PlayerCharacter";
     import type {
         WeaponInfo,
         ArmorInfo,
@@ -23,6 +23,7 @@
     } from "../../types";
 
     const dispatch = createEventDispatcher();
+    export let bonuses: Bonus[] = undefined
 
     $: allWeapons = WEAPONS.concat(
         $pc.customGear
@@ -111,7 +112,11 @@
                 break;
         }
         b.editable = true; // custom bonuses are editable
-        $pc = addBonusToPlayer($pc, b);
+        if (bonuses?.length >= 0) {
+            bonuses = addBonusToList(bonuses, b)
+        } else {
+            $pc = addBonusToPlayer($pc, b)
+        }
         dispatch("finish");
     }
 </script>
@@ -160,17 +165,19 @@
             {/each}
         </select>
     {/if}
-    <label for="metaDataType"
-    >Does this bonus target a specific item, spell, or stat?</label
-    >
-    <select id="metaDataType" bind:value={mdType}>
-        <option value="">No</option>
-        <option value="weapon">Equipped Weapon</option>
-        <option value="armor">Equipped Armor</option>
-        <option value="spell">Spell</option>
-        <option value="stat">Stat</option>
-        <option value="weaponType">Weapon Type</option>
-    </select>
+    {#if bonuses?.length >= 0}
+        <label for="metaDataType">
+            Does this bonus target a specific item, spell, or stat?
+        </label>
+        <select id="metaDataType" bind:value={mdType}>
+            <option value="">No</option>
+            <option value="weapon">Equipped Weapon</option>
+            <option value="armor">Equipped Armor</option>
+            <option value="spell">Spell</option>
+            <option value="stat">Stat</option>
+            <option value="weaponType">Weapon Type</option>
+        </select>
+    {/if}
 
     {#if mdType === "weapon"}
         <label for="weapon">Which weapon?</label>
@@ -197,7 +204,9 @@
         <label for="stat">Which stat?</label>
         <select id="stat" bind:value={selectedStat}>
             {#each STATS as s}
-                <option>{s}</option>
+                {#if !(s === "LVL" || s === "None")}
+                    <option>{s}</option>
+                {/if}
             {/each}
         </select>
     {:else if mdType === "weaponType"}

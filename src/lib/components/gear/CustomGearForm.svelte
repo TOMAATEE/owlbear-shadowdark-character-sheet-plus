@@ -14,14 +14,18 @@
         ArmorInfo,
         RangeType,
         ModifyBonus,
+        Bonus,
     } from "../../types";
     import {pc} from "../../model/PlayerCharacter";
     import MultiSelect from "../MultiSelect.svelte";
+    import CustomBonusButton from "../bonuses/CustomBonusButton.svelte";
+    import BonusView from "../bonuses/BonusView.svelte";
 
     const dispatch = createEventDispatcher();
 
     export let gear: GearInfo = undefined;
     const currGear = $pc.gear.find((g) => g.name === gear?.name);
+    let bonuses: Bonus[] = gear?.playerBonuses ?? []
 
     function getMagicWeaponModifierFromGear(g?: GearInfo): number {
         if (!g) return 0;
@@ -51,6 +55,7 @@
         quantityPerSlot: gear?.slots?.perSlot ?? 1,
 
         showAdvanced: gear?.type !== undefined && gear?.type !== "Basic",
+        bonuses: gear?.playerBonuses,
 
         // advanced fields
         gearType: gear?.type ?? "Basic",
@@ -61,17 +66,13 @@
         weaponProperties: (gear as WeaponInfo)?.properties ?? [],
         magicWeaponModifier: getMagicWeaponModifierFromGear(gear),
         weaponType: (gear as WeaponInfo)?.weaponType ?? "Melee",
-        weaponRanges: getRangeTypeFromGear(gear), // TODO
-        hasOneHandedAttack: gear
-            ? Boolean((gear as WeaponInfo)?.damage?.oneHanded)
-            : true,
+        weaponRanges: getRangeTypeFromGear(gear),
+        hasOneHandedAttack: gear ? Boolean((gear as WeaponInfo)?.damage?.oneHanded) : true,
         oneHandedNumDice: (gear as WeaponInfo)?.damage?.oneHanded?.numDice ?? 1,
-        oneHandedDiceType:
-            (gear as WeaponInfo)?.damage?.oneHanded?.diceType ?? "d6",
+        oneHandedDiceType: (gear as WeaponInfo)?.damage?.oneHanded?.diceType ?? "d6",
         hasTwoHandedAttack: Boolean((gear as WeaponInfo)?.damage?.twoHanded),
         twoHandedNumDice: (gear as WeaponInfo)?.damage?.twoHanded?.numDice ?? 1,
-        twoHandedDiceType:
-            (gear as WeaponInfo)?.damage?.twoHanded?.diceType ?? "d8",
+        twoHandedDiceType: (gear as WeaponInfo)?.damage?.twoHanded?.diceType ?? "d8",
 
         // armor fields
         baseAC: (gear as ArmorInfo)?.ac?.base ?? 10,
@@ -84,8 +85,7 @@
         JSON.stringify(defaultViewModel)
     ) as typeof defaultViewModel;
 
-    $: weaponHasAtLeastDamage =
-        vm.gearType !== "Weapon" || vm.hasOneHandedAttack || vm.hasTwoHandedAttack;
+    $: weaponHasAtLeastDamage = vm.gearType !== "Weapon" || vm.hasOneHandedAttack || vm.hasTwoHandedAttack;
 
     $: canAdd = vm.name?.length > 0 && vm.quantity > 0 && weaponHasAtLeastDamage;
 
@@ -126,7 +126,7 @@
                 freeCarry: vm.slots > 0 ? 0 : 1,
             },
             editable: true,
-            playerBonuses: [],
+            playerBonuses: bonuses,
             cost: {
                 gp: 0,
                 sp: 0,
@@ -163,6 +163,7 @@
                     vm.weaponProperties.includes("Magic") &&
                     vm.magicWeaponModifier > 0
                 ) {
+                    w.playerBonuses = w.playerBonuses.filter((b) => !(b.name.includes(" to atk") || b.name.includes(" to dmg")))
                     w.playerBonuses.push({
                         name: w.name + `: +${vm.magicWeaponModifier} to atk`,
                         desc: `+${vm.magicWeaponModifier} to attack rolls when ${w.name} is equipped`,
@@ -284,6 +285,16 @@
             <option>Weapon</option>
             <option>Armor</option>
         </select>
+        <CustomBonusButton bind:bonuses={bonuses}/>
+        <ul>
+            {#each bonuses as b}
+                {#if !(b.name.includes(" to atk") || b.name.includes(" to dmg"))}
+                    <li class="border-b pe-1">
+                        <BonusView bonus={b} bind:bonuses={bonuses}/>
+                    </li>
+                {/if}
+            {/each}
+        </ul>
 
         {#if vm.gearType === "Basic"}
             <div class="flex gap-1">
@@ -298,10 +309,7 @@
                 <div class="flex gap-1 items-center">
                     <input id="attackable" type="checkbox" bind:checked={vm.attackable}/>
                     <label for="attackable">
-                        Should this item appear in <span class="pirata text-lg"
-                    >ATTACKS</span
-                    >
-                        when equipped?
+                        Should this item appear in <span class="pirata text-lg">ATTACKS</span> when equipped?
                     </label>
                 </div>
             {/if}
@@ -415,7 +423,9 @@
             <select name="" id="" bind:value={vm.armorStat}>
                 <option value={undefined}>No</option>
                 {#each STATS as s}
-                    <option>{s}</option>
+                    {#if !(s === "LVL" || s === "None")}
+                        <option>{s}</option>
+                    {/if}
                 {/each}
             </select>
         {/if}
