@@ -1,15 +1,15 @@
 <script lang="ts">
-    import {createEventDispatcher} from "svelte";
-    import {ARMORS} from "../../compendium/armorCompendium";
-    import {SPELLS} from "../../compendium/spellCompendium";
-    import {WEAPONS} from "../../compendium/weaponCompendium";
+    import {createEventDispatcher} from "svelte"
+    import {ARMORS} from "../../compendium/armorCompendium"
+    import {SPELLS} from "../../compendium/spellCompendium"
+    import {WEAPONS} from "../../compendium/weaponCompendium"
     import {
         ROLL_BONUS_TOS,
         BONUS_TOS,
         DICE_TYPES,
         STATS,
-    } from "../../constants";
-    import {addBonusToList, addBonusToPlayer, pc} from "../../model/PlayerCharacter";
+    } from "../../constants"
+    import {addBonusToList, addBonusToPlayer, pc} from "../../model/PlayerCharacter"
     import type {
         WeaponInfo,
         ArmorInfo,
@@ -20,104 +20,104 @@
         Stat,
         WeaponType,
         RollBonusTo,
-    } from "../../types";
+    } from "../../types"
 
-    const dispatch = createEventDispatcher();
+    const dispatch = createEventDispatcher()
     export let bonuses: Bonus[] = undefined
 
     $: allWeapons = WEAPONS.concat(
         $pc.customGear
             .filter((g) => g.type === "Weapon")
             .map((g) => g as WeaponInfo) ?? []
-    );
+    )
 
     $: allArmors = ARMORS.concat(
         $pc.customGear
             .filter((g) => g.type === "Armor")
             .map((g) => g as ArmorInfo) ?? []
-    );
+    )
 
-    $: allSpells = SPELLS.concat($pc.customSpells ?? []);
+    $: allSpells = SPELLS.concat($pc.customSpells ?? [])
 
-    let name: string = "";
-    let desc: string = "";
-    let type: Bonus["type"];
-    let bonusTo: BonusTo;
-    let bonusAmount: number = 1;
-    let mdType: BonusMetaData["type"] | "";
-    let diceType: DiceType = "d8";
-    let selectedWeapon: string;
-    let selectedArmor: string;
-    let selectedSpell: string;
-    let selectedStat: Stat | "";
-    let weaponType: WeaponType | "";
+    let name: string = ""
+    let desc: string = ""
+    let type: Bonus["type"]
+    let bonusTo: BonusTo
+    let bonusAmount: number = 1
+    let mdType: BonusMetaData["type"] | ""
+    let diceType: DiceType = "d8"
+    let selectedWeapon: string
+    let selectedArmor: string
+    let selectedSpell: string
+    let selectedStat: Stat | ""
+    let weaponType: WeaponType | ""
 
     $: if (bonusTo) {
-        selectedWeapon = "";
-        selectedArmor = "";
-        selectedSpell = "";
-        selectedStat = "";
-        weaponType = "";
+        selectedWeapon = ""
+        selectedArmor = ""
+        selectedSpell = ""
+        selectedStat = ""
+        weaponType = ""
     }
 
-    let reqsMet = Boolean(name) && Boolean(desc);
-    let buttonText = "ADD";
+    let reqsMet = Boolean(name) && Boolean(desc)
+    let buttonText = "ADD"
     $: {
         if (bonusTo === "stat" || bonusTo === "statRoll") {
-            mdType = "stat";
-            reqsMet = Boolean(name) && Boolean(desc) && Boolean(selectedStat);
+            mdType = "stat"
+            reqsMet = Boolean(name) && Boolean(desc) && Boolean(selectedStat)
         } else {
-            if (mdType === "stat") mdType = "";
-            reqsMet = Boolean(name) && Boolean(desc);
+            if (mdType === "stat") mdType = ""
+            reqsMet = Boolean(name) && Boolean(desc)
         }
-        buttonText = reqsMet ? "ADD" : "Please add required fields";
+        buttonText = reqsMet ? "ADD" : "Please add required fields"
     }
 
     function addBonus() {
-        let b: Bonus;
+        let b: Bonus
         switch (type) {
             case "generic":
-                b = {name, desc, type};
-                break;
+                b = {name, desc, type}
+                break
             case "modifyAmt":
-                b = {name, desc, type, bonusTo, bonusAmount};
-                break;
+                b = {name, desc, type, bonusTo, bonusAmount}
+                break
             case "advantage":
             case "disadvantage": {
-                let rbto = bonusTo as RollBonusTo;
-                b = {name, desc, type, bonusTo: rbto};
-                break;
+                let rbto = bonusTo as RollBonusTo
+                b = {name, desc, type, bonusTo: rbto}
+                break
             }
             case "diceType":
-                let rbto = bonusTo as RollBonusTo;
-                b = {name, desc, type, bonusTo: rbto, diceType};
-                break;
+                let rbto = bonusTo as RollBonusTo
+                b = {name, desc, type, bonusTo: rbto, diceType}
+                break
         }
         switch (mdType) {
             case "weapon":
                 if (selectedWeapon)
-                    b.metadata = {type: mdType, weapon: selectedWeapon};
-                break;
+                    b.metadata = {type: mdType, weapon: selectedWeapon}
+                break
             case "weaponType":
-                if (weaponType) b.metadata = {type: mdType, weaponType};
-                break;
+                if (weaponType) b.metadata = {type: mdType, weaponType}
+                break
             case "armor":
-                if (selectedArmor) b.metadata = {type: mdType, armor: selectedArmor};
-                break;
+                if (selectedArmor) b.metadata = {type: mdType, armor: selectedArmor}
+                break
             case "stat":
-                if (selectedStat) b.metadata = {type: mdType, stat: selectedStat};
-                break;
+                if (selectedStat) b.metadata = {type: mdType, stat: selectedStat}
+                break
             case "spell":
-                if (selectedSpell) b.metadata = {type: mdType, spell: selectedSpell};
-                break;
+                if (selectedSpell) b.metadata = {type: mdType, spell: selectedSpell}
+                break
         }
-        b.editable = true; // custom bonuses are editable
+        b.editable = true // custom bonuses are editable
         if (bonuses?.length >= 0) {
             bonuses = addBonusToList(bonuses, b)
         } else {
             $pc = addBonusToPlayer($pc, b)
         }
-        dispatch("finish");
+        dispatch("finish")
     }
 </script>
 

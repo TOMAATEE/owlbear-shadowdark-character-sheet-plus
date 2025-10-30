@@ -5,17 +5,17 @@
         deleteBonusForList,
         deleteBonusForPlayer,
         pc,
-    } from "../../model/PlayerCharacter";
-    import type {Bonus} from "../../types";
-    import {addSign} from "../../utils";
-    import Modal from "../Modal.svelte";
-    import {addBonusToPlayer} from "../../model/PlayerCharacter.js";
+    } from "../../model/PlayerCharacter"
+    import type {Bonus} from "../../types"
+    import {addSign} from "../../utils"
+    import Modal from "../Modal.svelte"
+    import {addBonusToPlayer} from "../../model/PlayerCharacter.js"
 
-    export let bonus: Bonus;
-    export let showInfo = true;
+    export let bonus: Bonus
+    export let showInfo = true
     export let bonuses: Bonus[] = undefined
-    let showModal = false;
-    $: b = bonus;
+    let showModal = false
+    $: b = bonus
 
     $: displayableName = b.metadata?.type && b.metadata[b.metadata.type]
         ? `${b.metadata[b.metadata.type]}:` : ""
@@ -66,7 +66,7 @@
             <div>{b.diceType} on {b.bonusTo}</div>
         {/if}
         {#if showInfo}
-            <button on:click={() => { showModal = true; }}>
+            <button on:click={() => { showModal = true }}>
                 <i class="material-icons">info</i>
             </button>
         {/if}

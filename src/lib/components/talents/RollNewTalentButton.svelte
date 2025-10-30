@@ -1,20 +1,20 @@
 <script lang="ts">
-    import Modal from "../Modal.svelte";
-    import {addBonusToPlayer, pc} from "../../model/PlayerCharacter";
-    import {CLASS_TALENTS} from "../../compendium/talentCompendium";
-    import {rollDice} from "../../utils";
-    import {STATS} from "../../constants";
+    import Modal from "../Modal.svelte"
+    import {addBonusToPlayer, pc} from "../../model/PlayerCharacter"
+    import {CLASS_TALENTS} from "../../compendium/talentCompendium"
+    import {rollDice} from "../../utils"
+    import {STATS} from "../../constants"
     import type {
         Bonus,
         ModifyBonus,
         SpellBonusMetaData,
         Stat,
-    } from "../../types";
+    } from "../../types"
 
-    let showModal = false;
+    let showModal = false
 
     $: if (!showModal) {
-        reset();
+        reset()
     }
 
     const ranges: { min: number; max: number }[] = [
@@ -23,22 +23,22 @@
         {min: 8, max: 9},
         {min: 10, max: 11},
         {min: 12, max: 12},
-    ];
+    ]
 
-    let rolled = false;
-    let highlight = -1;
+    let rolled = false
+    let highlight = -1
 
     function rollTalent() {
         if (rolled) reset()
-        const result = rollDice("d6", 2);
+        const result = rollDice("d6", 2)
 
-        rolled = true;
+        rolled = true
 
         for (let i = 0; i < ranges.length; i++) {
-            const r = ranges[i];
+            const r = ranges[i]
             if (result >= r.min && result <= r.max) {
-                highlight = i;
-                break;
+                highlight = i
+                break
             }
         }
         if ($pc.class === "Bard") {
@@ -47,13 +47,13 @@
         } else if ($pc.class === "Warlock" && highlight === 1) talentChoiceOrStatsChoice = "stats"
     }
 
-    let options: (Bonus | Bonus[])[] = [];
-    let selectedOption: Bonus | Bonus[];
-    let updateAction = () => {};
+    let options: (Bonus | Bonus[])[] = []
+    let selectedOption: Bonus | Bonus[]
+    let updateAction = () => {}
 
     function setOptionsForHighlight(highlight: number) {
         options = []
-        const highlightedTalent = CLASS_TALENTS[$pc.class][highlight];
+        const highlightedTalent = CLASS_TALENTS[$pc.class][highlight]
 
         switch (highlightedTalent?.type) {
             case "generic":
@@ -63,51 +63,51 @@
                         desc: highlightedTalent.name,
                         type: "generic",
                         editable: true,
-                    });
-                };
-                break;
+                    })
+                }
+                break
             case "bonus":
                 updateAction = () => {
                     for (const b of highlightedTalent.bonuses) {
-                        $pc = addBonusToPlayer($pc, b);
+                        $pc = addBonusToPlayer($pc, b)
                     }
-                };
-                break;
+                }
+                break
             case "chooseBonus":
-                const firstChoice = highlightedTalent.choices[0];
+                const firstChoice = highlightedTalent.choices[0]
                 // hacky solution to filter out known spells
                 if (!Array.isArray(firstChoice) && firstChoice.metadata && firstChoice.metadata.type === "spell") {
                     options = (highlightedTalent.choices as ModifyBonus[]).filter((b) =>
                         $pc.spells.find(
                             (s) => s.name === (b.metadata as SpellBonusMetaData)?.spell,
                         ),
-                    );
+                    )
                 } else {
-                    options = highlightedTalent.choices;
+                    options = highlightedTalent.choices
                 }
-                break;
+                break
         }
     }
 
     function stringForOption(o: Bonus | Bonus[]): string {
         if (Array.isArray(o)) {
-            return o.map((o) => o.name).join(" & ");
+            return o.map((o) => o.name).join(" & ")
         } else {
-            return o.name;
+            return o.name
         }
     }
 
     $: if (highlight > -1) {
-        setOptionsForHighlight(highlight);
+        setOptionsForHighlight(highlight)
     }
 
     function reset() {
-        rolled = false;
-        highlight = -1;
-        options = [];
-        selectedOption = undefined;
-        talentChoiceOrStatsChoice = undefined;
-        statDistributionRemaining = 2;
+        rolled = false
+        highlight = -1
+        options = []
+        selectedOption = undefined
+        talentChoiceOrStatsChoice = undefined
+        statDistributionRemaining = 2
         newStats = {
             STR: $pc.stats.STR,
             DEX: $pc.stats.DEX,
@@ -117,7 +117,7 @@
             CHA: $pc.stats.CHA,
             LVL: $pc.stats.LVL,
             None: $pc.stats.None,
-        };
+        }
     }
 
     $: newStats = {
@@ -129,45 +129,45 @@
         CHA: $pc.stats.CHA,
         LVL: $pc.stats.LVL,
         None: $pc.stats.None,
-    };
+    }
 
     function updateSheet() {
         if (talentChoiceOrStatsChoice === "stats") {
-            $pc.stats = newStats;
+            $pc.stats = newStats
         } else if (selectedOption) {
             if (Array.isArray(selectedOption)) {
                 for (const b of selectedOption) {
-                    $pc = addBonusToPlayer($pc, b);
+                    $pc = addBonusToPlayer($pc, b)
                 }
             } else {
-                $pc = addBonusToPlayer($pc, selectedOption);
+                $pc = addBonusToPlayer($pc, selectedOption)
             }
         } else {
-            updateAction();
+            updateAction()
         }
-        $pc = $pc;
-        showModal = false;
+        $pc = $pc
+        showModal = false
     }
 
-    let talentChoiceOrStatsChoice: "talent" | "stats";
-    let statDistributionRemaining = 2;
+    let talentChoiceOrStatsChoice: "talent" | "stats"
+    let statDistributionRemaining = 2
 
     function onTalentSelectChange(e: Event) {
-        options = [];
-        setOptionsForHighlight(parseInt((e.target as HTMLSelectElement).value));
+        options = []
+        setOptionsForHighlight(parseInt((e.target as HTMLSelectElement).value))
     }
 
     function onStatAdd(s: Stat) {
-        if (statDistributionRemaining < 1) return;
-        newStats[s] += 1;
-        statDistributionRemaining -= 1;
+        if (statDistributionRemaining < 1) return
+        newStats[s] += 1
+        statDistributionRemaining -= 1
     }
 
     function onStatSubtract(s: Stat) {
         if (statDistributionRemaining === 2 || newStats[s] - 1 < $pc.stats[s])
-            return;
-        newStats[s] = Math.max($pc.stats[s], newStats[s] - 1);
-        statDistributionRemaining += 1;
+            return
+        newStats[s] = Math.max($pc.stats[s], newStats[s] - 1)
+        statDistributionRemaining += 1
     }
 </script>
 
@@ -262,6 +262,6 @@
 
 <style lang="postcss">
     select {
-        @apply my-1;
+        @apply my-1
     }
 </style>

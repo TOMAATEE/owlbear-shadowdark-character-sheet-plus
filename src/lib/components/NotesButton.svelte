@@ -1,8 +1,8 @@
 <script lang="ts">
-    import Modal from "./Modal.svelte";
-    import {PlayerCharacterStore as pc} from "../model/PlayerCharacter";
+    import Modal from "./Modal.svelte"
+    import {PlayerCharacterStore as pc} from "../model/PlayerCharacter"
 
-    let showModal = false;
+    let showModal = false
 </script>
 
 <button class="bg-black text-white px-1" on:click={() => (showModal = true)}

@@ -1,23 +1,23 @@
 <script lang="ts">
-    import {findCustomGear, findWeapon} from "../compendium";
+    import {findCustomGear, findWeapon} from "../compendium"
     import {
         calculateAttackBonusForPlayerWeapon,
         calculateDamageBonusForPlayerWeapon,
         calculateDamageDiceTypeForPlayerWeapon,
         PlayerCharacterStore as pc,
-    } from "../model/PlayerCharacter";
-    import {addSign} from "../utils";
-    import RollButton from "./RollButton.svelte";
+    } from "../model/PlayerCharacter"
+    import {addSign} from "../utils"
+    import RollButton from "./RollButton.svelte"
 
-    $: equippedGear = $pc.gear.filter((g) => g.equipped);
-    $: weapons = equippedGear.map((g) => findWeapon(g.name)).filter(Boolean);
+    $: equippedGear = $pc.gear.filter((g) => g.equipped)
+    $: weapons = equippedGear.map((g) => findWeapon(g.name)).filter(Boolean)
     // this is nice, but limiting to the players creativity
-    // $: canAttackTwoHanded = weapons.length == 1 && !isPlayerHoldingShield($pc);
+    // $: canAttackTwoHanded = weapons.length == 1 && !isPlayerHoldingShield($pc)
 
     $: customAttacks = equippedGear
         .map((g) => findCustomGear(g.name))
         .filter(Boolean)
-        .filter((g) => g.canBeEquipped && g.properties?.includes("Attackable"));
+        .filter((g) => g.canBeEquipped && g.properties?.includes("Attackable"))
 </script>
 
 <h2>ATTACKS</h2>

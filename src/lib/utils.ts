@@ -1,55 +1,55 @@
-import {findAny} from "./compendium";
-import {DICE_TYPES, ValueForDiceType} from "./constants";
-import type {DiceType, Gear, GearInfo} from "./types";
+import {findAny} from "./compendium"
+import {DICE_TYPES, ValueForDiceType} from "./constants"
+import type {DiceType, Gear, GearInfo} from "./types"
 
 export function clamp(n: number, min: number, max: number): number {
-    return Math.max(Math.min(max, n), min);
+    return Math.max(Math.min(max, n), min)
 }
 
 export function sum(numbers: number[]): number {
-    return numbers.reduce((acc, x) => acc + x, 0);
+    return numbers.reduce((acc, x) => acc + x, 0)
 }
 
 export function rollDice(diceType: DiceType, numDice = 1): number {
-    let result = 0;
+    let result = 0
     for (let i = 0; i < numDice; i++) {
-        result += Math.floor(Math.random() * ValueForDiceType[diceType]) + 1;
+        result += Math.floor(Math.random() * ValueForDiceType[diceType]) + 1
     }
-    return result;
+    return result
 }
 
 export function rollDiceA(diceType: DiceType, numDice = 1): number[] {
-    const result: number[] = [];
+    const result: number[] = []
     for (let i = 0; i < numDice; i++) {
-        result.push(rollDice(diceType));
+        result.push(rollDice(diceType))
     }
-    return result;
+    return result
 }
 
 export function toPlusString(numbers: number[], brackets: boolean = null): string {
     if (brackets === null) brackets = numbers.length > 1
     const diceS = numbers.reduce((prev, current) => prev + current + " + ", brackets ? "(" : "")
-    return diceS.substring(0, diceS.length - 3) + (brackets ? ")" : "");
+    return diceS.substring(0, diceS.length - 3) + (brackets ? ")" : "")
 }
 
 export function addSign(n: number): string {
-    return `${n >= 0 ? "+" : ""}${n}`;
+    return `${n >= 0 ? "+" : ""}${n}`
 }
 
 export function alphabetically(a: string, b: string): number {
-    a = a.toLowerCase();
-    b = b.toLowerCase();
+    a = a.toLowerCase()
+    b = b.toLowerCase()
     if (a < b) {
-        return -1;
+        return -1
     }
     if (a > b) {
-        return 1;
+        return 1
     }
-    return 0;
+    return 0
 }
 
 export function toInfo<T extends GearInfo>(g: Gear): T {
-    return findAny(g.name) as T;
+    return findAny(g.name) as T
 }
 
 // eslint-disable-next-line
@@ -59,30 +59,30 @@ export function debounce<F extends (...args: any[]) => any>(
     onStartWaiting?: () => void,
     onFinish?: () => void
 ) {
-    let timer: NodeJS.Timeout;
+    let timer: NodeJS.Timeout
 
     return (...args: Parameters<F>): Promise<ReturnType<F>> => {
-        onStartWaiting?.();
+        onStartWaiting?.()
         return new Promise((resolve) => {
             if (timer) {
-                clearTimeout(timer);
+                clearTimeout(timer)
             }
 
             timer = setTimeout(() => {
-                resolve(fn(...args));
-                onFinish?.();
-            }, ms);
-        });
-    };
+                resolve(fn(...args))
+                onFinish?.()
+            }, ms)
+        })
+    }
 }
 
 // eslint-disable-next-line
 export function assertUnreachable(_x: never): never {
-    throw new Error("Didn't expect to get here");
+    throw new Error("Didn't expect to get here")
 }
 
 export function compareDiceType(a: DiceType, b: DiceType) {
     return (
         DICE_TYPES.findIndex((d) => d === a) - DICE_TYPES.findIndex((d) => d === b)
-    );
+    )
 }

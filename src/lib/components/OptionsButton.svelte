@@ -1,20 +1,20 @@
 <script lang="ts">
-    import savePlayerToFile from "../services/FileSaver";
-    import {clearLocalStorage} from "../services/LocalStorageSaver";
+    import savePlayerToFile from "../services/FileSaver"
+    import {clearLocalStorage} from "../services/LocalStorageSaver"
     import {
         defaultPC,
         PlayerCharacterStore as pc,
-    } from "../model/PlayerCharacter";
-    import Modal from "./Modal.svelte";
-    import {CurrentSaveSlot, NUM_SLOTS} from "../services/SaveSlotTracker";
-    import OBR from "@owlbear-rodeo/sdk";
-    import {Settings} from "../services/SettingsTracker";
-    import {isGM, isTrackedPlayerGM} from "../services/OBRHelper";
+    } from "../model/PlayerCharacter"
+    import Modal from "./Modal.svelte"
+    import {CurrentSaveSlot, NUM_SLOTS} from "../services/SaveSlotTracker"
+    import OBR from "@owlbear-rodeo/sdk"
+    import {Settings} from "../services/SettingsTracker"
+    import {isGM, isTrackedPlayerGM} from "../services/OBRHelper"
 
-    export let files: FileList | undefined;
-    let showModal = false;
+    export let files: FileList | undefined
+    let showModal = false
 
-    $: isSheetReadOnly = $isGM && !$isTrackedPlayerGM;
+    $: isSheetReadOnly = $isGM && !$isTrackedPlayerGM
 </script>
 
 <button
@@ -34,7 +34,7 @@
                     <button
                             class:green={$CurrentSaveSlot === i + 1}
                             on:click={() => {
-                                $CurrentSaveSlot = i + 1;
+                                $CurrentSaveSlot = i + 1
                             }}>{i + 1}</button
                     >
                 {/each}
@@ -66,14 +66,14 @@
                     disabled={isSheetReadOnly}
                     bind:files
                     on:click={(e) => {
-                        e.currentTarget.value = "";
-                        files = undefined;
+                        e.currentTarget.value = ""
+                        files = undefined
                     }}
             />
         </label>
         <button
                 on:click={() => {
-                    savePlayerToFile($pc);
+                    savePlayerToFile($pc)
                 }}>Export JSON
         </button>
         <a
@@ -85,13 +85,13 @@
             <div>Advanced Options (Proceed with caution)</div>
             <button
                     on:click={() => {
-                        $pc = defaultPC();
+                        $pc = defaultPC()
                     }}>Clear Current Save Slot
             </button>
             <button
                     on:click={() => {
-                        $pc = defaultPC();
-                        clearLocalStorage();
+                        $pc = defaultPC()
+                        clearLocalStorage()
                     }}>Clear Storage (Proceed with caution)
             </button>
         {/if}
@@ -101,20 +101,20 @@
 <style lang="postcss">
     button,
     .btn {
-        @apply bg-black text-white px-1 rounded-md hover:scale-105 transition active:opacity-50 text-center cursor-pointer;
+        @apply bg-black text-white px-1 rounded-md hover:scale-105 transition active:opacity-50 text-center cursor-pointer
     }
 
     .btn-disabled {
-        @apply bg-black text-white px-1 rounded-md text-center opacity-30 cursor-default hover:scale-100;
+        @apply bg-black text-white px-1 rounded-md text-center opacity-30 cursor-default hover:scale-100
     }
 
     .green {
-        @apply bg-green-600;
+        @apply bg-green-600
     }
 
     #options button,
     #options .btn,
     #options .btn-disabled {
-        @apply p-2;
+        @apply p-2
     }
 </style>

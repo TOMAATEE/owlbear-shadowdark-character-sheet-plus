@@ -1,4 +1,4 @@
-import type {SpellInfo} from "../types";
+import type {SpellInfo} from "../types"
 
 export const SPELLS: SpellInfo[] = [
     // #################################################################################################################
@@ -1293,10 +1293,10 @@ export const SPELLS: SpellInfo[] = [
         desc: "1/day, ignore all damage and effects from one attack.",
         duration: {type: "Instant"},
     },
-];
+]
 
-const SPELL_COMPENDIUM: { [name: string]: SpellInfo } = {};
+const SPELL_COMPENDIUM: { [name: string]: SpellInfo } = {}
 for (const s of SPELLS) {
-    SPELL_COMPENDIUM[s.name.toLowerCase()] = s;
+    SPELL_COMPENDIUM[s.name.toLowerCase()] = s
 }
-export default SPELL_COMPENDIUM;
+export default SPELL_COMPENDIUM

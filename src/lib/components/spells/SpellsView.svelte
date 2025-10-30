@@ -2,40 +2,40 @@
     import {
         calculateSpellCastingModifierForPlayer, calculateSpellDiceAmount, calculateSpellMax,
         pc,
-    } from "../../model/PlayerCharacter";
-    import CustomSpellButton from "./CustomSpellButton.svelte";
-    import RollButton from "../RollButton.svelte";
-    import SpellsButton from "./SpellsButton.svelte";
-    import SpellInfoButton from "./SpellInfoButton.svelte";
-    import type {SpellInfo} from "../../types";
-    import RollMishapButton from "./RollMishapButton.svelte";
-    import {MISHAPS} from "../../compendium/mishapCompendium.js";
+    } from "../../model/PlayerCharacter"
+    import CustomSpellButton from "./CustomSpellButton.svelte"
+    import RollButton from "../RollButton.svelte"
+    import SpellsButton from "./SpellsButton.svelte"
+    import SpellInfoButton from "./SpellInfoButton.svelte"
+    import type {SpellInfo} from "../../types"
+    import RollMishapButton from "./RollMishapButton.svelte"
+    import {MISHAPS} from "../../compendium/mishapCompendium.js"
 
     $: spells = $pc.spells.map(
         (spell) => {
-            if (!spell) return null;
+            if (!spell) return null
 
             if (spell.uses && spell.uses.used == null) {
-                spell.uses.used = 0;
+                spell.uses.used = 0
             }
-            return spell;
-        }).filter(Boolean);
-    $: hasSpells = spells?.length > 0;
+            return spell
+        }).filter(Boolean)
+    $: hasSpells = spells?.length > 0
 
     function toggleFailed(s: SpellInfo) {
-        const idx = $pc.spells.findIndex((spell) => spell.name === s.name);
+        const idx = $pc.spells.findIndex((spell) => spell.name === s.name)
 
         if (idx === -1) {
-            s.disabled = true;
-            $pc.spells.push(s);
+            s.disabled = true
+            $pc.spells.push(s)
         } else {
-            $pc.spells[idx].disabled = !$pc.spells[idx].disabled;
+            $pc.spells[idx].disabled = !$pc.spells[idx].disabled
         }
     }
 
     function hasFailedSpellcast(s: SpellInfo): boolean {
-        const idx = $pc.spells.findIndex((spell) => spell.name === s.name);
-        return idx !== -1 && $pc.spells[idx].disabled;
+        const idx = $pc.spells.findIndex((spell) => spell.name === s.name)
+        return idx !== -1 && $pc.spells[idx].disabled
     }
 
     function isDisabled(s: SpellInfo) {

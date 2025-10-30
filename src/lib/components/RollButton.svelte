@@ -1,38 +1,38 @@
 <script lang="ts">
-    import type {DiceType, SpellInfo} from "../types";
-    import {addSign, rollDiceA, sum, toPlusString} from "../utils";
-    import Menu from "./Menu/Menu.svelte";
-    import MenuOption from "./Menu/MenuOption.svelte";
-    import {notify} from "../services/Notifier";
-    import {createEventDispatcher} from "svelte";
-    import {pc} from "../model/PlayerCharacter";
+    import type {DiceType, SpellInfo} from "../types"
+    import {addSign, rollDiceA, sum, toPlusString} from "../utils"
+    import Menu from "./Menu/Menu.svelte"
+    import MenuOption from "./Menu/MenuOption.svelte"
+    import {notify} from "../services/Notifier"
+    import {createEventDispatcher} from "svelte"
+    import {pc} from "../model/PlayerCharacter"
 
-    export let modifier: number = 0;
-    export let numDice: number = 1;
-    export let diceType: DiceType = "d20"; // default to d20
-    export let disabled = false;
-    export let display = "modifier";
-    export let spell: SpellInfo = null;
-    export let advantage: boolean = false;
-    export let disadvantage: boolean = false;
+    export let modifier: number = 0
+    export let numDice: number = 1
+    export let diceType: DiceType = "d20" // default to d20
+    export let disabled = false
+    export let display = "modifier"
+    export let spell: SpellInfo = null
+    export let advantage: boolean = false
+    export let disadvantage: boolean = false
 
     const dispatch = createEventDispatcher()
 
-    let showMenu = false;
-    let pos = {x: 0, y: 0};
-    let touchTimer: ReturnType<typeof setTimeout>;
+    let showMenu = false
+    let pos = {x: 0, y: 0}
+    let touchTimer: ReturnType<typeof setTimeout>
 
     function touchStart(e: TouchEvent) {
         touchTimer = setTimeout(() => {
-            onRightClick(e as any);
-            touchTimer = null;
-        }, 500);
+            onRightClick(e as any)
+            touchTimer = null
+        }, 500)
     }
 
     function touchEnd() {
         if (touchTimer) {
-            clearTimeout(touchTimer);
-            touchTimer = null;
+            clearTimeout(touchTimer)
+            touchTimer = null
         }
     }
 
@@ -44,46 +44,46 @@
             rollWithDisadvantage()
             return
         }
-        let msg: string;
-        let result: number;
+        let msg: string
+        let result: number
         if (numDice >= 1) {
             const n = rollDiceA(diceType, numDice)
             result = sum(n)
-            msg = `rolled ${numDice}${diceType}: ${toPlusString(n)} + ${modifier} = ${result + modifier}`;
+            msg = `rolled ${numDice}${diceType}: ${toPlusString(n)} + ${modifier} = ${result + modifier}`
         } else {
             msg = "not rollable, no dice defined"
         }
         msg = evaluateSuccess(result, msg)
-        notify(msg);
-        dispatch("rolled", { result });
+        notify(msg)
+        dispatch("rolled", { result })
     }
 
     function rollWithAdvantage() {
-        const outcome1 = rollDiceA(diceType, numDice);
-        const outcome2 = rollDiceA(diceType, numDice);
-        const result = Math.max(sum(outcome1), sum(outcome2));
-        let msg = `rolled ${numDice}${diceType}: ${toPlusString(outcome1)} vs. ${toPlusString(outcome2)};\n ${result} + ${modifier} = ${result + modifier}`;
+        const outcome1 = rollDiceA(diceType, numDice)
+        const outcome2 = rollDiceA(diceType, numDice)
+        const result = Math.max(sum(outcome1), sum(outcome2))
+        let msg = `rolled ${numDice}${diceType}: ${toPlusString(outcome1)} vs. ${toPlusString(outcome2)}\n ${result} + ${modifier} = ${result + modifier}`
         msg = evaluateSuccess(result, msg)
-        notify(msg);
-        dispatch("rolled", { result });
+        notify(msg)
+        dispatch("rolled", { result })
     }
 
     function rollWithDisadvantage() {
-        const outcome1 = rollDiceA(diceType, numDice);
-        const outcome2 = rollDiceA(diceType, numDice);
-        const result = Math.min(sum(outcome1), sum(outcome2));
-        let msg = `rolled ${numDice}${diceType}: ${toPlusString(outcome1)} vs. ${toPlusString(outcome2)};\n ${result} + ${modifier} = ${result + modifier}`;
+        const outcome1 = rollDiceA(diceType, numDice)
+        const outcome2 = rollDiceA(diceType, numDice)
+        const result = Math.min(sum(outcome1), sum(outcome2))
+        let msg = `rolled ${numDice}${diceType}: ${toPlusString(outcome1)} vs. ${toPlusString(outcome2)}\n ${result} + ${modifier} = ${result + modifier}`
         msg = evaluateSuccess(result, msg)
-        notify(msg);
-        dispatch("rolled", { result });
+        notify(msg)
+        dispatch("rolled", { result })
     }
 
     function rollSecretly() {
-        const outcome = rollDiceA(diceType, numDice);
+        const outcome = rollDiceA(diceType, numDice)
         const result = sum(outcome)
-        let msg = `rolled ${numDice}${diceType}: ${toPlusString(outcome)} + ${modifier} = ${sum(outcome) + modifier}`;
+        let msg = `rolled ${numDice}${diceType}: ${toPlusString(outcome)} + ${modifier} = ${sum(outcome) + modifier}`
         msg = evaluateSuccess(result, msg)
-        notify(msg, {secret: true});
+        notify(msg, {secret: true})
     }
 
     function evaluateSuccess(result: number, msg: string): string {
@@ -114,16 +114,16 @@
     async function onRightClick(e: MouseEvent) {
         if (!disabled) {
             if (showMenu) {
-                showMenu = false;
-                await new Promise((res) => setTimeout(res, 100));
+                showMenu = false
+                await new Promise((res) => setTimeout(res, 100))
             }
-            pos = {x: e.clientX, y: e.clientY};
-            showMenu = true;
+            pos = {x: e.clientX, y: e.clientY}
+            showMenu = true
         }
     }
 
     function closeMenu() {
-        showMenu = false;
+        showMenu = false
     }
 </script>
 

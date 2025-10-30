@@ -3,17 +3,17 @@
         calculateModifierForHpRoll,
         calculateTotalHitPointsForPlayer, hasAdvantageOn,
         PlayerCharacterStore as pc,
-    } from "../model/PlayerCharacter";
-    import RollButton from "./RollButton.svelte";
-    import type {Class} from "../types";
-    import {clamp} from "../utils";
+    } from "../model/PlayerCharacter"
+    import RollButton from "./RollButton.svelte"
+    import type {Class} from "../types"
+    import {clamp} from "../utils"
 
     function getClassHpDice(c: Class) {
         switch (c) {
             case "Thief":
             case "Witch":
             case "Wizard":
-                return "d4";
+                return "d4"
             case "Bard":
             case "Knight of St. Ydris":
             case "Priest":
@@ -21,40 +21,40 @@
             case "Seer":
             case "Warlock":
             default: // Custom classes
-                return "d6";
+                return "d6"
             case "Basilisk Warrior":
             case "Desert Rider":
             case "Pit Fighter":
             case "Fighter":
             case "Ranger":
             case "Sea Wolf":
-                return "d8";
+                return "d8"
         }
     }
 
     function addRolledHp(e: CustomEvent<{ result: number }>) {
-        $pc.maxHitPoints += e.detail.result;
-        $pc.hitPoints += e.detail.result;
+        $pc.maxHitPoints += e.detail.result
+        $pc.hitPoints += e.detail.result
     }
 
     function incrMaxHp() {
-        $pc.maxHitPoints += 1;
+        $pc.maxHitPoints += 1
     }
 
     function decrMaxHp() {
-        $pc.maxHitPoints = Math.max(1, $pc.maxHitPoints - 1);
+        $pc.maxHitPoints = Math.max(1, $pc.maxHitPoints - 1)
         if ($pc.hitPoints > $pc.maxHitPoints) {
-            $pc.hitPoints = $pc.maxHitPoints;
+            $pc.hitPoints = $pc.maxHitPoints
         }
     }
 
     function longRest() {
-        $pc.hitPoints = $pc.maxHitPoints;
+        $pc.hitPoints = $pc.maxHitPoints
         $pc.spells = $pc.spells.map(s => ({
             ...s,
             uses: s.uses ? { ...s.uses, used: 0 } : s.uses,
             disabled: false
-        }));
+        }))
     }
 
     function clampHp() {
@@ -64,7 +64,7 @@
 </script>
 
 <div class="items-center flex {calculateModifierForHpRoll($pc) !== 0 ? `gap-4` : `gap-7`}">
-    <h2>HP</h2>&nbsp;&nbsp;<RollButton
+    <h2>HP</h2>&nbsp&nbsp<RollButton
         modifier={calculateModifierForHpRoll($pc)}
         diceType={getClassHpDice($pc.class)}
         display="dice"

@@ -1,14 +1,14 @@
 <script lang="ts">
-    import Modal from "../Modal.svelte";
-    import SpellShopView from "./SpellShopView.svelte";
+    import Modal from "../Modal.svelte"
+    import SpellShopView from "./SpellShopView.svelte"
 
-    let showModal = false;
+    let showModal = false
 </script>
 
 <button
         class="bg-black text-white p-2 w-full"
         on:click={() => {
-    showModal = true;
+    showModal = true
   }}>Spells
 </button
 >

@@ -1,71 +1,71 @@
 <script lang="ts">
-    import SPELL_COMPENDIUM from "../../compendium/spellCompendium";
-    import {pc} from "../../model/PlayerCharacter";
-    import TextInput from "../TextInput.svelte";
-    import SpellView from "./SpellView.svelte";
+    import SPELL_COMPENDIUM from "../../compendium/spellCompendium"
+    import {pc} from "../../model/PlayerCharacter"
+    import TextInput from "../TextInput.svelte"
+    import SpellView from "./SpellView.svelte"
 
-    let spellInput: string = "";
-    let showFilters = true;
+    let spellInput: string = ""
+    let showFilters = true
 
-    let showTier0 = true;
-    let showTier1 = true;
-    let showTier2 = true;
-    let showTier3 = true;
-    let showTier4 = true;
-    let showTier5 = true;
+    let showTier0 = true
+    let showTier1 = true
+    let showTier2 = true
+    let showTier3 = true
+    let showTier4 = true
+    let showTier5 = true
 
-    let showPriest = true;
-    let showWizard = true;
-    let showWitch = true;
-    let showSeer = true;
-    let showOther = true;
+    let showPriest = true
+    let showWizard = true
+    let showWitch = true
+    let showSeer = true
+    let showOther = true
 
-    let showSelf = true;
-    let showClose = true;
-    let showNear = true;
-    let showFar = true;
-    let showPlane = true;
-    let showUnlimited = true;
+    let showSelf = true
+    let showClose = true
+    let showNear = true
+    let showFar = true
+    let showPlane = true
+    let showUnlimited = true
 
-    let showCustom = false;
+    let showCustom = false
 
     $: spells = Object.values(SPELL_COMPENDIUM)
         .concat($pc.customSpells ?? [])
         .filter((s) => {
-            if (!showTier0 && s.tier === 0) return false;
-            if (!showTier1 && s.tier === 1) return false;
-            if (!showTier2 && s.tier === 2) return false;
-            if (!showTier3 && s.tier === 3) return false;
-            if (!showTier4 && s.tier === 4) return false;
-            if (!showTier5 && s.tier === 5) return false;
+            if (!showTier0 && s.tier === 0) return false
+            if (!showTier1 && s.tier === 1) return false
+            if (!showTier2 && s.tier === 2) return false
+            if (!showTier3 && s.tier === 3) return false
+            if (!showTier4 && s.tier === 4) return false
+            if (!showTier5 && s.tier === 5) return false
 
-            if (!showSelf && s.range === "Self") return false;
-            if (!showClose && s.range === "Close") return false;
-            if (!showNear && s.range === "Near") return false;
-            if (!showFar && s.range === "Far") return false;
-            if (!showPlane && s.range === "Plane") return false;
-            if (!showUnlimited && s.range === "Unlimited") return false;
+            if (!showSelf && s.range === "Self") return false
+            if (!showClose && s.range === "Close") return false
+            if (!showNear && s.range === "Near") return false
+            if (!showFar && s.range === "Far") return false
+            if (!showPlane && s.range === "Plane") return false
+            if (!showUnlimited && s.range === "Unlimited") return false
 
-            if (showCustom && !$pc.customSpells.find((cs) => cs.name === s.name)) return false;
+            if (showCustom && !$pc.customSpells.find((cs) => cs.name === s.name)) return false
 
-            const allowedClasses = [];
-            if (showPriest) allowedClasses.push("Priest");
-            if (showWizard) allowedClasses.push("Wizard");
-            if (showWitch) allowedClasses.push("Witch");
-            if (showSeer) allowedClasses.push("Seer");
-            if (showOther) allowedClasses.push("Fighter", "Thief", "Ranger", "Bard", "Knight of St. Ydris", "Warlock", "Desert Rider", "Pit Fighter", "Ras-Godai", "Sea Wolf", "Basilisk Warrior");
-            if (allowedClasses.length === 0) return false;
+            const allowedClasses = []
+            if (showPriest) allowedClasses.push("Priest")
+            if (showWizard) allowedClasses.push("Wizard")
+            if (showWitch) allowedClasses.push("Witch")
+            if (showSeer) allowedClasses.push("Seer")
+            if (showOther) allowedClasses.push("Fighter", "Thief", "Ranger", "Bard", "Knight of St. Ydris", "Warlock", "Desert Rider", "Pit Fighter", "Ras-Godai", "Sea Wolf", "Basilisk Warrior")
+            if (allowedClasses.length === 0) return false
 
-            const spellClasses = s.class.split(",").map(c => c.trim());
-            if (!spellClasses.some(c => allowedClasses.includes(c))) return false;
+            const spellClasses = s.class.split(",").map(c => c.trim())
+            if (!spellClasses.some(c => allowedClasses.includes(c))) return false
 
-            const term = spellInput.toLowerCase();
+            const term = spellInput.toLowerCase()
             return (
                 s.name.toLowerCase().includes(term) ||
                 s.desc.toLowerCase().includes(term) ||
                 s.duration.type.toLowerCase().includes(term)
-            );
-        });
+            )
+        })
 </script>
 
 <div class="flex flex-col gap-1">
@@ -144,6 +144,6 @@
 
 <style lang="postcss">
     input[type="checkbox"] {
-        @apply w-4 h-4;
+        @apply w-4 h-4
     }
 </style>

@@ -6,27 +6,27 @@
         isTrackedPlayerGM,
         GmId,
         GmPlayer,
-    } from "../services/OBRHelper";
-    import Modal from "./Modal.svelte";
+    } from "../services/OBRHelper"
+    import Modal from "./Modal.svelte"
 
-    let showModal = false;
+    let showModal = false
 
     type PlayerItem = {
-        id: string;
-        name: string;
-    };
+        id: string
+        name: string
+    }
 
-    let allPlayers: PlayerItem[];
+    let allPlayers: PlayerItem[]
 
     $: {
-        allPlayers = $PartyStore.map((p) => ({id: p.id, name: p.name}));
+        allPlayers = $PartyStore.map((p) => ({id: p.id, name: p.name}))
 
         // add GM to the top of the list
-        allPlayers.unshift({id: $GmId, name: $GmPlayer?.name ?? "GM"});
+        allPlayers.unshift({id: $GmId, name: $GmPlayer?.name ?? "GM"})
     }
 
     function onLoadPlayer(p: PlayerItem) {
-        $TrackedPlayer = p.id;
+        $TrackedPlayer = p.id
     }
 </script>
 

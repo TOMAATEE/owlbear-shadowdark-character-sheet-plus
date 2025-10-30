@@ -1,81 +1,81 @@
 <script lang="ts">
-    import ARMOR_COMPENDIUM from "../../compendium/armorCompendium";
-    import GEAR_COMPENDIUM from "../../compendium/basicGearCompendium";
-    import WEAPON_COMPENDIUM from "../../compendium/weaponCompendium";
-    import {canPlayerAffordGear} from "../../model/PlayerCharacter";
-    import type {GearInfo, Gear} from "../../types";
-    import {pc} from "../../model/PlayerCharacter";
-    import Modal from "../Modal.svelte";
-    import CustomGearForm from "./CustomGearForm.svelte";
-    import TextInput from "../TextInput.svelte";
+    import ARMOR_COMPENDIUM from "../../compendium/armorCompendium"
+    import GEAR_COMPENDIUM from "../../compendium/basicGearCompendium"
+    import WEAPON_COMPENDIUM from "../../compendium/weaponCompendium"
+    import {canPlayerAffordGear} from "../../model/PlayerCharacter"
+    import type {GearInfo, Gear} from "../../types"
+    import {pc} from "../../model/PlayerCharacter"
+    import Modal from "../Modal.svelte"
+    import CustomGearForm from "./CustomGearForm.svelte"
+    import TextInput from "../TextInput.svelte"
 
-    let gear: GearInfo = undefined;
-    let showCustomGearEditModal = false;
+    let gear: GearInfo = undefined
+    let showCustomGearEditModal = false
 
-    let showOnlyWhatICanAfford = false;
-    let showWeapon = true;
-    let showArmor = true;
-    let showBasic = true;
-    let showCustom = false;
+    let showOnlyWhatICanAfford = false
+    let showWeapon = true
+    let showArmor = true
+    let showBasic = true
+    let showCustom = false
 
-    let gearInput: string = "";
+    let gearInput: string = ""
     $: allResults = Object.values(GEAR_COMPENDIUM)
         .concat(Object.values(ARMOR_COMPENDIUM))
         .concat(Object.values(WEAPON_COMPENDIUM))
         .concat($pc.customGear ?? [])
         .filter((g) => {
             if (showCustom && !$pc.customGear.find((cg) => cg.name === g.name))
-                return false;
-            if (!showWeapon && g.type === "Weapon") return false;
-            if (!showArmor && g.type === "Armor") return false;
-            if (!showBasic && g.type === "Basic") return false;
-            if (showOnlyWhatICanAfford && !canPlayerAffordGear($pc, g)) return false;
-            return g.name.toLowerCase().includes(gearInput.toLowerCase());
-        }).sort((a, b) => a.name.localeCompare(b.name));
+                return false
+            if (!showWeapon && g.type === "Weapon") return false
+            if (!showArmor && g.type === "Armor") return false
+            if (!showBasic && g.type === "Basic") return false
+            if (showOnlyWhatICanAfford && !canPlayerAffordGear($pc, g)) return false
+            return g.name.toLowerCase().includes(gearInput.toLowerCase())
+        }).sort((a, b) => a.name.localeCompare(b.name))
 
     function addGear(g: GearInfo) {
         const existingGear = $pc.gear.find(
             (existingG) => existingG.name === g.name
-        );
+        )
         if (existingGear) {
-            existingGear.quantity++;
+            existingGear.quantity++
         } else {
-            const gear: Gear = {name: g.name, quantity: 1};
-            $pc.gear.push(gear);
+            const gear: Gear = {name: g.name, quantity: 1}
+            $pc.gear.push(gear)
         }
-        $pc = $pc;
+        $pc = $pc
     }
 
     function buyGear(g: GearInfo) {
         if (canPlayerAffordGear($pc, g)) {
-            let pcTotal = $pc.copper + $pc.silver * 10 + $pc.gold * 100;
-            let costTotal = g.cost.cp + g.cost.sp * 10 + g.cost.gp * 100;
-            pcTotal -= costTotal;
-            $pc.gold = Math.floor(pcTotal / 100);
-            pcTotal %= 100;
-            $pc.silver = Math.floor(pcTotal / 10);
-            $pc.copper = pcTotal % 10;
-            addGear(g);
+            let pcTotal = $pc.copper + $pc.silver * 10 + $pc.gold * 100
+            let costTotal = g.cost.cp + g.cost.sp * 10 + g.cost.gp * 100
+            pcTotal -= costTotal
+            $pc.gold = Math.floor(pcTotal / 100)
+            pcTotal %= 100
+            $pc.silver = Math.floor(pcTotal / 10)
+            $pc.copper = pcTotal % 10
+            addGear(g)
         }
     }
 
     function getCostForGear(g: GearInfo): string {
-        const {gp, sp, cp} = g.cost;
-        let gpStr: string, spStr: string, cpStr: string;
-        if (gp) gpStr = `${gp}gp`;
-        if (sp) spStr = `${sp}sp`;
-        if (cp) cpStr = `${cp}cp`;
-        return [gpStr, spStr, cpStr].join(" ");
+        const {gp, sp, cp} = g.cost
+        let gpStr: string, spStr: string, cpStr: string
+        if (gp) gpStr = `${gp}gp`
+        if (sp) spStr = `${sp}sp`
+        if (cp) cpStr = `${cp}cp`
+        return [gpStr, spStr, cpStr].join(" ")
     }
 
     function deleteCustomGear(gear: GearInfo) {
-        $pc.gear = $pc.gear.filter((g) => g.name !== gear.name);
+        $pc.gear = $pc.gear.filter((g) => g.name !== gear.name)
         $pc.bonuses = $pc.bonuses.filter((b) => {
             if (b.metadata?.type === "weapon" && b.metadata.weapon === gear.name)
-                return false;
-            return !(b.metadata?.type === "armor" && b.metadata.armor === gear.name);
-        });
-        $pc.customGear = $pc.customGear.filter((g) => g.name !== gear.name);
+                return false
+            return !(b.metadata?.type === "armor" && b.metadata.armor === gear.name)
+        })
+        $pc.customGear = $pc.customGear.filter((g) => g.name !== gear.name)
     }
 </script>
 
@@ -127,8 +127,8 @@
                             <button
                                     class="bg-black rounded-md text-white px-1 text-xs"
                                     on:click={() => {
-                    gear = g;
-                    showCustomGearEditModal = true;
+                    gear = g
+                    showCustomGearEditModal = true
                   }}><i class="material-icons">edit</i></button
                             >
                         {/if}
@@ -152,8 +152,8 @@
         <CustomGearForm
                 {gear}
                 on:finish={() => {
-        showCustomGearEditModal = false;
-        gear = undefined;
+        showCustomGearEditModal = false
+        gear = undefined
       }}
         />
     </Modal>

@@ -3,63 +3,63 @@
         calculateTitleForPlayer,
         levelUpPlayer,
         PlayerCharacterStore as pc,
-    } from "./lib/model/PlayerCharacter";
-    import {ALIGNMENTS} from "./lib/constants";
-    import TalentsSpellsView from "./lib/components/talents/TalentsSpellsView.svelte";
-    import StatView from "./lib/components/StatView.svelte";
-    import GearView from "./lib/components/gear/GearView.svelte";
-    import AttacksView from "./lib/components/AttacksView.svelte";
-    import {importFromJson} from "./lib/services/JSONImporter";
-    import HpView from "./lib/components/HPView.svelte";
-    import InfoButton from "./lib/components/InfoButton.svelte";
-    import OptionsButton from "./lib/components/OptionsButton.svelte";
-    import {setCustomGearForPlayer} from "./lib/compendium";
-    import ClassView from "./lib/components/ClassView.svelte";
-    import ArmorClassView from "./lib/components/ArmorClassView.svelte";
-    import NotesButton from "./lib/components/NotesButton.svelte";
-    import PlayersView from "./lib/components/PlayersView.svelte";
-    import {onMount} from "svelte";
-    import * as OBRHelper from "./lib/services/OBRHelper";
-    import * as LocalStorageSaver from "./lib/services/LocalStorageSaver";
-    import OBR from "@owlbear-rodeo/sdk";
-    import AncestryView from "./lib/components/AncestryView.svelte";
-    import {isSaveInProgress} from "./lib/services/LocalStorageSaver";
-    import NotificationsButton from "./lib/components/NotificationsButton.svelte";
-    import {initSettings} from "./lib/services/SettingsTracker";
-    import BackgroundView from "./lib/components/BackgroundView.svelte";
+    } from "./lib/model/PlayerCharacter"
+    import {ALIGNMENTS} from "./lib/constants"
+    import TalentsSpellsView from "./lib/components/talents/TalentsSpellsView.svelte"
+    import StatView from "./lib/components/StatView.svelte"
+    import GearView from "./lib/components/gear/GearView.svelte"
+    import AttacksView from "./lib/components/AttacksView.svelte"
+    import {importFromJson} from "./lib/services/JSONImporter"
+    import HpView from "./lib/components/HPView.svelte"
+    import InfoButton from "./lib/components/InfoButton.svelte"
+    import OptionsButton from "./lib/components/OptionsButton.svelte"
+    import {setCustomGearForPlayer} from "./lib/compendium"
+    import ClassView from "./lib/components/ClassView.svelte"
+    import ArmorClassView from "./lib/components/ArmorClassView.svelte"
+    import NotesButton from "./lib/components/NotesButton.svelte"
+    import PlayersView from "./lib/components/PlayersView.svelte"
+    import {onMount} from "svelte"
+    import * as OBRHelper from "./lib/services/OBRHelper"
+    import * as LocalStorageSaver from "./lib/services/LocalStorageSaver"
+    import OBR from "@owlbear-rodeo/sdk"
+    import AncestryView from "./lib/components/AncestryView.svelte"
+    import {isSaveInProgress} from "./lib/services/LocalStorageSaver"
+    import NotificationsButton from "./lib/components/NotificationsButton.svelte"
+    import {initSettings} from "./lib/services/SettingsTracker"
+    import BackgroundView from "./lib/components/BackgroundView.svelte"
 
-    const {isGM} = OBRHelper;
+    const {isGM} = OBRHelper
 
     onMount(() => {
-        initSettings();
+        initSettings()
         if (OBR.isAvailable) {
-            OBRHelper.init();
+            OBRHelper.init()
         } else {
-            LocalStorageSaver.init();
+            LocalStorageSaver.init()
         }
-    });
-    $: setCustomGearForPlayer($pc);
+    })
+    $: setCustomGearForPlayer($pc)
 
-    $: title = calculateTitleForPlayer($pc);
-    $: xpCap = $pc.level === 0 ? 10 : $pc.level * 10;
-    $: canLevel = $pc.level < 10 && $pc.xp >= xpCap;
-    const {canUndo, canRedo} = pc;
+    $: title = calculateTitleForPlayer($pc)
+    $: xpCap = $pc.level === 0 ? 10 : $pc.level * 10
+    $: canLevel = $pc.level < 10 && $pc.xp >= xpCap
+    const {canUndo, canRedo} = pc
 
-    let files: FileList;
+    let files: FileList
     $: if (files) {
         // https://developer.mozilla.org/en-US/docs/Web/API/FileList
         // there should only be one file
         for (const file of files) {
             file.text().then((txt) => {
-                $pc = importFromJson(txt);
-            });
-            files = undefined;
-            break;
+                $pc = importFromJson(txt)
+            })
+            files = undefined
+            break
         }
     }
 
     function onTitleInput(e: Event) {
-        $pc.title = (e.target as HTMLInputElement).value;
+        $pc.title = (e.target as HTMLInputElement).value
     }
 </script>
 
@@ -185,8 +185,8 @@
                                 class:opacity-20={!canLevel}
                                 disabled={!canLevel}
                                 on:click={() => {
-                                    levelUpPlayer($pc);
-                                    $pc = $pc;
+                                    levelUpPlayer($pc)
+                                    $pc = $pc
                             }}>🆙
                         </button>
                     </div>
@@ -237,7 +237,7 @@
 <style lang="postcss">
     input,
     select {
-        @apply w-full;
+        @apply w-full
     }
 
     .cell {

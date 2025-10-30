@@ -4,10 +4,10 @@ import type {
     DiceTypeBonus,
     ModifyBonus,
     Talent,
-} from "../types";
-import {ARMORS} from "./armorCompendium";
-import {SPELLS} from "./spellCompendium";
-import {WEAPONS} from "./weaponCompendium";
+} from "../types"
+import {ARMORS} from "./armorCompendium"
+import {SPELLS} from "./spellCompendium"
+import {WEAPONS} from "./weaponCompendium"
 
 export const CLASS_TALENTS: { [key in Class]: Talent[] } = {
     "Fighter": [
@@ -698,7 +698,7 @@ export const CLASS_TALENTS: { [key in Class]: Talent[] } = {
     ],
     "Warlock": [
         {
-            name: "Roll a Patron Boon from any patron; an unexplained gift",
+            name: "Roll a Patron Boon from any patron an unexplained gift",
             type: "generic",
         },
         {
@@ -1150,7 +1150,7 @@ export const CLASS_TALENTS: { [key in Class]: Talent[] } = {
             ] as ModifyBonus[][],
         },
         {
-            name: "Duality; choose two different Old Gods effects each day (reroll duplicates)",
+            name: "Duality choose two different Old Gods effects each day (reroll duplicates)",
             type: "generic",
         },
     ],
@@ -1242,7 +1242,7 @@ export const CLASS_TALENTS: { [key in Class]: Talent[] } = {
     ],
     "Basilisk Warrior": [
         {
-            name: "You find a basilisk egg; a loyal hatchling emerges in 1d4 days (reroll duplicates)",
+            name: "You find a basilisk egg a loyal hatchling emerges in 1d4 days (reroll duplicates)",
             type: "generic",
         },
         {
@@ -1342,7 +1342,7 @@ export const CLASS_TALENTS: { [key in Class]: Talent[] } = {
             ] as ModifyBonus[],
         },
     ],
-};
+}
 
 for (const key in CLASS_TALENTS) {
     if (CLASS_TALENTS[key].length === 4) {

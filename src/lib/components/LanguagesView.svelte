@@ -1,26 +1,26 @@
 <script lang="ts">
-    import {LANGUAGES} from "../constants";
-    import {PlayerCharacterStore as pc} from "../model/PlayerCharacter";
-    import type {Language} from "../types";
+    import {LANGUAGES} from "../constants"
+    import {PlayerCharacterStore as pc} from "../model/PlayerCharacter"
+    import type {Language} from "../types"
 
-    let addingNewLanguage = false;
+    let addingNewLanguage = false
 
     function doesNotKnowLanguage(l: string) {
-        return !$pc.languages.includes(l as Language);
+        return !$pc.languages.includes(l as Language)
     }
 
     function onAddNewLanguage(l: string) {
-        $pc.languages.push(l as Language);
-        addingNewLanguage = false;
-        $pc = $pc;
+        $pc.languages.push(l as Language)
+        addingNewLanguage = false
+        $pc = $pc
     }
 
     function onLanguageChange(e: Event) {
-        onAddNewLanguage((e.target as HTMLSelectElement).value);
+        onAddNewLanguage((e.target as HTMLSelectElement).value)
     }
 
     function onDeleteLanguage(lang: string) {
-        $pc.languages = $pc.languages.filter((l) => l !== lang);
+        $pc.languages = $pc.languages.filter((l) => l !== lang)
     }
 </script>
 
@@ -28,7 +28,7 @@
     <h2>Languages</h2>
     <button
             on:click={() => {
-      addingNewLanguage = !addingNewLanguage;
+      addingNewLanguage = !addingNewLanguage
     }}
             class="px-3 hover:bg-gray-400"
     >
@@ -52,7 +52,7 @@
             <button
                     class="text-white bg-black p-1 text-xs"
                     on:click={() => {
-          onDeleteLanguage(l);
+          onDeleteLanguage(l)
         }}
             >
                 <i class="material-icons translate-y-1">delete</i>

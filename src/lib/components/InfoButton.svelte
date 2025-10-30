@@ -1,12 +1,12 @@
 <script lang="ts">
-    import Modal from "./Modal.svelte";
+    import Modal from "./Modal.svelte"
 
-    let showModal = false;
+    let showModal = false
 </script>
 
 <button
         on:click={() => {
-    showModal = true;
+    showModal = true
   }}><i class="material-icons">help</i></button
 >
 
@@ -91,6 +91,6 @@
 
 <style lang="postcss">
     a {
-        @apply text-blue-700 hover:bg-gray-200;
+        @apply text-blue-700 hover:bg-gray-200
     }
 </style>

@@ -1,19 +1,19 @@
 <script lang="ts">
-    import {BACKGROUNDS} from "../constants";
+    import {BACKGROUNDS} from "../constants"
     import {
         PlayerCharacterStore as pc,
         setBackgroundForPlayer,
-    } from "../model/PlayerCharacter";
-    import type {Background} from "../types";
+    } from "../model/PlayerCharacter"
+    import type {Background} from "../types"
 
     function onToggleCustomBackground(e: Event) {
-        $pc.hasCustomBackground = (e.target as HTMLInputElement).checked;
+        $pc.hasCustomBackground = (e.target as HTMLInputElement).checked
     }
 
     function onBackgroundChange(e: Event) {
-        const a: Background = (e.target as HTMLSelectElement).value as Background;
-        setBackgroundForPlayer($pc, a);
-        $pc = $pc;
+        const a: Background = (e.target as HTMLSelectElement).value as Background
+        setBackgroundForPlayer($pc, a)
+        $pc = $pc
     }
 </script>
 

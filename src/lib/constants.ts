@@ -1,19 +1,19 @@
-import type {Class, SpellTier} from "./types";
+import type {Class, SpellTier} from "./types"
 
-export const GEAR_TYPES = ["Basic", "Armor", "Weapon"] as const;
+export const GEAR_TYPES = ["Basic", "Armor", "Weapon"] as const
 export const SHIELD_PROPERTIES = [
     "Shield",
     "OneHanded",
     "TwoHanded",
     "Magic",
-] as const;
-export const RANGE_TYPES = ["Self", "Close", "2xClose", "Near", "Far", "Plane", "Unlimited"] as const;
-export const DICE_TYPES = ["d1", "d4", "d6", "d8", "d10", "d12", "d20"] as const;
-export const SCHEMA_VERSION = "1.0.0";
-export const SCHEMA_TYPE = "sd-char-sheet";
-export const STATS = ["STR", "DEX", "CON", "INT", "WIS", "CHA", "LVL", "None"] as const;
-export const ALIGNMENTS = ["Neutral", "Lawful", "Chaotic"] as const;
-export const WEAPON_TYPES = ["Melee", "Ranged", "MeleeRanged"] as const;
+] as const
+export const RANGE_TYPES = ["Self", "Close", "2xClose", "Near", "Far", "Plane", "Unlimited"] as const
+export const DICE_TYPES = ["d1", "d4", "d6", "d8", "d10", "d12", "d20"] as const
+export const SCHEMA_VERSION = "1.0.0"
+export const SCHEMA_TYPE = "sd-char-sheet"
+export const STATS = ["STR", "DEX", "CON", "INT", "WIS", "CHA", "LVL", "None"] as const
+export const ALIGNMENTS = ["Neutral", "Lawful", "Chaotic"] as const
+export const WEAPON_TYPES = ["Melee", "Ranged", "MeleeRanged"] as const
 export const WEAPON_PROPERTIES = [
     "Finesse",
     "Loading",
@@ -27,7 +27,7 @@ export const WEAPON_PROPERTIES = [
     "Returning",
     "Sundering",
     "Spear-thrower"
-] as const;
+] as const
 
 export const TIME_UNITS = [
     "Second",
@@ -38,7 +38,7 @@ export const TIME_UNITS = [
     "Week",
     "Month",
     "Year",
-] as const;
+] as const
 
 export const NUMERICAL_BONUS_TOS = [
     "gearSlots",
@@ -47,7 +47,7 @@ export const NUMERICAL_BONUS_TOS = [
     "backstabDice",
     "hp",
     "spellMax",
-] as const;
+] as const
 
 export const ROLL_BONUS_TOS = [
     "hpRoll",
@@ -57,9 +57,9 @@ export const ROLL_BONUS_TOS = [
     "statRoll",
     "initiativeRoll",
     "talentRoll",
-] as const;
+] as const
 
-export const BONUS_TOS = [...NUMERICAL_BONUS_TOS, ...ROLL_BONUS_TOS] as const;
+export const BONUS_TOS = [...NUMERICAL_BONUS_TOS, ...ROLL_BONUS_TOS] as const
 
 export const DEITIES = [
     "None",
@@ -71,7 +71,7 @@ export const DEITIES = [
     "Ramlaat",
     "Shune the Vile",
     "The Lost",
-] as const;
+] as const
 
 export const BACKGROUNDS = {
     // Base Set
@@ -117,7 +117,7 @@ export const BACKGROUNDS = {
     "Wolfchild": "Long ago, you walked into town wearing pelts.",
     "Woodborn": "They found you in the hollow of an oak tree.",
     // Core Source 3
-    "Blacksmith": "Weapons, armor, horseshoes; you do it all.",
+    "Blacksmith": "Weapons, armor, horseshoes you do it all.",
     "Bowyer": "You can make and fix any bow or arrow.",
     "Crafter": "You can make and fix any utilitarian item.",
     "Criminal": "You were exiled from your village for a crime.",
@@ -128,7 +128,7 @@ export const BACKGROUNDS = {
     "Far Traveler": "You know many distant people and customs.",
     "Fisher": "You know all the sea creatures and legends.",
     "Freed": "You were a thrall, but escaped or won your freedom.",
-    "God's Blood": "You are descended from a god; it marks you.",
+    "God's Blood": "You are descended from a god it marks you.",
     "Heroborn": "You are the descendant of a famous warrior.",
     "Hunter": "You know how to move quietly in the wilds.",
     "Livestock Farmer": "You have intuition about all animals.",
@@ -137,7 +137,7 @@ export const BACKGROUNDS = {
     "Shipwright": "You know how to build and repair longboats.",
     "Skald": "You are a poet and know all the ancient ballads.",
     "Trader": "You have mercantile connections in every village.",
-} as const;
+} as const
 
 export const CLASSES = [
     "Fighter",
@@ -155,12 +155,12 @@ export const CLASSES = [
     "Sea Wolf",
     "Seer",
     "Basilisk Warrior"
-] as const;
+] as const
 
 export const TITLE_MAP: {
     [key in Class]: {
-        [key in "Lawful" | "Neutral" | "Chaotic"]: readonly string[];
-    };
+        [key in "Lawful" | "Neutral" | "Chaotic"]: readonly string[]
+    }
 } = {
     "Fighter": {
         Lawful: ["Squire", "Cavalier", "Knight", "Thane", "Lord/Lady"],
@@ -237,7 +237,7 @@ export const TITLE_MAP: {
         Chaotic: ["Stone Warrior", "Sharp Stone", "Slayer", "Moon Serpent", "Obsidian Basilisk"],
         Neutral: ["Stone Warrior", "Silent Stone", "Watcher", "Sky Serpent", "Sapphire Basilisk"],
     },
-} as const;
+} as const
 
 export const ANCESTRIES = [
     "Elf",
@@ -247,7 +247,7 @@ export const ANCESTRIES = [
     "Half-Orc",
     "Dwarf",
     "Kobold"
-] as const;
+] as const
 
 export const LANGUAGES = [
     "Common",
@@ -264,7 +264,7 @@ export const LANGUAGES = [
     "Diabolic",
     "Draconic",
     "Primordial",
-] as const;
+] as const
 
 export const ValueForDiceType = {
     d1: 1,
@@ -274,6 +274,6 @@ export const ValueForDiceType = {
     d10: 10,
     d12: 12,
     d20: 20,
-} as const;
+} as const
 
-export const SPELL_TIERS: SpellTier[] = [0, 1, 2, 3, 4, 5];
+export const SPELL_TIERS: SpellTier[] = [0, 1, 2, 3, 4, 5]

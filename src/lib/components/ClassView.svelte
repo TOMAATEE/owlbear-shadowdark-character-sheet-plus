@@ -1,28 +1,28 @@
 <script lang="ts">
-    import {CLASSES} from "../constants";
+    import {CLASSES} from "../constants"
     import {
         PlayerCharacterStore as pc,
         setClassForPlayer,
-    } from "../model/PlayerCharacter";
+    } from "../model/PlayerCharacter"
     import {
         ensureClassBonuses,
         ensureClassGear, ensureClassSpells,
-    } from "../services/AncestryClassEnsurer";
-    import type {Class} from "../types";
+    } from "../services/AncestryClassEnsurer"
+    import type {Class} from "../types"
 
-    $: atLeastLevelOne = $pc.level >= 1;
+    $: atLeastLevelOne = $pc.level >= 1
 
     function onClassChange(e: Event) {
-        const c: Class = (e.target as HTMLSelectElement).value as Class;
-        setClassForPlayer($pc, c);
-        $pc = $pc;
+        const c: Class = (e.target as HTMLSelectElement).value as Class
+        setClassForPlayer($pc, c)
+        $pc = $pc
     }
 
     function onToggleCustomClass(e: Event) {
-        $pc.hasCustomClass = (e.target as HTMLInputElement).checked;
-        ensureClassBonuses($pc);
-        ensureClassGear($pc);
-        ensureClassSpells($pc);
+        $pc.hasCustomClass = (e.target as HTMLInputElement).checked
+        ensureClassBonuses($pc)
+        ensureClassGear($pc)
+        ensureClassSpells($pc)
     }
 </script>
 

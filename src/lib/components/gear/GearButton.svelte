@@ -1,13 +1,13 @@
 <script lang="ts">
-    import GearShopView from "./GearShopView.svelte";
-    import Modal from "../Modal.svelte";
+    import GearShopView from "./GearShopView.svelte"
+    import Modal from "../Modal.svelte"
 
-    let showShop = false;
+    let showShop = false
 </script>
 
 <button class="bg-black text-white px-3 rounded-md"
         on:click={() => {
-            showShop = true;
+            showShop = true
         }}>Gear
 </button>
 

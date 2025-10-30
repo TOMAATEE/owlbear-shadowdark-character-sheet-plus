@@ -1,42 +1,42 @@
-import type {LANGUAGES} from "../constants";
-import type {PlayerCharacter, Gear, Class, Bonus, Ancestry} from "../types";
-import {learnSpellForPlayer} from "../model/PlayerCharacter";
-import SPELL_COMPENDIUM from "../compendium/spellCompendium";
+import type {LANGUAGES} from "../constants"
+import type {PlayerCharacter, Gear, Class, Bonus, Ancestry} from "../types"
+import {learnSpellForPlayer} from "../model/PlayerCharacter"
+import SPELL_COMPENDIUM from "../compendium/spellCompendium"
 
 export function ensureLanguages(pc: PlayerCharacter) {
-    const languages: (typeof LANGUAGES)[number][] = ["Common"];
+    const languages: (typeof LANGUAGES)[number][] = ["Common"]
     switch (pc.ancestry) {
         case "Elf":
-            languages.push("Elvish", "Sylvan");
-            break;
+            languages.push("Elvish", "Sylvan")
+            break
         case "Human":
-            break;
+            break
         case "Dwarf":
-            languages.push("Dwarvish");
-            break;
+            languages.push("Dwarvish")
+            break
         case "Goblin":
-            languages.push("Goblin");
-            break;
+            languages.push("Goblin")
+            break
         case "Halfling":
-            break;
+            break
         case "Half-Orc":
-            languages.push("Orcish");
-            break;
+            languages.push("Orcish")
+            break
         case "Kobold":
-            languages.push("Draconic");
-            break;
+            languages.push("Draconic")
+            break
     }
     switch (pc.class) {
         case "Knight of St. Ydris":
-            languages.push("Diabolic");
-            break;
+            languages.push("Diabolic")
+            break
         case "Witch":
-            languages.push("Diabolic", "Primordial", "Sylvan");
-            break;
+            languages.push("Diabolic", "Primordial", "Sylvan")
+            break
     }
     for (const l of languages) {
         if (!pc.languages.includes(l)) {
-            pc.languages.push(l);
+            pc.languages.push(l)
         }
     }
 }
@@ -56,62 +56,62 @@ export function setMishapTable(pc: PlayerCharacter) {
 }
 
 export function ensureAncestryBonuses(pc: PlayerCharacter) {
-    clearAncestryBonuses(pc);
-    addAncestryBonuses(pc.bonuses, pc.ancestry);
+    clearAncestryBonuses(pc)
+    addAncestryBonuses(pc.bonuses, pc.ancestry)
 }
 
 export function ensureClassBonuses(pc: PlayerCharacter) {
-    clearClassBonuses(pc);
-    if (!pc.class || pc.hasCustomClass) return;
-    addClassBonuses(pc.bonuses, pc.class);
+    clearClassBonuses(pc)
+    if (!pc.class || pc.hasCustomClass) return
+    addClassBonuses(pc.bonuses, pc.class)
 }
 
 export function ensureClassGear(pc: PlayerCharacter) {
-    clearClassGear(pc);
-    if (!pc.class || pc.hasCustomClass) return;
-    addClassGear(pc.gear, pc.class);
+    clearClassGear(pc)
+    if (!pc.class || pc.hasCustomClass) return
+    addClassGear(pc.gear, pc.class)
 }
 
 export function ensureClassSpells(pc: PlayerCharacter) {
-    clearClassSpells(pc);
-    if (!pc.class || pc.hasCustomClass) return;
-    addClassSpells(pc);
+    clearClassSpells(pc)
+    if (!pc.class || pc.hasCustomClass) return
+    addClassSpells(pc)
 }
 
 function clearClassSpells(pc: PlayerCharacter) {
     pc.spells = pc.spells.filter(
         (spell) =>
             spell.tier !== 0 || pc.class === spell.class
-    );
+    )
 }
 
 function addClassSpells(pc: PlayerCharacter) {
-    const classSpells: string[] = [];
+    const classSpells: string[] = []
     switch (pc.class) {
         case "Basilisk Warrior":
-            classSpells.push("Petrifying Gaze");
-            break;
+            classSpells.push("Petrifying Gaze")
+            break
         case "Desert Rider":
-            classSpells.push("Charge");
-            break;
+            classSpells.push("Charge")
+            break
         case "Knight of St. Ydris":
-            classSpells.push("Demonic Possession");
-            break;
+            classSpells.push("Demonic Possession")
+            break
         case "Pit Fighter":
-            classSpells.push("Flourish", "Relentless");
-            break;
+            classSpells.push("Flourish", "Relentless")
+            break
         case "Priest":
-            classSpells.push("Turn Undead");
-            break;
+            classSpells.push("Turn Undead")
+            break
         case "Ras-Godai":
-            classSpells.push("Smoke Step");
-            break;
+            classSpells.push("Smoke Step")
+            break
         case "Seer":
-            classSpells.push("Omen");
-            break;
+            classSpells.push("Omen")
+            break
         case "Witch":
-            classSpells.push("Revive Familiar");
-            break;
+            classSpells.push("Revive Familiar")
+            break
     }
     classSpells.forEach(spell => {
         learnSpellForPlayer(pc, SPELL_COMPENDIUM[spell.toLowerCase()])
@@ -128,7 +128,7 @@ function clearAncestryBonuses(pc: PlayerCharacter) {
                 "Mighty Attack ancestry",
                 "Mighty Damage ancestry",
             ].includes(b.name)
-    );
+    )
 }
 
 function clearClassBonuses(pc: PlayerCharacter) {
@@ -157,31 +157,31 @@ function clearClassBonuses(pc: PlayerCharacter) {
                 "Basilisk Blood",
                 "Stone Skin"
             ].includes(b.name) && !b.name.includes("Thievery:")
-    );
+    )
 }
 
 function clearClassGear(pc: PlayerCharacter) {
     pc.gear = pc.gear.filter(
         (g) => !["Thieving Tools", "Holy Symbol"].includes(g.name)
-    );
+    )
 }
 
 function addClassGear(gear: Gear[], c: Class) {
     if (c === "Thief" && !gear.find((g) => g.name === "Thieving Tools")) {
-        gear.push({name: "Thieving Tools", quantity: 1});
+        gear.push({name: "Thieving Tools", quantity: 1})
     } else if (c === "Priest" && !gear.find((g) => g.name === "Holy Symbol")) {
-        gear.push({name: "Holy Symbol", quantity: 1});
+        gear.push({name: "Holy Symbol", quantity: 1})
     }
 }
 
 function addAncestryBonuses(bonuses: Bonus[], a: Ancestry | "") {
     switch (a) {
         case "Elf":
-            break;
+            break
         case "Human":
-            break;
+            break
         case "Dwarf": {
-            const name = "Stout";
+            const name = "Stout"
             if (!bonuses.find((b) => b.name === name)) {
                 bonuses.push({
                     name,
@@ -189,37 +189,37 @@ function addAncestryBonuses(bonuses: Bonus[], a: Ancestry | "") {
                     desc: "Roll your HP gains with ADV",
                     type: "advantage",
                     bonusTo: "hpRoll",
-                });
+                })
             }
-            break;
+            break
         }
         case "Goblin": {
-            const name = "Keen senses";
+            const name = "Keen senses"
             if (!bonuses.find((b) => b.name === name)) {
                 bonuses.push({
                     name,
                     bonusSource: "Ancestry",
                     desc: "You can't be surprised",
                     type: "generic",
-                });
+                })
             }
-            break;
+            break
         }
         case "Halfling": {
-            const name = "Stealthy";
+            const name = "Stealthy"
             if (!bonuses.find((b) => b.name === name)) {
                 bonuses.push({
                     name,
                     bonusSource: "Ancestry",
                     desc: "Once per day, you can become invisible for 3 rounds",
                     type: "generic",
-                });
+                })
             }
-            break;
+            break
         }
         case "Half-Orc": {
-            const nameAtk = "Mighty Attack ancestry";
-            const nameDmg = "Mighty Damage ancestry";
+            const nameAtk = "Mighty Attack ancestry"
+            const nameDmg = "Mighty Damage ancestry"
             if (!bonuses.find((b) => b.name === nameAtk || b.name === nameDmg)) {
                 bonuses.push(
                     {
@@ -246,21 +246,21 @@ function addAncestryBonuses(bonuses: Bonus[], a: Ancestry | "") {
                             weaponType: "Melee",
                         },
                     }
-                );
+                )
             }
-            break;
+            break
         }
         case "Kobold": {
-            const name = "Knack";
+            const name = "Knack"
             if (!bonuses.find((b) => b.name === name)) {
                 bonuses.push({
                     name,
                     bonusSource: "Ancestry",
                     desc: "You get +1 to spellcasting checks or may begin each session with a luck token",
                     type: "generic",
-                });
+                })
             }
-            break;
+            break
         }
     }
 }
@@ -268,7 +268,7 @@ function addAncestryBonuses(bonuses: Bonus[], a: Ancestry | "") {
 function addClassBonuses(bonuses: Bonus[], c: Class) {
     switch (c) {
         case "Thief": {
-            let name = "Thievery";
+            let name = "Thievery"
             if (!bonuses.find((b) => b.name === name)) {
                 bonuses.push(
                     {
@@ -277,10 +277,10 @@ function addClassBonuses(bonuses: Bonus[], c: Class) {
                         desc: "ADV on climbing, sneaking, hiding, applying disguises, disabling traps, picking pockets, opening locks",
                         type: "generic",
                     },
-                );
+                )
             }
 
-            name = "Backstab";
+            name = "Backstab"
             if (!bonuses.find((b) => b.name === name)) {
                 bonuses.push({
                     name,
@@ -290,27 +290,27 @@ function addClassBonuses(bonuses: Bonus[], c: Class) {
                     bonusTo: "backstabDice",
                     bonusAmount: 1,
                     bonusIncreaseRatePerLevel: 0.5,
-                });
+                })
             }
-            break;
+            break
         }
         case "Priest": {
-            break;
+            break
         }
         case "Wizard": {
-            const name = "Learning Spells";
+            const name = "Learning Spells"
             if (!bonuses.find((b) => b.name === name)) {
                 bonuses.push({
                     name,
                     bonusSource: "Class",
                     desc: "Study a scroll (1 Day) + DC 15 INT check to permanently learn scroll",
                     type: "generic",
-                });
+                })
             }
-            break;
+            break
         }
         case "Fighter": {
-            const name = "Hauler";
+            const name = "Hauler"
             if (!bonuses.find((b) => b.name === name)) {
                 bonuses.push({
                     name,
@@ -323,12 +323,12 @@ function addClassBonuses(bonuses: Bonus[], c: Class) {
                         type: "stat",
                         stat: "CON",
                     },
-                });
+                })
             }
-            break;
+            break
         }
         case "Ranger": {
-            const name = "Herbalism";
+            const name = "Herbalism"
             if (!bonuses.find((b) => b.name === name)) {
                 bonuses.push(
                     {
@@ -343,12 +343,12 @@ function addClassBonuses(bonuses: Bonus[], c: Class) {
                         desc: "ADV on checks associated with navigation, survivalism, tracking, sneaking, hiding, nature, animals",
                         type: "generic",
                     }
-                );
+                )
             }
-            break;
+            break
         }
         case "Bard": {
-            const name = "Bardic Arts";
+            const name = "Bardic Arts"
             if (!bonuses.find((b) => b.name === name)) {
                 bonuses.push(
                     {
@@ -377,12 +377,12 @@ function addClassBonuses(bonuses: Bonus[], c: Class) {
                         desc: "Add 1d6 to your learning rolls. Groups carousing with 1 or more bards add 1d6 to their rolls",
                         type: "generic",
                     },
-                );
+                )
             }
-            break;
+            break
         }
         case "Knight of St. Ydris": {
-            const name = "Demonic Possession Increase";
+            const name = "Demonic Possession Increase"
             if (!bonuses.find((b) => b.name === name)) {
                 bonuses.push(
                     {
@@ -397,12 +397,12 @@ function addClassBonuses(bonuses: Bonus[], c: Class) {
                             spell: "Demonic Possession",
                         },
                     },
-                );
+                )
             }
-            break;
+            break
         }
         case "Warlock": {
-            const name = "Patron";
+            const name = "Patron"
             if (!bonuses.find((b) => b.name === name)) {
                 bonuses.push(
                     {
@@ -411,17 +411,17 @@ function addClassBonuses(bonuses: Bonus[], c: Class) {
                         desc: "Your patron can choose to grant or withhold its gifts at any time. You can gain new Patron Boons/talents (or lose them) as a result",
                         type: "generic",
                     },
-                );
+                )
             }
-            break;
+            break
         }
         case "Witch":
-            break;
+            break
         case "Desert Rider": {
-            break;
+            break
         }
         case "Pit Fighter": {
-            const name = "Implacable";
+            const name = "Implacable"
             if (!bonuses.find((b) => b.name === name)) {
                 bonuses.push(
                     {
@@ -436,12 +436,12 @@ function addClassBonuses(bonuses: Bonus[], c: Class) {
                         desc: "You get up from dying with 1 HP on a roll of 18-20",
                         type: "generic",
                     },
-                );
+                )
             }
-            break;
+            break
         }
         case "Ras-Godai": {
-            const name = "Assassin";
+            const name = "Assassin"
             if (!bonuses.find((b) => b.name === name)) {
                 bonuses.push(
                     {
@@ -450,12 +450,12 @@ function addClassBonuses(bonuses: Bonus[], c: Class) {
                         desc: "ADV on checks to sneak and hide. Your attacks deal double damage against targets that are unaware of your presence",
                         type: "generic",
                     },
-                );
+                )
             }
-            break;
+            break
         }
         case "Sea Wolf": {
-            const name = "Seafarer";
+            const name = "Seafarer"
             if (!bonuses.find((b) => b.name === name)) {
                 bonuses.push(
                     {
@@ -467,7 +467,7 @@ function addClassBonuses(bonuses: Bonus[], c: Class) {
                     {
                         name: "Old Gods",
                         bonusSource: "Class",
-                        desc: "Choose one after you complete a rest; you gain its benefits until you complete your next rest.\n" +
+                        desc: "Choose one after you complete a rest you gain its benefits until you complete your next rest.\n" +
                             "Odin. You regain 1d4 HP every time you kill an enemy.\n" +
                             "Freya. You gain a luck token if you don't have one. Each time you use a luck token, add 1d6 to your roll.\n" +
                             "Loki. You have ADV on checks to lie, sneak, and hide.",
@@ -479,12 +479,12 @@ function addClassBonuses(bonuses: Bonus[], c: Class) {
                         desc: "If you wield a shield, you can take a defensive stance. Your AC becomes 20 during this time",
                         type: "generic",
                     },
-                );
+                )
             }
-            break;
+            break
         }
         case "Seer": {
-            const name = "Destined";
+            const name = "Destined"
             if (!bonuses.find((b) => b.name === name)) {
                 bonuses.push(
                     {
@@ -493,12 +493,12 @@ function addClassBonuses(bonuses: Bonus[], c: Class) {
                         desc: "Whenever you use a luck token, add 1d6 to the roll",
                         type: "generic",
                     },
-                );
+                )
             }
-            break;
+            break
         }
         case "Basilisk Warrior": {
-            const name = "Basilisk Blood";
+            const name = "Basilisk Blood"
             if (!bonuses.find((b) => b.name === name)) {
                 bonuses.push(
                     {
@@ -522,9 +522,9 @@ function addClassBonuses(bonuses: Bonus[], c: Class) {
                         bonusAmount: 2,
                         bonusIncreaseRatePerLevel: 0.5,
                     },
-                );
+                )
             }
-            break;
+            break
         }
     }
 }

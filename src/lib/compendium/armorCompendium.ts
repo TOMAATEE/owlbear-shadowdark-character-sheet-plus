@@ -1,4 +1,4 @@
-import type {ArmorInfo} from "../types";
+import type {ArmorInfo} from "../types"
 
 export const ARMORS: ArmorInfo[] = [
     {
@@ -99,10 +99,10 @@ export const ARMORS: ArmorInfo[] = [
             }
         ]
     },
-];
+]
 
-const ARMOR_COMPENDIUM: { [name: string]: ArmorInfo } = {};
+const ARMOR_COMPENDIUM: { [name: string]: ArmorInfo } = {}
 for (const w of ARMORS) {
-    ARMOR_COMPENDIUM[w.name.toLowerCase()] = w;
+    ARMOR_COMPENDIUM[w.name.toLowerCase()] = w
 }
-export default ARMOR_COMPENDIUM;
+export default ARMOR_COMPENDIUM

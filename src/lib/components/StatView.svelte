@@ -1,22 +1,22 @@
 <script lang="ts">
-    import RollButton from "./RollButton.svelte";
+    import RollButton from "./RollButton.svelte"
     import {
         PlayerCharacterStore,
         calculateBonusForPlayerStat,
         calculateModifierForPlayerStat,
         calculateStatValueForPlayerStat,
-    } from "../model/PlayerCharacter";
-    import type {Stat} from "../types";
+    } from "../model/PlayerCharacter"
+    import type {Stat} from "../types"
 
-    export let forStat: Stat;
-    const pc = PlayerCharacterStore;
-    $: modifier = calculateModifierForPlayerStat($pc, forStat);
-    $: statValue = calculateStatValueForPlayerStat($pc, forStat);
+    export let forStat: Stat
+    const pc = PlayerCharacterStore
+    $: modifier = calculateModifierForPlayerStat($pc, forStat)
+    $: statValue = calculateStatValueForPlayerStat($pc, forStat)
 
     function onInput(e: Event) {
         $pc.stats[forStat] =
             parseInt((e.target as HTMLInputElement).value) -
-            calculateBonusForPlayerStat($pc, forStat);
+            calculateBonusForPlayerStat($pc, forStat)
     }
 </script>
 
@@ -33,7 +33,7 @@
                 min="1"
                 max="20"
                 class="w-1/2"
-        />&nbsp;/&nbsp;<RollButton {modifier}/>
+        />&nbsp/&nbsp<RollButton {modifier}/>
     </div>
 </div>
 

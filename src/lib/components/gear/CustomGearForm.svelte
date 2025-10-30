@@ -1,12 +1,12 @@
 <script lang="ts">
-    import {createEventDispatcher} from "svelte";
+    import {createEventDispatcher} from "svelte"
     import {
         WEAPON_PROPERTIES,
         RANGE_TYPES,
         DICE_TYPES,
         SHIELD_PROPERTIES,
         STATS,
-    } from "../../constants";
+    } from "../../constants"
     import type {
         Currency,
         GearInfo,
@@ -15,33 +15,33 @@
         RangeType,
         ModifyBonus,
         Bonus,
-    } from "../../types";
-    import {pc} from "../../model/PlayerCharacter";
-    import MultiSelect from "../MultiSelect.svelte";
-    import CustomBonusButton from "../bonuses/CustomBonusButton.svelte";
-    import BonusView from "../bonuses/BonusView.svelte";
+    } from "../../types"
+    import {pc} from "../../model/PlayerCharacter"
+    import MultiSelect from "../MultiSelect.svelte"
+    import CustomBonusButton from "../bonuses/CustomBonusButton.svelte"
+    import BonusView from "../bonuses/BonusView.svelte"
 
-    const dispatch = createEventDispatcher();
+    const dispatch = createEventDispatcher()
 
-    export let gear: GearInfo = undefined;
-    const currGear = $pc.gear.find((g) => g.name === gear?.name);
+    export let gear: GearInfo = undefined
+    const currGear = $pc.gear.find((g) => g.name === gear?.name)
     let bonuses: Bonus[] = gear?.playerBonuses ?? []
 
     function getMagicWeaponModifierFromGear(g?: GearInfo): number {
-        if (!g) return 0;
+        if (!g) return 0
         let b = (g as WeaponInfo)?.playerBonuses?.find(
             (b) => b.type === "modifyAmt" && b.bonusTo === "attackRoll"
-        ) as ModifyBonus | undefined;
-        return b?.bonusAmount ?? 0;
+        ) as ModifyBonus | undefined
+        return b?.bonusAmount ?? 0
     }
 
     function getRangeTypeFromGear(g?: GearInfo): RangeType[] {
-        if (!g) return ["Close"];
-        const r = (g as WeaponInfo).range;
+        if (!g) return ["Close"]
+        const r = (g as WeaponInfo).range
         if (Array.isArray(r)) {
-            return r;
+            return r
         } else {
-            return [r];
+            return [r]
         }
     }
 
@@ -79,24 +79,24 @@
         armorProperties: (gear as ArmorInfo)?.properties ?? [],
         acModifier: (gear as ArmorInfo)?.ac?.modifier ?? 0,
         armorStat: (gear as ArmorInfo)?.ac?.stat,
-    };
+    }
 
     let vm = JSON.parse(
         JSON.stringify(defaultViewModel)
-    ) as typeof defaultViewModel;
+    ) as typeof defaultViewModel
 
-    $: weaponHasAtLeastDamage = vm.gearType !== "Weapon" || vm.hasOneHandedAttack || vm.hasTwoHandedAttack;
+    $: weaponHasAtLeastDamage = vm.gearType !== "Weapon" || vm.hasOneHandedAttack || vm.hasTwoHandedAttack
 
-    $: canAdd = vm.name?.length > 0 && vm.quantity > 0 && weaponHasAtLeastDamage;
+    $: canAdd = vm.name?.length > 0 && vm.quantity > 0 && weaponHasAtLeastDamage
 
     $: if (vm.hasOneHandedAttack && vm.hasTwoHandedAttack) {
         if (!vm.weaponProperties.includes("Versatile")) {
-            vm.weaponProperties.push("Versatile");
+            vm.weaponProperties.push("Versatile")
         }
     } else {
-        const i = vm.weaponProperties.findIndex((w) => w === "Versatile");
+        const i = vm.weaponProperties.findIndex((w) => w === "Versatile")
         if (i >= 0) {
-            vm.weaponProperties.splice(i, 1);
+            vm.weaponProperties.splice(i, 1)
         }
     }
 
@@ -105,13 +105,13 @@
         !vm.armorProperties.includes("OneHanded") &&
         !vm.armorProperties.includes("TwoHanded")
     ) {
-        vm.armorProperties.push("OneHanded");
+        vm.armorProperties.push("OneHanded")
     }
 
     $: if (!vm.showAdvanced) {
-        vm.gearType = "Basic";
-        vm.canBeEquipped = false;
-        vm.attackable = false;
+        vm.gearType = "Basic"
+        vm.canBeEquipped = false
+        vm.attackable = false
     }
 
     function createGearItem() {
@@ -133,31 +133,31 @@
                 cp: 0,
                 [vm.currency]: vm.cost,
             },
-        };
+        }
 
         switch (vm.gearType) {
             case "Basic": {
-                if (vm.canBeEquipped && vm.attackable) g.properties = ["Attackable"];
-                break;
+                if (vm.canBeEquipped && vm.attackable) g.properties = ["Attackable"]
+                break
             }
             case "Weapon": {
-                let w = g as WeaponInfo;
-                w.properties = vm.weaponProperties;
-                w.weaponType = vm.weaponType;
-                w.range = vm.weaponRanges;
-                w.canBeEquipped = true;
-                w.damage = {};
+                let w = g as WeaponInfo
+                w.properties = vm.weaponProperties
+                w.weaponType = vm.weaponType
+                w.range = vm.weaponRanges
+                w.canBeEquipped = true
+                w.damage = {}
                 if (vm.hasOneHandedAttack) {
                     w.damage.oneHanded = {
                         numDice: vm.oneHandedNumDice,
                         diceType: vm.oneHandedDiceType,
-                    };
+                    }
                 }
                 if (vm.hasTwoHandedAttack) {
                     w.damage.twoHanded = {
                         numDice: vm.twoHandedNumDice,
                         diceType: vm.twoHandedDiceType,
-                    };
+                    }
                 }
                 if (
                     vm.weaponProperties.includes("Magic") &&
@@ -176,7 +176,7 @@
                             type: "weapon",
                             weapon: w.name,
                         },
-                    });
+                    })
                     w.playerBonuses.push({
                         name: w.name + `: +${vm.magicWeaponModifier} to dmg`,
                         desc: `+${vm.magicWeaponModifier} to damage rolls when ${w.name} is equipped`,
@@ -189,46 +189,46 @@
                             type: "weapon",
                             weapon: w.name,
                         },
-                    });
+                    })
                 }
-                break;
+                break
             }
             case "Armor": {
-                let a = g as ArmorInfo;
-                a.properties = vm.armorProperties;
-                a.canBeEquipped = true;
+                let a = g as ArmorInfo
+                a.properties = vm.armorProperties
+                a.canBeEquipped = true
                 a.ac = {
                     base: vm.baseAC,
                     modifier: vm.acModifier,
                     stat: vm.armorStat,
-                };
-                break;
+                }
+                break
             }
         }
 
         if (gear) {
             for (let k in gear) {
                 if (gear.hasOwnProperty(k)) {
-                    delete gear[k];
+                    delete gear[k]
                 }
             }
             if (g.type !== "Basic") {
-                g.properties = g.properties?.filter((p) => p !== "Attackable");
+                g.properties = g.properties?.filter((p) => p !== "Attackable")
             }
-            Object.assign(gear, g);
+            Object.assign(gear, g)
             if (currGear) {
-                currGear.name = g.name;
-                currGear.quantity = vm.quantity;
+                currGear.name = g.name
+                currGear.quantity = vm.quantity
             }
         } else {
-            $pc.customGear.push(g);
+            $pc.customGear.push(g)
             $pc.gear.push({
                 name: g.name,
                 quantity: vm.quantity,
-            });
+            })
         }
-        $pc = $pc;
-        dispatch("finish");
+        $pc = $pc
+        dispatch("finish")
     }
 </script>
 
@@ -447,6 +447,6 @@
 
 <style lang="postcss">
     input[type="checkbox"] {
-        @apply w-5 h-5;
+        @apply w-5 h-5
     }
 </style>

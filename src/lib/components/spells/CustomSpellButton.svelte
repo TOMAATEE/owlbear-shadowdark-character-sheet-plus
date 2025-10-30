@@ -1,16 +1,16 @@
 <script lang="ts">
-    import CustomSpellForm from "./CustomSpellForm.svelte";
-    import Modal from "../Modal.svelte";
+    import CustomSpellForm from "./CustomSpellForm.svelte"
+    import Modal from "../Modal.svelte"
 
-    let showForm = false;
-    let showModal = false;
+    let showForm = false
+    let showModal = false
 </script>
 
 <button
         class="bg-black text-white w-full"
         on:click={() => {
-    showForm = true;
-    showModal = true;
+    showForm = true
+    showModal = true
   }}>Custom Spell
 </button
 >

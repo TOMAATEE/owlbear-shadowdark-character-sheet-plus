@@ -1,19 +1,19 @@
 <script lang="ts">
-    import {ANCESTRIES} from "../constants";
+    import {ANCESTRIES} from "../constants"
     import {
         PlayerCharacterStore as pc,
         setAncestryForPlayer,
-    } from "../model/PlayerCharacter";
-    import type {Ancestry} from "../types";
+    } from "../model/PlayerCharacter"
+    import type {Ancestry} from "../types"
 
     function onToggleCustomAncestry(e: Event) {
-        $pc.hasCustomAncestry = (e.target as HTMLInputElement).checked;
+        $pc.hasCustomAncestry = (e.target as HTMLInputElement).checked
     }
 
     function onAncestryChange(e: Event) {
-        const a: Ancestry = (e.target as HTMLSelectElement).value as Ancestry;
-        setAncestryForPlayer($pc, a);
-        $pc = $pc;
+        const a: Ancestry = (e.target as HTMLSelectElement).value as Ancestry
+        setAncestryForPlayer($pc, a)
+        $pc = $pc
     }
 </script>
 

@@ -1,4 +1,4 @@
-import type {MishapClass, Mishap} from "../types";
+import type {MishapClass, Mishap} from "../types"
 
 export const MISHAPS: { [key in MishapClass]: Mishap[] } = {
     "Wizard": [
@@ -205,7 +205,7 @@ export const MISHAPS: { [key in MishapClass]: Mishap[] } = {
         {
             name: "Shred",
             tiers: [5],
-            desc: "You tear a large hole in the fabric of the universe close to you; the lightless tear grows larger every round"
+            desc: "You tear a large hole in the fabric of the universe close to you the lightless tear grows larger every round"
         },
     ],
 // #####################################################################################################################
@@ -243,7 +243,7 @@ export const MISHAPS: { [key in MishapClass]: Mishap[] } = {
         {
             name: "Cobwebs",
             tiers: [1, 2, 3],
-            desc: "Mental cobwebs cloud your mind; you can't cast this spell again for a week"
+            desc: "Mental cobwebs cloud your mind you can't cast this spell again for a week"
         },
         {
             name: "Cackles",

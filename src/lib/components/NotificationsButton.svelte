@@ -2,11 +2,11 @@
     import {
         Notifications,
         clearNotifications,
-    } from "../services/NotificationLogger";
-    import Modal from "./Modal.svelte";
+    } from "../services/NotificationLogger"
+    import Modal from "./Modal.svelte"
 
-    let showModal = false;
-    const fmt = new Intl.DateTimeFormat("en-US", {timeStyle: "medium"});
+    let showModal = false
+    const fmt = new Intl.DateTimeFormat("en-US", {timeStyle: "medium"})
 </script>
 
 <button class="bg-black text-white px-1" on:click={() => (showModal = true)}

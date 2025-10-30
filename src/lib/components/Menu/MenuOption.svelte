@@ -1,21 +1,21 @@
 <script lang="ts">
-    import {getContext} from "svelte";
-    import {key} from "./MenuModel";
+    import {getContext} from "svelte"
+    import {key} from "./MenuModel"
 
-    export let isDisabled = false;
-    export let text = "";
+    export let isDisabled = false
+    export let text = ""
 
-    import {createEventDispatcher} from "svelte";
+    import {createEventDispatcher} from "svelte"
 
-    const dispatch = createEventDispatcher();
+    const dispatch = createEventDispatcher()
 
-    const {dispatchClick} = getContext<any>(key);
+    const {dispatchClick} = getContext<any>(key)
 
     const handleClick = () => {
-        if (isDisabled) return;
-        dispatch("click");
-        dispatchClick();
-    };
+        if (isDisabled) return
+        dispatch("click")
+        dispatchClick()
+    }
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -42,14 +42,14 @@
     }
 
     div:hover {
-        background: #0002;
+        background: #0002
     }
 
     div.disabled {
-        color: #0006;
+        color: #0006
     }
 
     div.disabled:hover {
-        background: white;
+        background: white
     }
 </style>

@@ -1,5 +1,5 @@
-import {findAny, findSpell} from "../compendium";
-import {ANCESTRIES, CLASSES, SCHEMA_TYPE} from "../constants";
+import {findAny, findSpell} from "../compendium"
+import {ANCESTRIES, CLASSES, SCHEMA_TYPE} from "../constants"
 import type {
     PlayerCharacter,
     SpellInfo,
@@ -8,94 +8,94 @@ import type {
     SDBonus,
     WeaponType,
     WeaponBonusMetaData,
-} from "../types";
+} from "../types"
 import {
     ensureAncestryBonuses,
     ensureClassBonuses,
     ensureClassGear,
     ensureClassSpells,
     ensureLanguages,
-} from "./AncestryClassEnsurer";
+} from "./AncestryClassEnsurer"
 
 export function importFromJson(jsonStr: string): PlayerCharacter {
-    const json = JSON.parse(jsonStr);
+    const json = JSON.parse(jsonStr)
     if (json["schemaType"] === SCHEMA_TYPE) {
-        const p = json as PlayerCharacter;
-        maintainBackwardsCompat(p);
-        return p;
+        const p = json as PlayerCharacter
+        maintainBackwardsCompat(p)
+        return p
     } else {
-        return importFromShadowDarklingsJson(json);
+        return importFromShadowDarklingsJson(json)
     }
 }
 
 export function maintainBackwardsCompat(pc: PlayerCharacter) {
     if (!pc["customGear"]) {
-        pc["customGear"] = [];
+        pc["customGear"] = []
     }
     if (!pc["customBonuses"]) {
-        pc["customBonuses"] = [];
+        pc["customBonuses"] = []
     }
     if (!pc["customTalents"]) {
-        pc["customTalents"] = [];
+        pc["customTalents"] = []
     }
     if (!pc["customLanguages"]) {
-        pc["customLanguages"] = [];
+        pc["customLanguages"] = []
     }
 
-    const cKitIdx = pc.gear?.findIndex((g) => g.name === "Crawling Kit");
+    const cKitIdx = pc.gear?.findIndex((g) => g.name === "Crawling Kit")
     if (cKitIdx && cKitIdx > -1) {
-        pc.gear.splice(cKitIdx, 1);
+        pc.gear.splice(cKitIdx, 1)
     }
 
     if (pc.customGear) {
         pc.customGear.forEach((g) => {
-            g.editable = true;
-        });
+            g.editable = true
+        })
     }
 
     if (pc.customSpells) {
         pc.customSpells.forEach((s) => {
-            s.editable = true;
-        });
+            s.editable = true
+        })
     }
 
     if (pc.bonuses) {
         pc.bonuses.forEach((b) => {
-            b.editable = true;
-        });
+            b.editable = true
+        })
     }
 
     // eslint-disable-next-line
     // @ts-ignore
-    if (pc.class === "Level 0") pc.class = "";
+    if (pc.class === "Level 0") pc.class = ""
     if (CLASSES.includes(pc.class) && pc.hasCustomClass) pc.hasCustomClass = false // https://192.168.178.24:5173/manifest.json
 
     // ensure player has proper bonuses every time we load json
-    ensureAncestryBonuses(pc);
-    ensureClassBonuses(pc);
-    ensureClassGear(pc);
-    ensureClassSpells(pc);
-    ensureLanguages(pc);
+    ensureAncestryBonuses(pc)
+    ensureClassBonuses(pc)
+    ensureClassGear(pc)
+    ensureClassSpells(pc)
+    ensureLanguages(pc)
 
-    ensureProperWeaponNamesInBonuses(pc);
+    ensureProperWeaponNamesInBonuses(pc)
 }
 
 // eslint-disable-next-line
 function importFromShadowDarklingsJson(json: any): PlayerCharacter {
-    const spells: SpellInfo[] = getSpellsFromJSON(json);
+    const spells: SpellInfo[] = getSpellsFromJSON(json)
 
-    const gear: Gear[] = [];
+    const gear: Gear[] = []
 
     for (const g of json.gear) {
-        const foundGear = findAny(g.name);
-        if (!foundGear) continue;
-        gear.push({name: foundGear.name, quantity: g.quantity});
+        const foundGear = findAny(g.name)
+        if (!foundGear) continue
+        gear.push({name: foundGear.name, quantity: g.quantity})
     }
 
     const languages = json.languages
         .split(",")
         .map((s: string) => s.trim())
-        .filter((l: string) => l !== "None");
+        .filter((l: string) => l !== "None")
 
     const bonuses: Bonus[] = json.bonuses
         .filter(
@@ -105,9 +105,9 @@ function importFromShadowDarklingsJson(json: any): PlayerCharacter {
                 !b.bonusTo.includes("Languages"),
         )
         .map(mapSDBonusToBonus)
-        .flat();
+        .flat()
 
-    const theClass = json.class === "Level 0" ? "" : json.class;
+    const theClass = json.class === "Level 0" ? "" : json.class
 
     const pc: PlayerCharacter = {
         name: json.name,
@@ -139,23 +139,23 @@ function importFromShadowDarklingsJson(json: any): PlayerCharacter {
         xp: 0,
         spells,
         customSpells: [],
-    };
+    }
 
-    ensureClassBonuses(pc);
-    ensureClassGear(pc);
-    ensureLanguages(pc);
-    ensureAncestryBonuses(pc);
+    ensureClassBonuses(pc)
+    ensureClassGear(pc)
+    ensureLanguages(pc)
+    ensureAncestryBonuses(pc)
 
-    ensureProperWeaponNamesInBonuses(pc);
+    ensureProperWeaponNamesInBonuses(pc)
 
-    return pc;
+    return pc
 }
 
 function mapSDBonusToBonus(sdb: SDBonus): Bonus | Bonus[] {
     const commonBonusData = {
         name: sdb.name,
         bonusSource: sdb.sourceType,
-    };
+    }
 
     if (sdb.bonusName === "Plus1ToCastingSpells") {
         return {
@@ -164,7 +164,7 @@ function mapSDBonusToBonus(sdb: SDBonus): Bonus | Bonus[] {
             bonusAmount: 1,
             type: "modifyAmt",
             ...commonBonusData,
-        };
+        }
     } else if (sdb.name === "WeaponMastery") {
         return [
             {
@@ -185,7 +185,7 @@ function mapSDBonusToBonus(sdb: SDBonus): Bonus | Bonus[] {
                 metadata: {type: "weapon", weapon: sdb.bonusTo},
                 ...commonBonusData,
             },
-        ];
+        ]
     } else if (sdb.name === "Grit") {
         return {
             bonusTo: "statRoll",
@@ -193,7 +193,7 @@ function mapSDBonusToBonus(sdb: SDBonus): Bonus | Bonus[] {
             desc: `Advantage on ${sdb.bonusName} checks`,
             metadata: {type: "stat", stat: "STR"},
             ...commonBonusData,
-        };
+        }
     } else if (sdb.name === "ArmorMaster") {
         return {
             bonusTo: "armorClass",
@@ -202,7 +202,7 @@ function mapSDBonusToBonus(sdb: SDBonus): Bonus | Bonus[] {
             metadata: {type: "armor", armor: sdb.bonusTo},
             desc: `+1 AC from ${sdb.bonusTo} armor`,
             ...commonBonusData,
-        };
+        }
     } else if (sdb.name === "BackStabIncrease") {
         return {
             bonusTo: "backstabDice",
@@ -210,14 +210,14 @@ function mapSDBonusToBonus(sdb: SDBonus): Bonus | Bonus[] {
             bonusAmount: 1,
             desc: "Your backstab deals +1 dice of damage",
             ...commonBonusData,
-        };
+        }
     } else if (sdb.name === "AdvOnInitiative") {
         return {
             bonusTo: "initiativeRoll",
             type: "advantage",
             desc: "Advantage on Initiative rolls",
             ...commonBonusData,
-        };
+        }
     } else if (sdb.name === "Plus1ToHit") {
         return [
             {
@@ -236,7 +236,7 @@ function mapSDBonusToBonus(sdb: SDBonus): Bonus | Bonus[] {
                 metadata: {type: "weaponType", weaponType: "Ranged"},
                 ...commonBonusData,
             },
-        ];
+        ]
     } else if (sdb.name === "AdvOnCastOneSpell") {
         return {
             bonusTo: "spellcastRoll",
@@ -247,9 +247,9 @@ function mapSDBonusToBonus(sdb: SDBonus): Bonus | Bonus[] {
                 spell: sdb.bonusName,
             },
             ...commonBonusData,
-        };
+        }
     } else if (sdb.name === "SetWeaponTypeDamage") {
-        const [weapon] = sdb.bonusTo.split(":");
+        const [weapon] = sdb.bonusTo.split(":")
         return {
             type: "diceType",
             bonusTo: "damageRoll",
@@ -260,11 +260,11 @@ function mapSDBonusToBonus(sdb: SDBonus): Bonus | Bonus[] {
                 weapon,
             },
             ...commonBonusData,
-        };
+        }
     } else if (sdb.name === "Plus1ToHitAndDamage") {
         const weaponType: WeaponType = sdb.bonusTo.toLowerCase().includes("ranged")
             ? "Ranged"
-            : "Melee";
+            : "Melee"
         return [
             {
                 bonusTo: "attackRoll",
@@ -282,16 +282,16 @@ function mapSDBonusToBonus(sdb: SDBonus): Bonus | Bonus[] {
                 metadata: {type: "weaponType", weaponType},
                 ...commonBonusData,
             },
-        ];
+        ]
     } else if (sdb.name === "ReduceHerbalismDC") {
         return {
             type: "generic",
             desc: "Reduce the difficulty of your herbalism checks by one step",
             ...commonBonusData,
-        };
+        }
     }
 
-    return [];
+    return []
 }
 
 function ensureProperWeaponNamesInBonuses(pc: PlayerCharacter) {
@@ -300,26 +300,26 @@ function ensureProperWeaponNamesInBonuses(pc: PlayerCharacter) {
         .filter((m) => Boolean(m) && m.type === "weapon")
         .forEach((m: WeaponBonusMetaData) => {
             if (m.weapon === "Bastard sword") {
-                m.weapon = "Bastard Sword";
+                m.weapon = "Bastard Sword"
             }
-        });
+        })
 }
 
 // eslint-disable-next-line
 function getSpellsFromJSON(json: any): SpellInfo[] {
-    const spells: SpellInfo[] = [];
+    const spells: SpellInfo[] = []
     // eslint-disable-next-line
     json.bonuses.forEach(async (b: any) => {
         if (b.name.includes("Spell:") || b.name === "LearnExtraSpell") {
-            const s = findSpell(b.bonusName);
+            const s = findSpell(b.bonusName)
             if (s) {
-                spells.push(s);
+                spells.push(s)
             }
         }
-    });
-    return spells;
+    })
+    return spells
 }
 
 export function exportToJson(pc: PlayerCharacter): string {
-    return JSON.stringify(pc);
+    return JSON.stringify(pc)
 }

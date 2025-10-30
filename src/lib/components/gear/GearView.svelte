@@ -1,61 +1,61 @@
 <script lang="ts">
-    import CustomGearButton from "./CustomGearButton.svelte";
-    import GearButton from "./GearButton.svelte";
-    import {findAny} from "../../compendium";
-    import {calculateGearSlotsForPlayer, pc, setMoney} from "../../model/PlayerCharacter";
-    import {alphabetically} from "../../utils";
-    import type {Gear} from "../../types";
-    import {WEAPONS} from "../../compendium/weaponCompendium";
-    import {ARMORS} from "../../compendium/armorCompendium";
-    import {GEAR} from "../../compendium/basicGearCompendium";
+    import CustomGearButton from "./CustomGearButton.svelte"
+    import GearButton from "./GearButton.svelte"
+    import {findAny} from "../../compendium"
+    import {calculateGearSlotsForPlayer, pc, setMoney} from "../../model/PlayerCharacter"
+    import {alphabetically} from "../../utils"
+    import type {Gear} from "../../types"
+    import {WEAPONS} from "../../compendium/weaponCompendium"
+    import {ARMORS} from "../../compendium/armorCompendium"
+    import {GEAR} from "../../compendium/basicGearCompendium"
 
-    const COIN_NAME = "Extra Coins";
+    const COIN_NAME = "Extra Coins"
     $: costlyGear = $pc.gear
         .filter((g) => findAny(g.name)?.slots.freeCarry === 0)
-        .sort((a, b) => alphabetically(a.name, b.name));
+        .sort((a, b) => alphabetically(a.name, b.name))
 
-    $: totalCoins = $pc.gold + $pc.silver + $pc.copper;
+    $: totalCoins = $pc.gold + $pc.silver + $pc.copper
 
     $: if (costlyGear && totalCoins > 100) {
         costlyGear.push({
             name: COIN_NAME,
             quantity: totalCoins - 100,
-        });
+        })
     }
 
     $: freeGear = $pc.gear
         .filter((g) => findAny(g.name)?.slots.freeCarry)
-        .sort((a, b) => alphabetically(a.name, b.name));
+        .sort((a, b) => alphabetically(a.name, b.name))
 
-    $: totalSlots = calculateGearSlotsForPlayer($pc);
+    $: totalSlots = calculateGearSlotsForPlayer($pc)
 
     $: freeSlots =
         totalSlots -
         costlyGear.reduce((acc, curr) => {
-            return acc + slotsForGear(curr);
-        }, 0);
+            return acc + slotsForGear(curr)
+        }, 0)
 
     function slotsForGear(g: Gear): number {
         if (g.name === COIN_NAME) {
-            return Math.ceil(g.quantity / 100);
+            return Math.ceil(g.quantity / 100)
         }
 
-        const foundGear = findAny(g.name);
+        const foundGear = findAny(g.name)
         return (
             Math.ceil(g.quantity / foundGear.slots.perSlot) *
             foundGear.slots.slotsUsed
-        );
+        )
     }
 
     function deleteGear(name: string) {
-        const idx = $pc.gear.findIndex((g) => g.name === name);
-        const g = $pc.gear[idx];
+        const idx = $pc.gear.findIndex((g) => g.name === name)
+        const g = $pc.gear[idx]
         if (g.quantity > 1) {
-            g.quantity -= 1;
+            g.quantity -= 1
         } else {
-            $pc.gear.splice(idx, 1);
+            $pc.gear.splice(idx, 1)
         }
-        $pc = $pc;
+        $pc = $pc
     }
 
     function sellGear(name: string) {
@@ -66,23 +66,23 @@
                 g = WEAPONS.find((i) => i.name === name)
             }
         }
-        let pcTotal = $pc.copper + $pc.silver * 10 + $pc.gold * 100;
-        let costTotal = g.cost.cp + g.cost.sp * 10 + g.cost.gp * 100;
-        pcTotal += costTotal;
-        setMoney($pc, pcTotal);
+        let pcTotal = $pc.copper + $pc.silver * 10 + $pc.gold * 100
+        let costTotal = g.cost.cp + g.cost.sp * 10 + g.cost.gp * 100
+        pcTotal += costTotal
+        setMoney($pc, pcTotal)
         deleteGear(g.name)
     }
 
     function toggleEquipped(g: Gear) {
-        g.equipped = !g.equipped;
-        $pc = $pc;
+        g.equipped = !g.equipped
+        $pc = $pc
     }
 
     function canInteractWithGear(_gear: Gear): boolean {
-        return true;
+        return true
         // as nice as this is, it is ultimately limiting to the player's creativity
-        // if (gear.equipped) return true;
-        // return gear.equipped || canPlayerEquipGear($pc, gear);
+        // if (gear.equipped) return true
+        // return gear.equipped || canPlayerEquipGear($pc, gear)
     }
 </script>
 
@@ -128,7 +128,7 @@
 
 <div
         class="overflow-scroll flex flex-col gap-1 p-2"
-        style="box-shadow: inset 0 0 5px #000;"
+        style="box-shadow: inset 0 0 5px #000"
 >
     <ul>
         {#each costlyGear as g, i}

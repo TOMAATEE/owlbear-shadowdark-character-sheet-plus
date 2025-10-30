@@ -2,18 +2,18 @@
     import {
         calculateArmorClassForPlayer,
         PlayerCharacterStore as pc,
-    } from "../model/PlayerCharacter";
+    } from "../model/PlayerCharacter"
 
-    $: ac = calculateArmorClassForPlayer($pc);
+    $: ac = calculateArmorClassForPlayer($pc)
 
     function incrAC() {
-        $pc.armorClass += 1;
-        $pc = $pc;
+        $pc.armorClass += 1
+        $pc = $pc
     }
 
     function decrAC() {
-        $pc.armorClass -= 1;
-        $pc = $pc;
+        $pc.armorClass -= 1
+        $pc = $pc
     }
 </script>
 

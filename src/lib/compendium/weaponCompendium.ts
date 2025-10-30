@@ -1,4 +1,4 @@
-import type {WeaponInfo} from "../types";
+import type {WeaponInfo} from "../types"
 
 export const WEAPONS: WeaponInfo[] = [
     {
@@ -397,10 +397,10 @@ export const WEAPONS: WeaponInfo[] = [
             oneHanded: {diceType: "d4", numDice: 1},
         },
     },
-];
+]
 
-const WEAPON_COMPENDIUM: { [name: string]: WeaponInfo } = {};
+const WEAPON_COMPENDIUM: { [name: string]: WeaponInfo } = {}
 for (const w of WEAPONS) {
-    WEAPON_COMPENDIUM[w.name.toLowerCase()] = w;
+    WEAPON_COMPENDIUM[w.name.toLowerCase()] = w
 }
-export default WEAPON_COMPENDIUM;
+export default WEAPON_COMPENDIUM

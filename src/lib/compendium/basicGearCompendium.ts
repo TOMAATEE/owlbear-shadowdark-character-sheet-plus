@@ -1,4 +1,4 @@
-import type {GearInfo} from "../types";
+import type {GearInfo} from "../types"
 
 export const GEAR: GearInfo[] = [
     {
@@ -162,11 +162,11 @@ export const GEAR: GearInfo[] = [
         type: "Basic",
         slots: {perSlot: 1, slotsUsed: 0, freeCarry: 1},
     },
-];
+]
 
-const GEAR_COMPENDIUM: { [name: string]: GearInfo } = {};
+const GEAR_COMPENDIUM: { [name: string]: GearInfo } = {}
 for (const g of GEAR) {
-    GEAR_COMPENDIUM[g.name.toLowerCase()] = g;
+    GEAR_COMPENDIUM[g.name.toLowerCase()] = g
 }
 
-export default GEAR_COMPENDIUM;
+export default GEAR_COMPENDIUM

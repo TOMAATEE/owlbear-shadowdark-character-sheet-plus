@@ -1,14 +1,14 @@
-import {writable} from "svelte/store";
-import {findAny} from "../compendium";
-import {DICE_TYPES, TITLE_MAP} from "../constants";
+import {writable} from "svelte/store"
+import {findAny} from "../compendium"
+import {DICE_TYPES, TITLE_MAP} from "../constants"
 import {
     ensureAncestryBonuses,
     ensureClassBonuses,
     ensureClassGear,
     ensureClassSpells,
     ensureLanguages, setMishapTable,
-} from "../services/AncestryClassEnsurer";
-import {createUndoRedoStore} from "../services/PlayerHistoryTracker";
+} from "../services/AncestryClassEnsurer"
+import {createUndoRedoStore} from "../services/PlayerHistoryTracker"
 import type {
     AdvantageBonus,
     Ancestry,
@@ -28,15 +28,15 @@ import type {
     Stat,
     Title,
     WeaponInfo,
-} from "../types";
-import {alphabetically, clamp, compareDiceType, toInfo} from "../utils";
-import {slotsForGear} from "./Gear";
-import SPELL_COMPENDIUM from "../compendium/spellCompendium";
+} from "../types"
+import {alphabetically, clamp, compareDiceType, toInfo} from "../utils"
+import {slotsForGear} from "./Gear"
+import SPELL_COMPENDIUM from "../compendium/spellCompendium"
 
 export const PlayerCharacterStore = createUndoRedoStore(
     writable<PlayerCharacter>(defaultPC()),
-);
-export const pc = PlayerCharacterStore;
+)
+export const pc = PlayerCharacterStore
 
 export function defaultPC(): PlayerCharacter {
     return {
@@ -67,70 +67,70 @@ export function defaultPC(): PlayerCharacter {
         spells: [],
         customSpells: [],
         hitPoints: 1,
-    };
+    }
 }
 
 export function calculateModifierForPlayerStat(pc: PlayerCharacter, stat: Stat): number {
-    if (stat == "None") return 0;
-    let finalModifier = 0;
+    if (stat == "None") return 0
+    let finalModifier = 0
     const baseModifier = clamp(
         Math.floor((calculateStatValueForPlayerStat(pc, stat) - 10) / 2),
         -4,
         4,
-    );
-    finalModifier += baseModifier;
-    return finalModifier;
+    )
+    finalModifier += baseModifier
+    return finalModifier
 }
 
 export function setClassForPlayer(pc: PlayerCharacter, c: Class) {
-    pc.class = c;
-    ensureClassBonuses(pc);
-    ensureClassSpells(pc);
-    ensureClassGear(pc);
-    ensureLanguages(pc);
-    setMishapTable(pc);
+    pc.class = c
+    ensureClassBonuses(pc)
+    ensureClassSpells(pc)
+    ensureClassGear(pc)
+    ensureLanguages(pc)
+    setMishapTable(pc)
 }
 
 export function setAncestryForPlayer(pc: PlayerCharacter, a: Ancestry | "") {
-    pc.ancestry = a;
-    ensureAncestryBonuses(pc);
-    ensureLanguages(pc);
+    pc.ancestry = a
+    ensureAncestryBonuses(pc)
+    ensureLanguages(pc)
 }
 
 export function setBackgroundForPlayer(pc: PlayerCharacter, b: Background | "") {
-    pc.background = b;
+    pc.background = b
 }
 
 export function calculateStatValueForPlayerStat(pc: PlayerCharacter, stat: Stat): number {
     if (stat === "LVL") return pc.level + 10
-    const baseStat = pc.stats[stat];
-    return baseStat + calculateBonusForPlayerStat(pc, stat);
+    const baseStat = pc.stats[stat]
+    return baseStat + calculateBonusForPlayerStat(pc, stat)
 }
 
 function doesBonusApplyToWeapon(b: Bonus, w: WeaponInfo): boolean {
-    const appliesToAllWeapons = !b.metadata;
+    const appliesToAllWeapons = !b.metadata
 
     const appliesToWeaponType =
         b.metadata?.type === "weaponType" &&
-        w.weaponType.includes(b.metadata.weaponType);
+        w.weaponType.includes(b.metadata.weaponType)
 
     const appliesToWeapon =
-        b.metadata?.type === "weapon" && b.metadata.weapon === w.name;
+        b.metadata?.type === "weapon" && b.metadata.weapon === w.name
 
-    return appliesToAllWeapons || appliesToWeaponType || appliesToWeapon;
+    return appliesToAllWeapons || appliesToWeaponType || appliesToWeapon
 }
 
 function doesBonusApplyToSpell(b: Bonus, s: SpellInfo): boolean {
-    const appliesToAllSpells = !b.metadata;
+    const appliesToAllSpells = !b.metadata
 
     const appliesToSpell =
-        b.metadata?.type === "spell" && b.metadata.spell === s.name;
+        b.metadata?.type === "spell" && b.metadata.spell === s.name
 
-    return appliesToAllSpells || appliesToSpell;
+    return appliesToAllSpells || appliesToSpell
 }
 
 export function calculateDamageDiceTypeForPlayerWeapon(pc: PlayerCharacter, w: WeaponInfo, handedness: "oneHanded" | "twoHanded"): DiceType {
-    let result = w.damage[handedness].diceType;
+    let result = w.damage[handedness].diceType
 
     const diceTypeBonuses = pc.bonuses
         .filter(
@@ -141,14 +141,14 @@ export function calculateDamageDiceTypeForPlayerWeapon(pc: PlayerCharacter, w: W
         )
         .map((b: DiceTypeBonus) => b.diceType)
         .sort(compareDiceType)
-        .reverse();
+        .reverse()
 
     if (diceTypeBonuses[0] && compareDiceType(diceTypeBonuses[0], result) > 0) {
         // this will be the greatest diceType among all bonuses.
-        result = diceTypeBonuses[0];
+        result = diceTypeBonuses[0]
     }
 
-    return result;
+    return result
 }
 
 export function calculateBonusForPlayerStat(pc: PlayerCharacter, stat: Stat): number {
@@ -160,7 +160,7 @@ export function calculateBonusForPlayerStat(pc: PlayerCharacter, stat: Stat): nu
                 b.metadata?.type === "stat" &&
                 b.metadata.stat === stat,
         )
-        .reduce((acc, b: ModifyBonus) => acc + calculateBonusAmount(pc, b), 0);
+        .reduce((acc, b: ModifyBonus) => acc + calculateBonusAmount(pc, b), 0)
 
     const gearBonuses = getAllGearBonuses(pc)
         .filter((b) =>
@@ -169,59 +169,59 @@ export function calculateBonusForPlayerStat(pc: PlayerCharacter, stat: Stat): nu
             b.metadata?.type === "stat" &&
             b.metadata.stat === stat
         )
-        .reduce((acc: number, b: ModifyBonus) => acc + calculateBonusAmount(pc, b), 0);
+        .reduce((acc: number, b: ModifyBonus) => acc + calculateBonusAmount(pc, b), 0)
 
-    return bonuses + gearBonuses;
+    return bonuses + gearBonuses
 }
 
 export function setMoney(pc: PlayerCharacter, total: number) {
-    pc.gold = Math.floor(total / 100);
-    total %= 100;
-    pc.silver = Math.floor(total / 10);
-    pc.copper = total % 10;
+    pc.gold = Math.floor(total / 100)
+    total %= 100
+    pc.silver = Math.floor(total / 10)
+    pc.copper = total % 10
 }
 
 export function calculateArmorClassForPlayer(pc: PlayerCharacter) {
-    let baseAC = pc.armorClass;
-    let modsFromStat = calculateModifierForPlayerStat(pc, "DEX"); // default to DEX
+    let baseAC = pc.armorClass
+    let modsFromStat = calculateModifierForPlayerStat(pc, "DEX") // default to DEX
 
-    let modsFromUnrestrictedBonuses = 0;
+    let modsFromUnrestrictedBonuses = 0
     for (const b of pc.bonuses) {
         if (b.type === "modifyAmt" && b.bonusTo === "armorClass" && !b.metadata) {
-            modsFromUnrestrictedBonuses += calculateBonusAmount(pc, b);
+            modsFromUnrestrictedBonuses += calculateBonusAmount(pc, b)
         }
     }
 
-    let modsFromGearBonuses = 0;
+    let modsFromGearBonuses = 0
     for (const b of getAllGearBonuses(pc)) {
         if (b.type === "modifyAmt" && b.bonusTo === "armorClass") {
-            modsFromGearBonuses += calculateBonusAmount(pc, b);
+            modsFromGearBonuses += calculateBonusAmount(pc, b)
         }
     }
 
-    let modsFromShields = 0;
+    let modsFromShields = 0
     const shields = pc.gear
         .filter((g) => g.equipped)
         .map(toInfo<ArmorInfo>)
-        .filter((g) => g.type === "Armor" && g.properties?.includes("OneHanded"));
+        .filter((g) => g.type === "Armor" && g.properties?.includes("OneHanded"))
 
     for (const s of shields) {
-        modsFromShields += s.ac.modifier;
+        modsFromShields += s.ac.modifier
     }
 
     const armor = pc.gear
         .filter((g) => g.equipped)
         .map(toInfo<ArmorInfo>)
-        .filter((g) => g.type === "Armor" && !g.properties?.includes("OneHanded"));
+        .filter((g) => g.type === "Armor" && !g.properties?.includes("OneHanded"))
 
-    let modsFromArmor = 0;
-    let shouldAddStat = true;
+    let modsFromArmor = 0
+    let shouldAddStat = true
     for (const a of armor) {
         if (a.ac.stat && a.ac.stat !== "DEX") {
-            modsFromStat = calculateModifierForPlayerStat(pc, a.ac.stat);
+            modsFromStat = calculateModifierForPlayerStat(pc, a.ac.stat)
         }
 
-        modsFromArmor += a.ac.modifier;
+        modsFromArmor += a.ac.modifier
 
         modsFromArmor += pc.bonuses
             .filter(
@@ -230,11 +230,11 @@ export function calculateArmorClassForPlayer(pc: PlayerCharacter) {
                     b.metadata?.type === "armor" &&
                     b.metadata.armor === a.name,
             )
-            .reduce((acc, b: ModifyBonus) => acc + b.bonusAmount, 0);
+            .reduce((acc, b: ModifyBonus) => acc + b.bonusAmount, 0)
 
         if (a.ac.base > 0) {
-            shouldAddStat = Boolean(a.ac.stat);
-            baseAC = Math.max(a.ac.base, baseAC);
+            shouldAddStat = Boolean(a.ac.stat)
+            baseAC = Math.max(a.ac.base, baseAC)
         }
     }
 
@@ -245,15 +245,15 @@ export function calculateArmorClassForPlayer(pc: PlayerCharacter) {
         modsFromShields +
         modsFromArmor +
         (shouldAddStat ? modsFromStat : 0)
-    );
+    )
 }
 
 export function calculateTitleForPlayer(pc: PlayerCharacter): Title | undefined {
-    if (pc.level === 0) return undefined;
+    if (pc.level === 0) return undefined
     try {
-        return TITLE_MAP[pc.class][pc.alignment][Math.max(0, Math.floor((pc.level - 1) / 2))];
+        return TITLE_MAP[pc.class][pc.alignment][Math.max(0, Math.floor((pc.level - 1) / 2))]
     } catch {
-        return undefined;
+        return undefined
     }
 }
 
@@ -262,7 +262,7 @@ export function calculateSpellDiceAmount(pc: PlayerCharacter, spell: SpellInfo) 
         (b) =>
             b.type === "diceAmount" &&
             b.metadata.type === "spell" &&
-            b.metadata.spell === spell.name) as DiceAmountBonus[];
+            b.metadata.spell === spell.name) as DiceAmountBonus[]
 
     let amount = spell.roll?.numDice ?? 1
 
@@ -273,51 +273,51 @@ export function calculateSpellDiceAmount(pc: PlayerCharacter, spell: SpellInfo) 
 }
 
 export function calculateSpellCastingModifierForPlayer(pc: PlayerCharacter, spell: SpellInfo): number {
-    let result = 0;
-    let stat = spell.stat;
+    let result = 0
+    let stat = spell.stat
     if (!stat) {
         switch (pc.class) {
             case "Priest":
             case "Seer":
                 stat = "WIS"
-                break;
+                break
             case "Wizard":
                 stat = "INT"
-                break;
+                break
             case "Bard":
             case "Knight of St. Ydris":
             case "Witch":
                 stat = "CHA"
-                break;
+                break
             default:
-                return 0;
+                return 0
         }
     }
-    const baseModifier = calculateModifierForPlayerStat(pc, stat);
-    result += baseModifier;
+    const baseModifier = calculateModifierForPlayerStat(pc, stat)
+    result += baseModifier
     if (spell.tier === 0) return result
 
     const bonuses = pc.bonuses
         .filter((b) => b.type === "modifyAmt" && b.bonusTo === "spellcastRoll")
         .reduce((acc: number, b: ModifyBonus) => {
             if (doesBonusApplyToSpell(b, spell)) {
-                acc += calculateBonusAmount(pc, b);
+                acc += calculateBonusAmount(pc, b)
             }
-            return acc;
-        }, 0);
-    result += bonuses;
+            return acc
+        }, 0)
+    result += bonuses
 
     const gearBonuses = getAllGearBonuses(pc)
         .filter((b) => b.type === "modifyAmt" && b.bonusTo === "spellcastRoll")
         .reduce((acc: number, b: ModifyBonus) => {
             if (doesBonusApplyToSpell(b, spell)) {
-                acc += calculateBonusAmount(pc, b);
+                acc += calculateBonusAmount(pc, b)
             }
-            return acc;
-        }, 0);
-    result += gearBonuses;
+            return acc
+        }, 0)
+    result += gearBonuses
 
-    return result;
+    return result
 }
 
 export function calculateDamageBonusForPlayerWeapon(pc: PlayerCharacter, w: WeaponInfo): number {
@@ -325,55 +325,55 @@ export function calculateDamageBonusForPlayerWeapon(pc: PlayerCharacter, w: Weap
         .filter((b) => b.type === "modifyAmt" && b.bonusTo === "damageRoll")
         .reduce((acc: number, b: ModifyBonus) => {
             if (doesBonusApplyToWeapon(b, w)) {
-                acc += calculateBonusAmount(pc, b);
+                acc += calculateBonusAmount(pc, b)
             }
-            return acc;
-        }, 0);
+            return acc
+        }, 0)
 
     const gearBonuses = getAllGearBonuses(pc)
         .filter((b) => b.type === "modifyAmt" && b.bonusTo === "damageRoll")
         .reduce((acc: number, b: ModifyBonus) => {
             if (doesBonusApplyToWeapon(b, w)) {
-                acc += calculateBonusAmount(pc, b);
+                acc += calculateBonusAmount(pc, b)
             }
-            return acc;
-        }, 0);
+            return acc
+        }, 0)
 
-    return bonuses + gearBonuses;
+    return bonuses + gearBonuses
 }
 
 export function calculateAttackBonusForPlayerWeapon(pc: PlayerCharacter, w: WeaponInfo): number {
-    let result = 0;
+    let result = 0
     // melee vs ranged
-    const strMod = calculateModifierForPlayerStat(pc, "STR");
-    const dexMod = calculateModifierForPlayerStat(pc, "DEX");
+    const strMod = calculateModifierForPlayerStat(pc, "STR")
+    const dexMod = calculateModifierForPlayerStat(pc, "DEX")
     if (w.properties?.includes("Finesse") || w.weaponType === "MeleeRanged") {
-        result += Math.max(strMod, dexMod);
+        result += Math.max(strMod, dexMod)
     } else {
-        result += w.weaponType === "Melee" ? strMod : dexMod;
+        result += w.weaponType === "Melee" ? strMod : dexMod
     }
 
     const bonuses = pc.bonuses
         .filter((b) => b.type === "modifyAmt" && b.bonusTo === "attackRoll")
         .reduce((acc: number, b: ModifyBonus) => {
             if (doesBonusApplyToWeapon(b, w)) {
-                acc += calculateBonusAmount(pc, b);
+                acc += calculateBonusAmount(pc, b)
             }
-            return acc;
-        }, 0);
-    result += bonuses;
+            return acc
+        }, 0)
+    result += bonuses
 
     const gearBonuses = getAllGearBonuses(pc)
         .filter((b) => b.type === "modifyAmt" && b.bonusTo === "attackRoll")
         .reduce((acc: number, b: ModifyBonus) => {
             if (doesBonusApplyToWeapon(b, w)) {
-                acc += calculateBonusAmount(pc, b);
+                acc += calculateBonusAmount(pc, b)
             }
-            return acc;
-        }, 0);
-    result += gearBonuses;
+            return acc
+        }, 0)
+    result += gearBonuses
 
-    return result;
+    return result
 }
 
 export function getAllGearBonuses(pc: PlayerCharacter): Bonus[] {
@@ -387,7 +387,7 @@ export function getAllGearBonuses(pc: PlayerCharacter): Bonus[] {
 }
 
 export function calculateGearSlotsForPlayer(pc: PlayerCharacter) {
-    const base = Math.max(10, pc.stats.STR);
+    const base = Math.max(10, pc.stats.STR)
 
     const bonuses = pc.bonuses.reduce((acc: number, b: Bonus) => {
         if (b.type === "modifyAmt" && b.bonusTo === "gearSlots") {
@@ -397,59 +397,59 @@ export function calculateGearSlotsForPlayer(pc: PlayerCharacter) {
                 acc += calculateBonusAmount(pc, b)
             }
         }
-        return acc;
-    }, 0);
+        return acc
+    }, 0)
 
     const gearBonuses = getAllGearBonuses(pc)
         .filter((b) => b.type === "modifyAmt" && b.bonusTo === "gearSlots")
         .reduce((acc: number, b: ModifyBonus) => acc + calculateBonusAmount(pc, b), 0)
 
-    return base + bonuses + gearBonuses;
+    return base + bonuses + gearBonuses
 }
 
 export function calculateFreeSlotsForPlayer(pc: PlayerCharacter): number {
     const costlyGear = pc.gear
         .filter((g) => findAny(g.name)?.slots?.freeCarry === 0)
-        .sort((a, b) => alphabetically(a.name, b.name));
+        .sort((a, b) => alphabetically(a.name, b.name))
 
-    const totalSlots = calculateGearSlotsForPlayer(pc);
+    const totalSlots = calculateGearSlotsForPlayer(pc)
 
     return totalSlots - costlyGear.reduce((acc, curr) => {
-        return acc + slotsForGear(curr);
-    }, 0);
+        return acc + slotsForGear(curr)
+    }, 0)
 }
 
 export function levelUpPlayer(pc: PlayerCharacter) {
-    const xpCap = pc.level === 0 ? 10 : pc.level * 10;
+    const xpCap = pc.level === 0 ? 10 : pc.level * 10
 
-    if (pc.xp < xpCap) return;
-    if (pc.level == 10) return;
+    if (pc.xp < xpCap) return
+    if (pc.level == 10) return
 
-    pc.level += 1;
-    pc.xp -= xpCap;
+    pc.level += 1
+    pc.xp -= xpCap
 }
 
 export function playerHasSpell(pc: PlayerCharacter, spell: SpellInfo) {
-    return pc.spells.findIndex((s) => s.name === spell.name) > -1;
+    return pc.spells.findIndex((s) => s.name === spell.name) > -1
 }
 
 export function playerCanLearnSpell(pc: PlayerCharacter, spell: SpellInfo) {
-    let canAlsoLearn = "###";
-    if (pc.class === "Knight of St. Ydris") canAlsoLearn = "Witch";
+    let canAlsoLearn = "###"
+    if (pc.class === "Knight of St. Ydris") canAlsoLearn = "Witch"
     return (
         pc.hasCustomClass ||
         spell.class.toLowerCase().includes(pc.class.toLowerCase()) ||
         spell.class.toLowerCase().includes(canAlsoLearn.toLowerCase())
-    );
+    )
 }
 
 export function learnSpellForPlayer(pc: PlayerCharacter, spell: SpellInfo) {
-    if (playerHasSpell(pc, spell)) return;
-    pc.spells.push(SPELL_COMPENDIUM[spell.name.toLowerCase()]);
+    if (playerHasSpell(pc, spell)) return
+    pc.spells.push(SPELL_COMPENDIUM[spell.name.toLowerCase()])
 }
 
 export function unlearnSpellForPlayer(pc: PlayerCharacter, spell: SpellInfo) {
-    pc.spells = pc.spells.filter((s) => s.name !== spell.name);
+    pc.spells = pc.spells.filter((s) => s.name !== spell.name)
 }
 
 export function addBonusToPlayer(pc: PlayerCharacter, b: Bonus, customAmount: number = null): PlayerCharacter {
@@ -484,19 +484,19 @@ export function deleteBonusForList(bonuses: Bonus[], bonus: Bonus): Bonus[] {
 }
 
 export function hasAdvantageOn(pc: PlayerCharacter, s: string) {
-    const bonuses = pc.bonuses.filter((b) => b.type === "advantage");
-    if (bonuses.length === 0) return false;
-    return bonuses.filter((b: AdvantageBonus) => b.bonusTo === s).length >= 1;
+    const bonuses = pc.bonuses.filter((b) => b.type === "advantage")
+    if (bonuses.length === 0) return false
+    return bonuses.filter((b: AdvantageBonus) => b.bonusTo === s).length >= 1
 }
 
 export function hasDisadvantageOn(pc: PlayerCharacter, s: string) {
-    const bonuses = pc.bonuses.filter((b) => b.type === "disadvantage");
-    if (bonuses.length === 0) return false;
-    return bonuses.filter((b: DisadvantageBonus) => b.bonusTo === s).length >= 1;
+    const bonuses = pc.bonuses.filter((b) => b.type === "disadvantage")
+    if (bonuses.length === 0) return false
+    return bonuses.filter((b: DisadvantageBonus) => b.bonusTo === s).length >= 1
 }
 
 export function calculateTotalHitPointsForPlayer(pc: PlayerCharacter): number {
-    const baseMaxHP = pc.maxHitPoints;
+    const baseMaxHP = pc.maxHitPoints
     const bonuses = pc.bonuses
         .filter((b) => b.type === "modifyAmt" && b.bonusTo === "hp")
         .reduce((acc, b: ModifyBonus) => acc + calculateBonusAmount(pc, b), 0)
@@ -505,7 +505,7 @@ export function calculateTotalHitPointsForPlayer(pc: PlayerCharacter): number {
         .filter((b) => b.type === "modifyAmt" && b.bonusTo === "hp")
         .reduce((acc: number, b: ModifyBonus) => acc + calculateBonusAmount(pc, b), 0)
 
-    return baseMaxHP + bonuses + gearBonuses;
+    return baseMaxHP + bonuses + gearBonuses
 }
 
 export function calculateModifierForHpRoll(pc: PlayerCharacter): number {
@@ -517,24 +517,24 @@ export function calculateModifierForHpRoll(pc: PlayerCharacter): number {
         .filter((b) => b.type === "modifyAmt" && b.bonusTo === "hpRoll")
         .reduce((acc: number, b: ModifyBonus) => acc + calculateBonusAmount(pc, b), 0)
 
-    return bonuses + gearBonuses;
+    return bonuses + gearBonuses
 }
 
 export function calculateBonusAmount(pc: PlayerCharacter, b: ModifyBonus): number {
-    let result = b.bonusAmount;
+    let result = b.bonusAmount
 
     if (b.bonusTo !== "stat" && b.metadata?.type === "stat") {
         result = Math.max(result, calculateModifierForPlayerStat(pc, b.metadata.stat))
     }
     const levelRateBonus = Math.floor(pc.level * (b.bonusIncreaseRatePerLevel ?? 0))
-    return result + levelRateBonus;
+    return result + levelRateBonus
 }
 
 export function calculateSpellMax(pc: PlayerCharacter, spell: SpellInfo) {
-    if (!spell.uses) return;
+    if (!spell.uses) return
     let base = spell.uses.max
     if (spell.uses.metadata && spell.uses.metadata.type === "max") {
-        base = Math.max(base, calculateModifierForPlayerStat(pc, spell.uses.metadata.stat));
+        base = Math.max(base, calculateModifierForPlayerStat(pc, spell.uses.metadata.stat))
     }
     const bonuses = pc.bonuses
         .filter((b) =>
@@ -542,7 +542,7 @@ export function calculateSpellMax(pc: PlayerCharacter, spell: SpellInfo) {
             b.bonusTo === "spellMax" &&
             doesBonusApplyToSpell(b, spell)
         )
-        .reduce((acc, b: ModifyBonus) => acc + b.bonusAmount, 0);
+        .reduce((acc, b: ModifyBonus) => acc + b.bonusAmount, 0)
 
     const gearBonuses = getAllGearBonuses(pc)
         .filter((b) =>
@@ -555,81 +555,81 @@ export function calculateSpellMax(pc: PlayerCharacter, spell: SpellInfo) {
 }
 
 export function deleteCustomPlayerSpell(pc: PlayerCharacter, spell: SpellInfo) {
-    pc.spells = pc.spells.filter((s) => s.name !== spell.name);
+    pc.spells = pc.spells.filter((s) => s.name !== spell.name)
     pc.bonuses = pc.bonuses.filter((b) =>
         !(b.metadata?.type === "spell" && b.metadata.spell === spell.name)
-    );
-    pc.customSpells = pc.customSpells.filter((s) => s.name !== spell.name);
+    )
+    pc.customSpells = pc.customSpells.filter((s) => s.name !== spell.name)
 }
 
 function isArmorShield(g: GearInfo): boolean {
-    return g.type === "Armor" && g.properties?.includes("OneHanded");
+    return g.type === "Armor" && g.properties?.includes("OneHanded")
 }
 
 function isWearableArmor(g: GearInfo): boolean {
-    return g.type === "Armor" && !g.properties?.includes("OneHanded");
+    return g.type === "Armor" && !g.properties?.includes("OneHanded")
 }
 
 export function canPlayerAffordGear(pc: PlayerCharacter, g: GearInfo) {
-    const {gp, sp, cp} = g.cost;
-    const convertedCost = gp * 100 + sp * 10 + cp;
-    const pcConverted = pc.gold * 100 + pc.silver * 10 + pc.copper;
-    return pcConverted >= convertedCost;
+    const {gp, sp, cp} = g.cost
+    const convertedCost = gp * 100 + sp * 10 + cp
+    const pcConverted = pc.gold * 100 + pc.silver * 10 + pc.copper
+    return pcConverted >= convertedCost
 }
 
 export function canPlayerEquipGear(pc: PlayerCharacter, gear: Gear) {
-    if (gear.equipped) return false;
-    const g = findAny(gear.name);
-    if (!g || !g.canBeEquipped) return false;
+    if (gear.equipped) return false
+    const g = findAny(gear.name)
+    if (!g || !g.canBeEquipped) return false
 
     if (isWearableArmor(g)) {
         const equippedArmor = pc.gear
             .filter((a) => a.equipped)
             .map((a) => findAny(a.name))
-            .filter(isWearableArmor);
-        return equippedArmor.length === 0; // must not be wearing armor
+            .filter(isWearableArmor)
+        return equippedArmor.length === 0 // must not be wearing armor
     }
 
-    const freeHands = calculateFreeHands(pc);
+    const freeHands = calculateFreeHands(pc)
 
-    if (freeHands <= 0) return false;
-    if (freeHands == 2) return true;
+    if (freeHands <= 0) return false
+    if (freeHands == 2) return true
 
     // we know the pc has only 1 free hand here
     if (g.type === "Weapon") {
-        const w = g as WeaponInfo;
-        return Boolean(w.damage.oneHanded);
+        const w = g as WeaponInfo
+        return Boolean(w.damage.oneHanded)
     } else if (isArmorShield(g)) {
-        return freeHands >= 1;
+        return freeHands >= 1
     }
 
     // custom equippable gear can always be equipped
-    return true;
+    return true
 }
 
 export function calculateFreeHands(pc: PlayerCharacter): number {
-    let freeHands = 2;
+    let freeHands = 2
 
     const equippedWeapons = pc.gear
         .filter((w) => w.equipped)
         .map((w) => findAny(w.name))
         .filter((w) => w.type === "Weapon")
-        .map((w) => w as WeaponInfo);
+        .map((w) => w as WeaponInfo)
 
     const equippedArmor = pc.gear
         .filter((a) => a.equipped)
         .map((a) => findAny(a.name))
-        .filter((a) => a.type === "Armor");
+        .filter((a) => a.type === "Armor")
 
     // shields and weapons take up hands
     freeHands -= equippedWeapons.reduce((acc, w) => {
-        const isWeaponOneHandable = Boolean(w.damage.oneHanded);
-        return acc + (isWeaponOneHandable ? 1 : 2);
-    }, 0);
+        const isWeaponOneHandable = Boolean(w.damage.oneHanded)
+        return acc + (isWeaponOneHandable ? 1 : 2)
+    }, 0)
 
     freeHands -= equippedArmor.filter(
         (a) => a.properties?.includes("OneHanded"),
-    ).length;
+    ).length
 
-    return freeHands;
+    return freeHands
 }

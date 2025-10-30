@@ -1,25 +1,25 @@
 <script lang="ts">
-    import Modal from "../Modal.svelte";
-    import {pc, unlearnSpellForPlayer} from "../../model/PlayerCharacter";
-    import {rollDice, rollDiceA, sum, toPlusString} from "../../utils";
-    import {MISHAPS} from "../../compendium/mishapCompendium";
-    import {SPELL_TIERS} from "../../constants";
-    import type {Mishap, MishapClass, SpellTier} from "../../types";
+    import Modal from "../Modal.svelte"
+    import {pc, unlearnSpellForPlayer} from "../../model/PlayerCharacter"
+    import {rollDice, rollDiceA, sum, toPlusString} from "../../utils"
+    import {MISHAPS} from "../../compendium/mishapCompendium"
+    import {SPELL_TIERS} from "../../constants"
+    import type {Mishap, MishapClass, SpellTier} from "../../types"
 
-    let showModal = false;
+    let showModal = false
 
     $: if (!showModal) {
-        reset();
+        reset()
     }
 
-    let rolled = false;
-    let highlight = -1;
-    let nat1highlights: number[];
+    let rolled = false
+    let highlight = -1
+    let nat1highlights: number[]
     let total: number
-    let tier: SpellTier = 1;
-    let selectedClass: MishapClass = $pc.mishapTable;
-    let options: Mishap[];
-    let msg: string;
+    let tier: SpellTier = 1
+    let selectedClass: MishapClass = $pc.mishapTable
+    let options: Mishap[]
+    let msg: string
     let affected = []
 
     reloadMishaps()
@@ -27,7 +27,7 @@
     function rollMishap() {
         reset()
         const roll =  rollDice("d12")
-        rolled = true;
+        rolled = true
         highlight = roll - 1
         if (roll === 1) {
             let one = 1
@@ -44,14 +44,14 @@
 
     function setOptionsForHighlight() {
         if (highlight === 0 && nat1highlights) { // nat 1 is always 2 mishaps, highlight all for clarity
-            let highlight1 = options[nat1highlights[0]];
-            let highlight2 = options[nat1highlights[1]];
+            let highlight1 = options[nat1highlights[0]]
+            let highlight2 = options[nat1highlights[1]]
             msg = ""
             msg += getMishapEffect(highlight1)
             msg += (msg.length > 0 ? "\n" : "") + getMishapEffect(highlight2)
             if (!highlight1.roll && !highlight1.target && !highlight2.roll && !highlight2.target) msg = undefined
         } else {
-            const highlightedMishap = options[highlight];
+            const highlightedMishap = options[highlight]
             msg = getMishapEffect(highlightedMishap)
         }
     }
@@ -118,8 +118,8 @@
             let mishap1 = options[highlight]
             updatePerMishap(mishap1)
         }
-        $pc = $pc;
-        showModal = false;
+        $pc = $pc
+        showModal = false
     }
 
     function updatePerMishap(mishap: Mishap) {
@@ -134,8 +134,8 @@
                         affected.forEach(spell => unlearnSpellForPlayer($pc, spell))
                     } else if (mishap.target.type === "disable") {
                         $pc.spells.forEach(s => {
-                            if (affected.includes(s.name)) s.disabled = true;
-                        });
+                            if (affected.includes(s.name)) s.disabled = true
+                        })
                     }
                     break
             }
@@ -147,31 +147,31 @@
     }
 
     function deleteGear(name: string) {
-        const idx = $pc.gear.findIndex((g) => g.name === name);
-        const g = $pc.gear[idx];
+        const idx = $pc.gear.findIndex((g) => g.name === name)
+        const g = $pc.gear[idx]
         if (g) {
             if (g.quantity > 1) {
-                g.quantity -= 1;
+                g.quantity -= 1
             } else {
-                $pc.gear.splice(idx, 1);
+                $pc.gear.splice(idx, 1)
             }
-            $pc = $pc;
+            $pc = $pc
         }
     }
 
     function reloadMishaps() {
-        options = MISHAPS[selectedClass].filter((m) => m.tiers.includes(tier));
+        options = MISHAPS[selectedClass].filter((m) => m.tiers.includes(tier))
         reset()
     }
 
     $: if (highlight > -1) {
-        setOptionsForHighlight();
+        setOptionsForHighlight()
     }
 
     function reset() {
         affected = []
-        highlight = -1;
-        rolled = false;
+        highlight = -1
+        rolled = false
         total = 0
         nat1highlights = undefined
         msg = undefined
@@ -225,6 +225,6 @@
 
 <style lang="postcss">
     select {
-        @apply my-1;
+        @apply my-1
     }
 </style>

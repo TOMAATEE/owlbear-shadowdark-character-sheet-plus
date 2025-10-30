@@ -1,27 +1,27 @@
 <script lang="ts">
-    import {setContext, createEventDispatcher} from "svelte";
-    import {fade} from "svelte/transition";
-    import {key} from "./MenuModel";
+    import {setContext, createEventDispatcher} from "svelte"
+    import {fade} from "svelte/transition"
+    import {key} from "./MenuModel"
 
-    export let x: number;
-    export let y: number;
-    let menuEl: HTMLElement;
+    export let x: number
+    export let y: number
+    let menuEl: HTMLElement
 
     $: if (menuEl) {
-        const rect = menuEl.getBoundingClientRect();
-        x = Math.min(window.innerWidth - rect.width, x);
-        y = Math.min(window.innerHeight - rect.height, y);
+        const rect = menuEl.getBoundingClientRect()
+        x = Math.min(window.innerWidth - rect.width, x)
+        y = Math.min(window.innerHeight - rect.height, y)
     }
 
-    const dispatch = createEventDispatcher();
+    const dispatch = createEventDispatcher()
 
     setContext(key, {
         dispatchClick: () => dispatch("click"),
-    });
+    })
 
     function onPageClick(e: Event) {
-        if (e.target === menuEl || menuEl.contains(e.target as Node)) return;
-        dispatch("clickoutside");
+        if (e.target === menuEl || menuEl.contains(e.target as Node)) return
+        dispatch("clickoutside")
     }
 </script>
 
@@ -30,7 +30,7 @@
 <div
         transition:fade={{ duration: 100 }}
         bind:this={menuEl}
-        style="top: {y}px; left: {x}px;"
+        style="top: {y}px left: {x}px"
 >
     <slot/>
 </div>

@@ -1,39 +1,39 @@
-import OBR from "@owlbear-rodeo/sdk";
-import {get} from "svelte/store";
-import {pushNotification} from "./NotificationLogger";
-import {pluginId} from "./OBRHelper";
-import {Settings} from "./SettingsTracker";
+import OBR from "@owlbear-rodeo/sdk"
+import {get} from "svelte/store"
+import {pushNotification} from "./NotificationLogger"
+import {pluginId} from "./OBRHelper"
+import {Settings} from "./SettingsTracker"
 
-export const NOTIFICATION_KEY = pluginId("notification");
+export const NOTIFICATION_KEY = pluginId("notification")
 
 export type NotifyOptions = {
-    secret?: boolean;
-};
+    secret?: boolean
+}
 
 export async function notify(msg: string, options: NotifyOptions = {}) {
     if (!OBR.isAvailable) {
-        alert(msg);
-        return;
+        alert(msg)
+        return
     }
 
-    const myName = await OBR.player.getName();
-    const m = `${myName}: ${msg}`;
+    const myName = await OBR.player.getName()
+    const m = `${myName}: ${msg}`
 
     if (options.secret) {
-        await showNotification(`Secret: ${m}`);
+        await showNotification(`Secret: ${m}`)
     } else {
-        await OBR.broadcast.sendMessage(NOTIFICATION_KEY, m);
-        await showNotification(m);
+        await OBR.broadcast.sendMessage(NOTIFICATION_KEY, m)
+        await showNotification(m)
     }
 }
 
-let timeoutHandle: NodeJS.Timeout;
+let timeoutHandle: NodeJS.Timeout
 
 export async function showNotification(msg: string) {
-    pushNotification(msg);
+    pushNotification(msg)
     if (timeoutHandle) {
-        clearTimeout(timeoutHandle);
-        timeoutHandle = null;
+        clearTimeout(timeoutHandle)
+        timeoutHandle = null
     }
     try {
         const popoverId = await OBR.notification.show(msg)
@@ -44,6 +44,6 @@ export async function showNotification(msg: string) {
             (get(Settings).popoverDuration ?? 5) * 1000
         ) as unknown as NodeJS.Timeout
     } catch {
-        alert(msg);
+        alert(msg)
     }
 }

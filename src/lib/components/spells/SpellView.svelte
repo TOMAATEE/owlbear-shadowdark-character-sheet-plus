@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {createEventDispatcher} from "svelte";
+    import {createEventDispatcher} from "svelte"
     import {
         deleteCustomPlayerSpell,
         learnSpellForPlayer,
@@ -7,48 +7,48 @@
         playerCanLearnSpell,
         playerHasSpell,
         unlearnSpellForPlayer,
-    } from "../../model/PlayerCharacter";
-    import type {SpellInfo} from "../../types";
-    import Modal from "../Modal.svelte";
-    import CustomSpellForm from "./CustomSpellForm.svelte";
-    import {findSpell} from "../../compendium";
+    } from "../../model/PlayerCharacter"
+    import type {SpellInfo} from "../../types"
+    import Modal from "../Modal.svelte"
+    import CustomSpellForm from "./CustomSpellForm.svelte"
+    import {findSpell} from "../../compendium"
 
-    export let s: SpellInfo;
+    export let s: SpellInfo
     $: Object.assign(s, fixSpell(s))
-    $: duration = s.duration.amt > 0 ? s.duration.amt : "";
-    $: theS = Boolean(s.duration.amt > 1 || s.duration.roll) ? "s" : "";
-    let dispatch = createEventDispatcher();
-    let showCustomSpellEditModal = false;
+    $: duration = s.duration.amt > 0 ? s.duration.amt : ""
+    $: theS = Boolean(s.duration.amt > 1 || s.duration.roll) ? "s" : ""
+    let dispatch = createEventDispatcher()
+    let showCustomSpellEditModal = false
 
     function fixSpell(spell: SpellInfo) { // for compatibility with old/ShadowDarklings char-sheet
         if (spell.duration) return spell // all new spells have a duration
         console.log(spell)
 
-        const reference = findSpell(spell.name);
+        const reference = findSpell(spell.name)
         if (!reference) {
-            console.warn(`Unknown spell "${spell.name}" found in old data`);
+            console.warn(`Unknown spell "${spell.name}" found in old data`)
         }
         return {
             ...reference,  // get full SpellInfo
             ...spell       // overwrite/add other data
-        };
+        }
     }
 
     function learnSpell(s: SpellInfo) {
-        learnSpellForPlayer($pc, s);
-        $pc = $pc;
+        learnSpellForPlayer($pc, s)
+        $pc = $pc
     }
 
     function unLearnSpell(s: SpellInfo) {
-        unlearnSpellForPlayer($pc, s);
-        $pc = $pc;
-        dispatch("close");
+        unlearnSpellForPlayer($pc, s)
+        $pc = $pc
+        dispatch("close")
     }
 
     function deleteSpell(s: SpellInfo) {
-        deleteCustomPlayerSpell($pc, s);
-        $pc = $pc;
-        dispatch("close");
+        deleteCustomPlayerSpell($pc, s)
+        $pc = $pc
+        dispatch("close")
     }
 </script>
 
@@ -98,7 +98,7 @@
                 <i class="material-icons translate-y-1">delete</i>
             </button>
             <button class="bg-black text-white p-3" on:click={() => {
-                showCustomSpellEditModal = true;
+                showCustomSpellEditModal = true
             }}>
                 <i class="material-icons translate-y-1">edit</i>
             </button>
@@ -110,8 +110,8 @@
     <Modal bind:showModal={showCustomSpellEditModal}>
         <h2 slot="header">Edit Spell: {s.name}</h2>
         <CustomSpellForm spellToEdit={s} on:finish={() => {
-            showCustomSpellEditModal = false;
-            s = s;
+            showCustomSpellEditModal = false
+            s = s
         }}/>
     </Modal>
 {/if}

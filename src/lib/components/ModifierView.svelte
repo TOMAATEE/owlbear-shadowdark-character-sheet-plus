@@ -2,39 +2,36 @@
     import {
         calculateModifierForPlayerStat,
         PlayerCharacterStore as pc,
-    } from "../model/PlayerCharacter";
-    import type {Stat} from "../types";
-    import {clamp, addSign} from "../utils";
-    import Modal from "./Modal.svelte";
+    } from "../model/PlayerCharacter"
+    import type {Stat} from "../types"
+    import {clamp, addSign} from "../utils"
+    import Modal from "./Modal.svelte"
 
-    export let forStat: Stat;
-    $: bonuses = [];
-    // $pc.bonuses
-    //   .filter((b) => b.bonusTo.includes(forStat))
-    //   .map((b) => `${b.bonusName} to ${b.bonusTo}`);
-    $: baseMod = clamp(Math.floor(($pc.stats[forStat] - 10) / 2), -4, 4);
-    $: modifier = calculateModifierForPlayerStat($pc, forStat);
+    export let forStat: Stat
+    $: bonuses = []
+    $: baseMod = clamp(Math.floor(($pc.stats[forStat] - 10) / 2), -4, 4)
+    $: modifier = calculateModifierForPlayerStat($pc, forStat)
 
-    let showMenu = false;
+    let showMenu = false
 
-    let timeout: ReturnType<typeof setTimeout>;
+    let timeout: ReturnType<typeof setTimeout>
 
     function mouseEnter() {
         timeout = setTimeout(() => {
-            onRightClick();
-            timeout = null;
-        }, 1000);
+            onRightClick()
+            timeout = null
+        }, 1000)
     }
 
     function mouseExit() {
         if (timeout) {
-            clearTimeout(timeout);
-            timeout = null;
+            clearTimeout(timeout)
+            timeout = null
         }
     }
 
     function onRightClick() {
-        showMenu = true;
+        showMenu = true
     }
 </script>
 

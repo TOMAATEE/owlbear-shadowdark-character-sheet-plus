@@ -1,15 +1,15 @@
 <script lang="ts">
-    import type {SpellInfo} from "../../types";
-    import Modal from "../Modal.svelte";
-    import SpellView from "./SpellView.svelte";
+    import type {SpellInfo} from "../../types"
+    import Modal from "../Modal.svelte"
+    import SpellView from "./SpellView.svelte"
 
-    export let spell: SpellInfo;
-    let showInfo = false;
+    export let spell: SpellInfo
+    let showInfo = false
 </script>
 
 <button
         on:click={() => {
-    showInfo = true;
+    showInfo = true
   }}
 >
     <i class="material-icons">info</i>
@@ -20,7 +20,7 @@
     <SpellView
             s={spell}
             on:close={() => {
-      showInfo = false;
+      showInfo = false
     }}
     />
 </Modal>

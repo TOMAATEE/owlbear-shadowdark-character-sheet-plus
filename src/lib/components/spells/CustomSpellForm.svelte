@@ -1,32 +1,32 @@
 <script lang="ts">
-    import {STATS, RANGE_TYPES, DICE_TYPES, TIME_UNITS} from "../../constants";
-    import type {DiceType, SpellInfo, SpellTier} from "../../types";
-    import {pc} from "../../model/PlayerCharacter";
-    import {createEventDispatcher} from "svelte";
+    import {STATS, RANGE_TYPES, DICE_TYPES, TIME_UNITS} from "../../constants"
+    import type {DiceType, SpellInfo, SpellTier} from "../../types"
+    import {pc} from "../../model/PlayerCharacter"
+    import {createEventDispatcher} from "svelte"
 
-    const dispatch = createEventDispatcher();
+    const dispatch = createEventDispatcher()
 
-    export let spellToEdit: SpellInfo = undefined;
-    let currSpell = $pc.spells.find((s) => s.name === spellToEdit?.name);
+    export let spellToEdit: SpellInfo = undefined
+    let currSpell = $pc.spells.find((s) => s.name === spellToEdit?.name)
 
-    let spellName = spellToEdit?.name;
-    let spellDesc = spellToEdit?.desc;
+    let spellName = spellToEdit?.name
+    let spellDesc = spellToEdit?.desc
 
-    $: isValid = Boolean(spellName && spellDesc);
+    $: isValid = Boolean(spellName && spellDesc)
 
-    let spellTier = `${spellToEdit?.tier ?? 1}`;
-    let spellDurationT: "Instant" | "Focus" | "Time" = "Instant";
-    let spellDurationType = spellToEdit?.duration?.type ?? "Round";
-    let spellDurationSubType = spellToEdit?.duration?.subType ?? "InGame";
-    let spellClass = spellToEdit?.class ?? "Wizard";
-    let spellRange = spellToEdit?.range ?? "Self";
-    let spellRollDiceType = spellToEdit?.duration?.roll?.diceType ?? "d8";
-    let spellAmt = spellToEdit?.duration?.amt ?? 1;
-    let spellStat = spellToEdit?.stat ?? "INT";
+    let spellTier = `${spellToEdit?.tier ?? 1}`
+    let spellDurationT: "Instant" | "Focus" | "Time" = "Instant"
+    let spellDurationType = spellToEdit?.duration?.type ?? "Round"
+    let spellDurationSubType = spellToEdit?.duration?.subType ?? "InGame"
+    let spellClass = spellToEdit?.class ?? "Wizard"
+    let spellRange = spellToEdit?.range ?? "Self"
+    let spellRollDiceType = spellToEdit?.duration?.roll?.diceType ?? "d8"
+    let spellAmt = spellToEdit?.duration?.amt ?? 1
+    let spellStat = spellToEdit?.stat ?? "INT"
 
     function onCreateSpell() {
         const durType =
-            spellDurationT === "Time" ? spellDurationType : spellDurationT;
+            spellDurationT === "Time" ? spellDurationType : spellDurationT
         const s: SpellInfo = {
             editable: true,
             name: spellName,
@@ -38,32 +38,32 @@
                 type: durType,
             },
             desc: spellDesc,
-        };
+        }
 
         if (spellDurationT === "Time") {
-            s.duration.subType = spellDurationSubType;
+            s.duration.subType = spellDurationSubType
             if (spellRollDiceType.length > 0) {
                 s.duration.roll = {
                     diceType: spellRollDiceType as DiceType,
                     numDice: spellAmt,
-                };
+                }
             } else {
-                s.duration.amt = spellAmt;
+                s.duration.amt = spellAmt
             }
         }
 
         if (spellToEdit) {
-            Object.assign(spellToEdit, s);
+            Object.assign(spellToEdit, s)
             if (currSpell) {
-                currSpell.name = s.name;
+                currSpell.name = s.name
             }
         } else {
-            $pc.spells.push(s);
-            $pc.customSpells.push(s);
+            $pc.spells.push(s)
+            $pc.customSpells.push(s)
         }
 
-        $pc = $pc;
-        dispatch("finish");
+        $pc = $pc
+        dispatch("finish")
     }
 </script>
 
@@ -156,6 +156,6 @@
 
 <style lang="postcss">
     input {
-        @apply transition-all;
+        @apply transition-all
     }
 </style>
