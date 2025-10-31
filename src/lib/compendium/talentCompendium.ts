@@ -2,7 +2,7 @@ import type {
     AdvantageBonus,
     Class, DiceAmountBonus,
     DiceTypeBonus,
-    ModifyBonus,
+    ModifyBonus, SpellBonus,
     Talent,
 } from "../types"
 import {ARMORS} from "./armorCompendium"
@@ -49,7 +49,7 @@ export const CLASS_TALENTS: { [key in Class]: Talent[] } = {
                             },
                         },
                     ] as ModifyBonus[],
-            ),
+                ),
         },
         {
             name: "+1 to melee and ranged attacks",
@@ -411,29 +411,24 @@ export const CLASS_TALENTS: { [key in Class]: Talent[] } = {
     "Ranger": [
         {
             type: "chooseBonus",
-            choices: WEAPONS
-                .filter((w) =>
-                    !(
-                        (w.damage.oneHanded && w.damage.oneHanded.numDice === 0) ||
-                        (w.damage.twoHanded && w.damage.twoHanded.numDice === 0)
-                    ))
-                .map((w) => ({
-                name: `d12 damage for ${w.name}`,
-                desc: `d12 damage for ${w.name}`,
-                type: "diceType",
-                bonusTo: "damageRoll",
-                bonusSource: "Talent",
-                diceType: "d12",
-                editable: true,
-                metadata: {
-                    type: "weapon",
-                    weapon: w.name,
-                },
-            })) as DiceTypeBonus[],
-            name: "You deal d12 damage with one weapon you choose",
+            choices: (["Melee", "Ranged"] as const).map((w) => (
+                {
+                    name: `d12 damage for ${w} weapons`,
+                    desc: `d12 damage for ${w} weapons`,
+                    type: "diceType",
+                    bonusTo: "damageRoll",
+                    bonusSource: "Talent",
+                    diceType: "d12",
+                    editable: true,
+                    metadata: {
+                        type: "weaponType",
+                        weaponType: w,
+                    },
+                })) as DiceTypeBonus[],
+            name: "You deal d12 damage with one weapon type you choose",
         },
         {
-            name: "+1 to attacks and damage with melee or ranged weapons",
+            name: "+1 to melee or ranged attacks and damage",
             type: "chooseBonus",
             choices: (["Melee", "Ranged"] as const).map((w) => [
                 {
@@ -510,8 +505,22 @@ export const CLASS_TALENTS: { [key in Class]: Talent[] } = {
             ] as ModifyBonus[],
         },
         {
-            name: "Reduce the difficulty of your herbalism checks by one step",
-            type: "generic",
+            name: "You gain ADV on Herbalism checks for a remedy you choose",
+            type: "bonus",
+            bonuses: [
+                {
+                    name: "Advantage to cast Herbalism",
+                    desc: "Advantage to cast Herbalism",
+                    type: "advantage",
+                    bonusTo: "spellcastRoll",
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "spell",
+                        spell: "Herbalism",
+                    },
+                }
+            ] as AdvantageBonus[],
         },
     ],
     "Bard": [
@@ -554,9 +563,7 @@ export const CLASS_TALENTS: { [key in Class]: Talent[] } = {
                 [
                     {
                         name: "+1 to Magical Dabbler rolls",
-                        desc: "+1 to Magical Dabbler rolls",
                         type: "generic",
-                        editable: true,
                     }
                 ],
             ] as ModifyBonus[][],
@@ -698,7 +705,7 @@ export const CLASS_TALENTS: { [key in Class]: Talent[] } = {
     ],
     "Warlock": [
         {
-            name: "Roll a Patron Boon from any patron an unexplained gift",
+            name: "Roll a Patron Boon from any patron, an unexplained gift", // TODO
             type: "generic",
         },
         {
@@ -738,14 +745,24 @@ export const CLASS_TALENTS: { [key in Class]: Talent[] } = {
             ] as ModifyBonus[],
         },
         {
-            name: "Roll two Patron Boons and choose one to keep",
+            name: "Roll two Patron Boons and choose one to keep", // TODO
             type: "generic",
         },
     ],
     "Witch": [
         {
             name: "1/day, teleport to your familiar's location as a move",
-            type: "generic",
+            type: "bonus",
+            bonuses: [
+                {
+                    name: "Familiar TP",
+                    desc: "1/day, teleport to your familiar's location as a move",
+                    type: "spell",
+                    spell: "Familiar TP",
+                    bonusSource: "Talent",
+                    editable: true,
+                },
+            ] as SpellBonus[],
         },
         {
             name: "+2 to Charisma stat or +1 to witch spellcasting checks",
@@ -901,7 +918,17 @@ export const CLASS_TALENTS: { [key in Class]: Talent[] } = {
     "Pit Fighter": [
         {
             name: "1/day, ignore all damage and effects from one attack",
-            type: "generic",
+            type: "bonus",
+            bonuses: [
+                {
+                    name: "Ignore Damage",
+                    desc: "1/day, ignore all damage and effects from one attack",
+                    type: "spell",
+                    spell: "Ignore Damage",
+                    bonusSource: "Talent",
+                    editable: true,
+                },
+            ] as SpellBonus[],
         },
         {
             name: "+1 to melee weapon damage",
@@ -1064,7 +1091,17 @@ export const CLASS_TALENTS: { [key in Class]: Talent[] } = {
     "Sea Wolf": [
         {
             name: "1/day, go berserk: immune to damage for 3 rounds",
-            type: "generic",
+            type: "bonus",
+            bonuses: [
+                {
+                    name: "Berserk",
+                    desc: "1/day, go berserk: immune to damage for 3 rounds",
+                    type: "spell",
+                    spell: "Berserk",
+                    bonusSource: "Talent",
+                    editable: true,
+                },
+            ] as SpellBonus[],
         },
         {
             name: "+1 to melee weapon damage",

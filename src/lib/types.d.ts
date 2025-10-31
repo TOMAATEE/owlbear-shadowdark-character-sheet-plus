@@ -58,7 +58,7 @@ export type Talent = GenericTalent | BonusTalent | ChooseBonusTalent
 ///// Spell
 export type SpellTier = 0 | 1 | 2 | 3 | 4 | 5
 export type SpellClass =
-    | Extract<Class, "Bard" | "Basilisk Warrior" | "Desert Rider" | "Knight of St. Ydris" | "Pit Fighter" | "Priest" | "Ras-Godai" | "Sea Wolf" | "Seer" | "Wizard" | "Witch">
+    | Extract<Class, "Bard" | "Basilisk Warrior" | "Desert Rider" | "Knight of St. Ydris" | "Pit Fighter" | "Priest" | "Ranger" | "Ras-Godai" | "Sea Wolf" | "Seer" | "Wizard" | "Witch">
     | "Priest, Wizard" | "Wizard, Witch" | "Priest, Witch"
     | "Other"
 export type SpellInfo = {
@@ -181,6 +181,7 @@ export type BonusMetaData =
     | ArmorBonusMetaData
     | StatBonusMetaData
     | SpellBonusMetaData
+    | MaxUsesMetaData
 export type GenericBonus = {
     name: string
     desc: string
@@ -205,6 +206,14 @@ export type DiceTypeBonus = Merge<
         bonusTo: RollBonusTo
         diceType: DiceType
         bonusSteps?: number
+    }
+>
+export type SpellBonus = Merge<
+    GenericBonus,
+    {
+        type: "spell"
+        spell?: string
+        tier?: SpellTier | boolean
     }
 >
 export type DiceAmountBonus = Merge<
@@ -233,6 +242,7 @@ export type Bonus =
     | GenericBonus
     | ModifyBonus
     | DiceTypeBonus
+    | SpellBonus
     | DiceAmountBonus
     | AdvantageBonus
     | DisadvantageBonus

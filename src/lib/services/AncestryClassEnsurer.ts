@@ -103,6 +103,9 @@ function addClassSpells(pc: PlayerCharacter) {
         case "Priest":
             classSpells.push("Turn Undead")
             break
+        case "Ranger":
+            classSpells.push("Herbalism")
+            break
         case "Ras-Godai":
             classSpells.push("Smoke Step")
             break
@@ -331,12 +334,6 @@ function addClassBonuses(bonuses: Bonus[], c: Class) {
             const name = "Herbalism"
             if (!bonuses.find((b) => b.name === name)) {
                 bonuses.push(
-                    {
-                        name,
-                        bonusSource: "Class",
-                        desc: "Make an INT check to find some herbs",
-                        type: "generic",
-                    },
                     {
                         name: "Wayfinder",
                         bonusSource: "Class",

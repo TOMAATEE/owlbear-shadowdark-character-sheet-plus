@@ -1,5 +1,5 @@
 import {writable} from "svelte/store"
-import {findAny} from "../compendium"
+import {findAny, findSpell} from "../compendium"
 import {DICE_TYPES, TITLE_MAP} from "../constants"
 import {
     ensureAncestryBonuses,
@@ -453,7 +453,27 @@ export function unlearnSpellForPlayer(pc: PlayerCharacter, spell: SpellInfo) {
 }
 
 export function addBonusToPlayer(pc: PlayerCharacter, b: Bonus, customAmount: number = null): PlayerCharacter {
-    pc.bonuses = addBonusToList(pc.bonuses, b, customAmount)
+    if (b.type === "spell") {
+        const spell = findSpell(b.spell)
+        if (playerHasSpell(pc, spell) && spell.uses) {
+            pc.bonuses = addBonusToList(pc.bonuses, {
+                name: b.name,
+                desc: `additional use per ${spell.uses.type}`,
+                type: "modifyAmt",
+                bonusTo: "spellMax",
+                bonusAmount: customAmount ?? 1,
+                editable: true,
+                metadata: {
+                    type: "spell",
+                    spell: spell.name
+                }
+            } as ModifyBonus)
+        } else {
+            learnSpellForPlayer(pc, spell)
+        }
+    } else {
+        pc.bonuses = addBonusToList(pc.bonuses, b, customAmount)
+    }
     return pc
 }
 

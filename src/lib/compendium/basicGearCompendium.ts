@@ -108,7 +108,7 @@ export const GEAR: GearInfo[] = [
     },
     {
         name: "Rations",
-        cost: {gp: 0, sp: 5, cp: 0},
+        cost: {gp: 0, sp: 2, cp: 0},
         canBeEquipped: false,
         type: "Basic",
         slots: {perSlot: 3, slotsUsed: 1, freeCarry: 0},
@@ -127,13 +127,9 @@ export const GEAR: GearInfo[] = [
         type: "Basic",
         slots: {perSlot: 1, slotsUsed: 1, freeCarry: 0},
     },
-    {
-        name: "Holy Symbol",
-        cost: {gp: 0, sp: 0, cp: 0},
-        canBeEquipped: false,
-        type: "Basic",
-        slots: {perSlot: 1, slotsUsed: 0, freeCarry: 1},
-    },
+    // #################################################################################################################
+    // --------------------------------------------Spell Scrolls/Wands--------------------------------------------------
+    // #################################################################################################################
     {
         name: "Light Spell",
         cost: {gp: 0, sp: 0, cp: 0},
@@ -154,6 +150,16 @@ export const GEAR: GearInfo[] = [
         canBeEquipped: false,
         type: "Basic",
         slots: {perSlot: 1, slotsUsed: 1, freeCarry: 1},
+    },
+    // #################################################################################################################
+    // ----------------------------------------------Class Items--------------------------------------------------------
+    // #################################################################################################################
+    {
+        name: "Holy Symbol",
+        cost: {gp: 0, sp: 0, cp: 0},
+        canBeEquipped: false,
+        type: "Basic",
+        slots: {perSlot: 1, slotsUsed: 0, freeCarry: 1},
     },
     {
         name: "Thieving Tools",

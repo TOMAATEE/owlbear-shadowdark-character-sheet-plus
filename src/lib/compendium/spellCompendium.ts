@@ -1207,6 +1207,20 @@ export const SPELLS: SpellInfo[] = [
         duration: {type: "Instant"},
     },
     {
+        name: "Herbalism",
+        tier: 0,
+        class: "Ranger",
+        stat: "INT",
+        range: "Self",
+        desc: "Make an INT check to prepare an herbal remedy you choose. If you fail, you can't make that remedy again until you successfully rest. Unused remedies expire in 3 rounds.\n" +
+            "• DC 11: Salve. Heals 1 HP\n" +
+            "• DC 12: Stimulant. You can't be surprised for 10 rounds\n" +
+            "• DC 13: Foebane. ADV on attacks and damage against one creature type you choose for 1d6 rounds\n" +
+            "• DC 14: Restorative. Ends one poison or disease\n" +
+            "• DC 15: Curative. Equivalent to a Potion of Healing",
+        duration: {type: "Instant"},
+    },
+    {
         name: "Petrifying Gaze",
         tier: 0,
         class: "Basilisk Warrior",

@@ -197,7 +197,7 @@
         {rolled ? "REROLL" : "ROLL"}
     </button>
     <div class="flex flex-col gap-1">
-        {#if highlight === 4 && $pc.class !== "Bard"}
+        {#if highlight === 4}
             <div class="flex gap-5 items-center justify-center p-2">
                 <label for="chooseTalentCheckBox">Choose Talent</label>
                 <input
@@ -224,7 +224,7 @@
         {#if talentChoiceOrStatsChoice === "talent"}
             <select on:change={onTalentSelectChange} value={highlight} class="w-full">
                 {#each CLASS_TALENTS[$pc.class].map((t) => t.name) as t, i}
-                    {#if i < 4}
+                    {#if i < 4 && !"+2 points to distribute to stats".includes(t)}
                         <option value={i}>{t}</option>
                     {/if}
                 {/each}
