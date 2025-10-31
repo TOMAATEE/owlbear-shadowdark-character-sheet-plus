@@ -113,6 +113,7 @@
 
     async function onRightClick(e: MouseEvent) {
         if (!disabled) {
+            window.dispatchEvent(new CustomEvent("closeAllContextMenus"))
             if (showMenu) {
                 showMenu = false
                 await new Promise((res) => setTimeout(res, 100))

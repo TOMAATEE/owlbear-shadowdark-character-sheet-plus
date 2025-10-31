@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {setContext, createEventDispatcher} from "svelte"
+    import {setContext, createEventDispatcher, onMount} from "svelte"
     import {fade} from "svelte/transition"
     import {key} from "./MenuModel"
 
@@ -19,27 +19,35 @@
         dispatchClick: () => dispatch("click"),
     })
 
+    onMount(() => {
+        const close = () => dispatch("clickoutside")
+        window.addEventListener("closeAllContextMenus", close)
+        return () => window.removeEventListener("closeAllContextMenus", close)
+    })
+
     function onPageClick(e: Event) {
         if (e.target === menuEl || menuEl.contains(e.target as Node)) return
         dispatch("clickoutside")
     }
 </script>
 
-<svelte:body on:click={onPageClick}/>
+<svelte:body on:click={onPageClick} />
 
 <div
         transition:fade={{ duration: 100 }}
         bind:this={menuEl}
-        style="top: {y}px left: {x}px"
+        style="top: {y}px; left: {x}px;"
 >
     <slot/>
 </div>
 
 <style>
     div {
+        white-space: nowrap;
         position: fixed;
         display: grid;
         border: 1px solid #0003;
+        border-radius: 0.5rem;
         box-shadow: 2px 2px 5px 0px #0002;
         background: white;
         z-index: 10;

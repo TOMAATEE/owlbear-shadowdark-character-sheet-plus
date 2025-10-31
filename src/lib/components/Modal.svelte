@@ -17,7 +17,7 @@
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <dialog
         class="max-w-3xl"
-        style={`min-width: 20rem width: ${vw}vw` + vh ? `height: ${vh}vh` : ""}
+        style={`min-width: 20rem; width: ${vw}vw;` + vh ? `height: ${vh}vh` : ""}
         bind:this={dialog}
         on:close={() => (showModal = false)}
         on:click|self={() => dialog.close()}

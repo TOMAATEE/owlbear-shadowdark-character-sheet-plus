@@ -17,7 +17,10 @@
         reset()
     }
 
-    const ranges: { min: number; max: number }[] = [
+    const ranges: {
+        min: number
+        max: number
+    }[] = [
         {min: 2, max: 2},
         {min: 3, max: 7},
         {min: 8, max: 9},

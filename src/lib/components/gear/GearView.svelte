@@ -5,9 +5,15 @@
     import {calculateGearSlotsForPlayer, pc, setMoney} from "../../model/PlayerCharacter"
     import {alphabetically} from "../../utils"
     import type {Gear} from "../../types"
-    import {WEAPONS} from "../../compendium/weaponCompendium"
-    import {ARMORS} from "../../compendium/armorCompendium"
-    import {GEAR} from "../../compendium/basicGearCompendium"
+    import MenuOption from "../Menu/MenuOption.svelte"
+    import Menu from "../Menu/Menu.svelte"
+
+    // variables for right click menu
+    let showMenu = false
+    let menuType: "Delete" | "Sell"
+    let pos = {x: 0, y: 0}
+    let relevantGear: Gear
+    let perStack: number
 
     const COIN_NAME = "Extra Coins"
     $: costlyGear = $pc.gear
@@ -41,36 +47,31 @@
         }
 
         const foundGear = findAny(g.name)
-        return (
-            Math.ceil(g.quantity / foundGear.slots.perSlot) *
-            foundGear.slots.slotsUsed
-        )
+        return Math.ceil(g.quantity / foundGear.slots.perSlot) * foundGear.slots.slotsUsed
     }
 
-    function deleteGear(name: string) {
+    function deleteGear(name: string, amount = 1) {
         const idx = $pc.gear.findIndex((g) => g.name === name)
         const g = $pc.gear[idx]
-        if (g.quantity > 1) {
-            g.quantity -= 1
+        if (g.quantity > amount) {
+            g.quantity -= amount
         } else {
-            $pc.gear.splice(idx, 1)
+            $pc.gear.splice(idx, amount)
         }
         $pc = $pc
     }
 
-    function sellGear(name: string) {
-        let g = GEAR.find((i) => i.name === name)
-        if (!g) {
-            g = ARMORS.find((i) => i.name === name)
-            if (!g) {
-                g = WEAPONS.find((i) => i.name === name)
-            }
-        }
+    function sellGear(name: string, amount = 1) {
+        const idx = $pc.gear.findIndex((g) => g.name === name)
+        const item = $pc.gear[idx]
+        if (item.quantity < amount) amount = item.quantity
+
+        let g = findAny(name)
         let pcTotal = $pc.copper + $pc.silver * 10 + $pc.gold * 100
-        let costTotal = g.cost.cp + g.cost.sp * 10 + g.cost.gp * 100
+        let costTotal = g.cost.cp + g.cost.sp * 10 + g.cost.gp * 100 * amount
         pcTotal += costTotal
         setMoney($pc, pcTotal)
-        deleteGear(g.name)
+        deleteGear(g.name, amount)
     }
 
     function toggleEquipped(g: Gear) {
@@ -83,6 +84,61 @@
         // as nice as this is, it is ultimately limiting to the player's creativity
         // if (gear.equipped) return true
         // return gear.equipped || canPlayerEquipGear($pc, gear)
+    }
+
+    function exchange(from: "silver" | "copper", to: "gold" | "silver") {
+        if ($pc[from] > 9) {
+            $pc[to] += Math.floor($pc[from] / 10)
+            $pc[from] %= 10
+        } else if ($pc[from] < 0) {
+            const deficit = Math.ceil(Math.abs($pc[from]) / 10)
+            $pc[to] -= deficit
+            $pc[from] += deficit * 10
+        }
+    }
+
+    function exchangeSToG() {
+        exchange("silver", "gold")
+    }
+
+    function exchangeCToS() {
+        exchange("copper", "silver")
+    }
+
+    async function onRightClick(type: "Delete" | "Sell", gear: Gear, event: MouseEvent) {
+        window.dispatchEvent(new CustomEvent("closeAllContextMenus"))
+        if (showMenu) {
+            showMenu = false
+            await new Promise((res) => setTimeout(res, 100))
+        }
+        menuType = type
+        relevantGear = gear
+        perStack = findAny(relevantGear.name).slots.perSlot
+        pos = {x: event.clientX, y: event.clientY}
+        showMenu = true
+    }
+
+    function closeMenu() {
+        showMenu = false
+    }
+
+    function processGear(mode: "one" | "stack" | "all") {
+        let amount: number
+        switch (mode) {
+            case "one":
+                amount = 1
+                break
+            case "all":
+                amount = relevantGear.quantity
+                break
+            case "stack":
+                amount = perStack
+        }
+        if (menuType === "Sell") {
+            sellGear(relevantGear.name, amount)
+        } else {
+            deleteGear(relevantGear.name, amount)
+        }
     }
 </script>
 
@@ -113,6 +169,7 @@
                 inputmode="numeric"
                 bind:value={$pc.silver}
                 class="w-16"
+                on:change={exchangeSToG}
         />
     </div>
     <div class="flex items-center">
@@ -122,6 +179,7 @@
                 inputmode="numeric"
                 bind:value={$pc.copper}
                 class="w-16"
+                on:change={exchangeCToS}
         />
     </div>
 </div>
@@ -136,7 +194,7 @@
                 <div class="flex items-center justify-between border-b border-gray-400">
                     <div class="flex justify-between">
                         <span>
-                          {i + 1}. {g.name} x {g.quantity} ({slotsForGear(g)} slots)
+                          {i + 1}. {g.name} x {g.quantity} ({slotsForGear(g)} slot{slotsForGear(g) !== 1 ? "s" : ""})
                         </span>
                     </div>
                     {#if g.name !== COIN_NAME}
@@ -151,10 +209,18 @@
                                         on:click={() => toggleEquipped(g)}
                                 />
                             {/if}
-                            <button on:click={() => deleteGear(g.name)} class="px-1 pt-1 rounded-md bg-black text-white">
+                            <button
+                                    on:click={() => deleteGear(g.name)}
+                                    class="px-1 pt-1 rounded-md bg-black text-white"
+                                    on:contextmenu|preventDefault={(e) => onRightClick("Delete", g, e)}
+                            >
                                 <i class="material-icons">delete</i>
                             </button>
-                            <button on:click={() => sellGear(g.name)} class="px-1 pt-1 rounded-md bg-black text-white">
+                            <button
+                                    on:click={() => sellGear(g.name)}
+                                    class="px-1 pt-1 rounded-md bg-black text-white"
+                                    on:contextmenu|preventDefault={(e) => onRightClick("Sell", g, e)}
+                            >
                                 <i class="material-icons translate-y-0.5">attach_money</i>
                             </button>
                         </div>
@@ -191,4 +257,12 @@
             </li>
         {/each}
     </ul>
+
+    {#if showMenu}
+        <Menu {...pos} on:click={closeMenu} on:clickoutside={closeMenu}>
+            <MenuOption on:click={() => processGear("one")} text={`${menuType} one`} />
+            <MenuOption on:click={() => processGear("stack")} text={`${menuType} stack (${perStack})`} isDisabled={perStack === 1} />
+            <MenuOption on:click={() => processGear("all")} text={`${menuType} all`} />
+        </Menu>
+    {/if}
 </div>

@@ -40,7 +40,7 @@
     $: if (allResults.length > 0) {
         for (const g of allResults) {
             if (!resultGear.find(gear => gear.name === g.name)) {
-                resultGear.push({ name: g.name, quantity: 1 });
+                resultGear.push({ name: g.name, quantity: 1 })
             }
         }
     }

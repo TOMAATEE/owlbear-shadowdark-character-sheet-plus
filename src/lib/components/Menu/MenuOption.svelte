@@ -33,6 +33,7 @@
 
 <style>
     div {
+        border-bottom: 1px solid #0003;
         padding: 4px 15px;
         cursor: default;
         font-size: 14px;
