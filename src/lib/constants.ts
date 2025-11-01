@@ -1,6 +1,6 @@
 import type {Class, SpellTier} from "./types"
 
-export const GEAR_TYPES = ["Basic", "Armor", "Weapon"] as const
+export const GEAR_TYPES = ["Basic", "Armor", "Weapon", "Treasure"] as const
 export const SHIELD_PROPERTIES = [
     "Shield",
     "OneHanded",
@@ -13,6 +13,7 @@ export const SCHEMA_VERSION = "1.0.0"
 export const SCHEMA_TYPE = "sd-char-sheet"
 export const STATS = ["STR", "DEX", "CON", "INT", "WIS", "CHA", "LVL", "None"] as const
 export const ALIGNMENTS = ["Neutral", "Lawful", "Chaotic"] as const
+export const TREASURE_PROPERTIES = {"Impure": 0.4, "Cracked": 0.8, "Basic": 1, "Pure": 1.2, "Perfect": 1.6, "Cut": 2, "Huge": 4} as const
 export const WEAPON_TYPES = ["Melee", "Ranged", "MeleeRanged"] as const
 export const WEAPON_PROPERTIES = [
     "Finesse",

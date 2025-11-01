@@ -2,11 +2,12 @@
     import CustomGearButton from "./CustomGearButton.svelte"
     import GearButton from "./GearButton.svelte"
     import {findAny} from "../../compendium"
-    import {calculateGearSlotsForPlayer, pc, setMoney} from "../../model/PlayerCharacter"
+    import {calculateGearSlotsForPlayer, pc} from "../../model/PlayerCharacter"
     import {alphabetically} from "../../utils"
     import type {Gear} from "../../types"
     import MenuOption from "../Menu/MenuOption.svelte"
     import Menu from "../Menu/Menu.svelte"
+    import {gearCostToTotal, playerMoneyToTotal, totalToPlayerMoney} from "../../services/Helper"
 
     // variables for right click menu
     let showMenu = false
@@ -61,17 +62,17 @@
         $pc = $pc
     }
 
-    function sellGear(name: string, amount = 1) {
+    function sellGear(name: string, quantity = 1) {
         const idx = $pc.gear.findIndex((g) => g.name === name)
         const item = $pc.gear[idx]
-        if (item.quantity < amount) amount = item.quantity
+        if (item.quantity < quantity) quantity = item.quantity
 
         let g = findAny(name)
-        let pcTotal = $pc.copper + $pc.silver * 10 + $pc.gold * 100
-        let costTotal = g.cost.cp + g.cost.sp * 10 + g.cost.gp * 100 * amount
+        let pcTotal = playerMoneyToTotal($pc)
+        let costTotal = gearCostToTotal(g, quantity)
         pcTotal += costTotal
-        setMoney($pc, pcTotal)
-        deleteGear(g.name, amount)
+        totalToPlayerMoney($pc, pcTotal)
+        deleteGear(g.name, quantity)
     }
 
     function toggleEquipped(g: Gear) {

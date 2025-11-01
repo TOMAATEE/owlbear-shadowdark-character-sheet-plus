@@ -3,12 +3,13 @@ import type {
     SpellInfo,
     PlayerCharacter,
     WeaponInfo,
-    ArmorInfo,
+    ArmorInfo, TreasureInfo,
 } from "../types"
 import ARMOR_COMPENDIUM from "./armorCompendium"
 import GEAR_COMPENDIUM from "./basicGearCompendium"
 import SPELL_COMPENDIUM from "./spellCompendium"
 import WEAPON_COMPENDIUM from "./weaponCompendium"
+import TREASURE_COMPENDIUM from "./treasureCompendium";
 
 let customGear: GearInfo[] = []
 let customSpells: SpellInfo[] = []
@@ -28,6 +29,10 @@ export function findArmor(name: string): ArmorInfo {
 
 export function findGear(name: string): GearInfo {
     return GEAR_COMPENDIUM[name.toLowerCase()]
+}
+
+export function findTreasure(name: string): TreasureInfo {
+    return TREASURE_COMPENDIUM[name.toLowerCase()]
 }
 
 export function findCustomSpell(name: string): SpellInfo {
@@ -54,6 +59,7 @@ export function findAny(name: string): GearInfo {
         findWeapon(name) ||
         findArmor(name) ||
         findGear(name) ||
+        findTreasure(name) ||
         findCustomGear(name)
     )
 }

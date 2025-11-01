@@ -17,6 +17,7 @@ import {
     SHIELD_PROPERTIES,
     GEAR_TYPES,
     NUMERICAL_BONUS_TOS,
+    TREASURE_PROPERTIES,
 } from "./constants"
 
 export type Merge<T, R> = Omit<T, keyof R> & R
@@ -269,6 +270,7 @@ export type Currency = keyof Cost
 export type GearProperty =
     | ShieldProperty
     | WeaponProperty
+    | TreasureProperty
     | "Magic"
     | "Attackable" // attackable means it can show up in the attacks view
 export type GearType = (typeof GEAR_TYPES)[number]
@@ -292,6 +294,15 @@ export type Gear = {
     quantity: number
     equipped?: boolean
 }
+export type TreasureProperty = keyof typeof TREASURE_PROPERTIES
+export type TreasureInfo = Merge<
+    GearInfo,
+    {
+        type: "Treasure"
+        properties: TreasureProperty[]
+        modCosts?: boolean
+    }
+>
 
 ///// Weapon
 export type WeaponType = (typeof WEAPON_TYPES)[number]

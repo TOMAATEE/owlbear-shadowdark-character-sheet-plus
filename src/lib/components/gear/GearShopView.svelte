@@ -8,6 +8,8 @@
     import Modal from "../Modal.svelte"
     import CustomGearForm from "./CustomGearForm.svelte"
     import TextInput from "../TextInput.svelte"
+    import TREASURE_COMPENDIUM from "../../compendium/treasureCompendium"
+    import {gearCostToTotal, playerMoneyToTotal, totalToPlayerMoney} from "../../services/Helper"
 
     let gear: GearInfo = undefined
     let showCustomGearEditModal = false
@@ -16,32 +18,33 @@
     let showWeapon = true
     let showArmor = true
     let showBasic = true
+    let showTreasure = false
     let showCustom = false
 
     let gearInput: string = ""
     $: allResults = Object.values(GEAR_COMPENDIUM)
         .concat(Object.values(ARMOR_COMPENDIUM))
         .concat(Object.values(WEAPON_COMPENDIUM))
+        .concat(Object.values(TREASURE_COMPENDIUM))
         .concat($pc.customGear ?? [])
         .filter((g) => {
-            if (showCustom && !$pc.customGear.find((cg) => cg.name === g.name))
-                return false
+            if (showCustom && !$pc.customGear.find((cg) => cg.name === g.name)) return false
             if (!showWeapon && g.type === "Weapon") return false
             if (!showArmor && g.type === "Armor") return false
             if (!showBasic && g.type === "Basic") return false
+            if (!showTreasure && g.type === "Treasure") return false
             if (showOnlyWhatICanAfford && !canPlayerAffordGear($pc, g)) return false
             return g.name.toLowerCase().includes(gearInput.toLowerCase())
-        }).sort((a, b) => a.name.localeCompare(b.name))
+        })//.sort((a, b) => a.name.localeCompare(b.name))
 
     let resultGear: Gear[] = []
     $: if (resultGear.length === 0 && allResults.length > 0) {
         resultGear = allResults.map(g => ({ name: g.name, quantity: 1 }))
     }
     $: if (allResults.length > 0) {
+        resultGear = []
         for (const g of allResults) {
-            if (!resultGear.find(gear => gear.name === g.name)) {
-                resultGear.push({ name: g.name, quantity: 1 })
-            }
+            resultGear.push({ name: g.name, quantity: 1 })
         }
     }
 
@@ -60,13 +63,10 @@
 
     function buyGear(g: GearInfo, quantity: number) {
         if (canPlayerAffordGear($pc, g, quantity)) {
-            let pcTotal = $pc.copper + $pc.silver * 10 + $pc.gold * 100
-            let costTotal = g.cost.cp + g.cost.sp * 10 + g.cost.gp * 100 * quantity
+            let pcTotal = playerMoneyToTotal($pc)
+            let costTotal = gearCostToTotal(g, quantity)
             pcTotal -= costTotal
-            $pc.gold = Math.floor(pcTotal / 100)
-            pcTotal %= 100
-            $pc.silver = Math.floor(pcTotal / 10)
-            $pc.copper = pcTotal % 10
+            totalToPlayerMoney($pc, pcTotal)
             addGear(g, quantity)
         }
     }
@@ -105,6 +105,8 @@
         <label for="showArmor">Armor</label>
         <input id="showBasic" type="checkbox" bind:checked={showBasic}/>
         <label for="showBasic">Basic</label>
+        <input id="showTreasure" type="checkbox" bind:checked={showTreasure}/>
+        <label for="showTreasure">Treasure</label>
         <input id="showCustom" type="checkbox" bind:checked={showCustom}/>
         <label for="showCustom">Custom</label>
         <input id="showAffordable" type="checkbox" bind:checked={showOnlyWhatICanAfford}/>
@@ -126,11 +128,11 @@
                     <td class="pl-3">{g.name}</td>
                     <td class="justify-end flex mr-2">{getCostForGear(g)}</td>
                     <td class="pr-3">{
-                        g.slots.freeCarry || g.slots.slotsUsed === 0 ?
-                            "Free" :
-                            (g.slots.perSlot > g.slots.slotsUsed) ?
-                                `${g.slots.slotsUsed}/${g.slots.perSlot}` :
-                                `${g.slots.slotsUsed}`}
+                        g.slots.freeCarry || g.slots.slotsUsed === 0
+                            ? "Free"
+                            : (g.slots.perSlot > g.slots.slotsUsed)
+                                ? `${g.slots.slotsUsed}/${g.slots.perSlot}`
+                                : `${g.slots.slotsUsed}`}
                     </td>
                     <td><input type="number" class="w-14" bind:value={resultGear[i].quantity} min="0"/></td>
                     <td class="flex justify-end gap-1">
@@ -167,9 +169,9 @@
         <CustomGearForm
                 {gear}
                 on:finish={() => {
-        showCustomGearEditModal = false
-        gear = undefined
-      }}
+                    showCustomGearEditModal = false
+                    gear = undefined
+                }}
         />
     </Modal>
 {/if}

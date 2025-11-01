@@ -32,6 +32,7 @@ import type {
 import {alphabetically, clamp, compareDiceType, toInfo} from "../utils"
 import {slotsForGear} from "./Gear"
 import SPELL_COMPENDIUM from "../compendium/spellCompendium"
+import {gearCostToTotal, playerMoneyToTotal} from "../services/Helper"
 
 export const PlayerCharacterStore = createUndoRedoStore(
     writable<PlayerCharacter>(defaultPC()),
@@ -172,13 +173,6 @@ export function calculateBonusForPlayerStat(pc: PlayerCharacter, stat: Stat): nu
         .reduce((acc: number, b: ModifyBonus) => acc + calculateBonusAmount(pc, b), 0)
 
     return bonuses + gearBonuses
-}
-
-export function setMoney(pc: PlayerCharacter, total: number) {
-    pc.gold = Math.floor(total / 100)
-    total %= 100
-    pc.silver = Math.floor(total / 10)
-    pc.copper = total % 10
 }
 
 export function calculateArmorClassForPlayer(pc: PlayerCharacter) {
@@ -591,9 +585,8 @@ function isWearableArmor(g: GearInfo): boolean {
 }
 
 export function canPlayerAffordGear(pc: PlayerCharacter, g: GearInfo, quantity = 1) {
-    const {gp, sp, cp} = g.cost
-    const convertedCost = gp * 100 + sp * 10 + cp * quantity
-    const pcConverted = pc.gold * 100 + pc.silver * 10 + pc.copper
+    const convertedCost = gearCostToTotal(g, quantity)
+    const pcConverted = playerMoneyToTotal(pc)
     return pcConverted >= convertedCost
 }
 
