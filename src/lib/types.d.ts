@@ -144,6 +144,7 @@ export type PlayerCharacter = {
     customSpells: SpellInfo[]
     mishapTable?: MishapClass
     hitPoints: number
+    luckToken?: boolean
 }
 
 /////// Bonus

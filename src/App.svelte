@@ -203,7 +203,7 @@
                         <div>{title}</div>
                     {/if}
                 </div>
-                <div class="col-span-full cell">
+                <div class="cell">
                     <h2>ALIGNMENT</h2>
                     <select bind:value={$pc.alignment}>
                         {#each ALIGNMENTS as alignment}
@@ -212,6 +212,19 @@
                             </option>
                         {/each}
                     </select>
+                </div>
+                <div class="cell">
+                    <h2>LUCK TOKEN</h2>
+                    <label class="flex items-center cursor-pointer relative">
+                        <input type="checkbox"
+                               class="peer h-9 mx-1 cursor-pointer appearance-none rounded-full bg-slate-100 border border-slate-300 checked:bg-slate-800 checked:border-slate-800 transition-all duration-150"
+                               id="check-custom-style"
+                               bind:checked={$pc.luckToken}
+                        />
+                        <span class="coin" aria-hidden="true">
+                            <img src="/coin.svg" alt="Coin" class="h-10 w-10" />
+                        </span>
+                    </label>
                 </div>
                 <div class="col-span-full cell">
                     <BackgroundView/>
@@ -249,5 +262,36 @@
         position: relative;
         border-radius: 0.5rem;
         box-shadow: inset 0 0 5px #000;
+    }
+
+    @keyframes coinFlip {
+        0% {
+            transform: translate(-50%, -50%) scale(0.6) rotateY(0deg);
+            opacity: 0;
+        }
+        50% {
+            transform: translate(-50%, -50%) scale(1.12) rotateY(180deg);
+            opacity: 1;
+        }
+        100% {
+            transform: translate(-50%, -50%) scale(1) rotateY(360deg);
+            opacity: 1;
+        }
+    }
+
+    .coin {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.6);
+        transform-style: preserve-3d;
+        backface-visibility: hidden;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    input:checked + .coin {
+        opacity: 1;
+        animation: coinFlip 0.7s ease-out forwards;
     }
 </style>

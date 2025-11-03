@@ -67,6 +67,7 @@ export function defaultPC(): PlayerCharacter {
         spells: [],
         customSpells: [],
         hitPoints: 1,
+        luckToken: true,
     }
 }
 
