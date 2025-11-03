@@ -1,6 +1,6 @@
 import {findAny} from "./compendium"
 import {DICE_TYPES, ValueForDiceType} from "./constants"
-import type {DiceType, Gear, GearInfo} from "./types"
+import type {Cost, DiceType, Gear, GearInfo, PlayerCharacter, Slots} from "./types"
 
 export function clamp(n: number, min: number, max: number): number {
     return Math.max(Math.min(max, n), min)
@@ -36,16 +36,32 @@ export function addSign(n: number): string {
     return `${n >= 0 ? "+" : ""}${n}`
 }
 
-export function alphabetically(a: string, b: string): number {
-    a = a.toLowerCase()
-    b = b.toLowerCase()
-    if (a < b) {
-        return -1
+export function sortAlphabetically(a: string, b: string, ascending = true): number {
+    const dir = ascending ? 1 : -1
+    return a.localeCompare(b, undefined, { sensitivity: 'base' }) * dir
+}
+
+export function sortNumeric(a: number, b: number, ascending = true): number {
+    const dir = ascending ? 1 : -1
+    return (a - b) * dir
+}
+
+export function sortCost(a: Cost, b: Cost, ascending = true): number {
+    return (
+        sortNumeric(a.gp, b.gp, ascending) ||
+        sortNumeric(a.sp, b.sp, ascending) ||
+        sortNumeric(a.cp, b.cp, ascending)
+    )
+}
+
+export function sortSlots(a: Slots, b: Slots, ascending = true): number {
+    if (a.freeCarry !== b.freeCarry) {
+        return (a.freeCarry ? -1 : 1) * (ascending ? 1 : -1)
     }
-    if (a > b) {
-        return 1
-    }
-    return 0
+    return (
+        sortNumeric(a.slotsUsed, b.slotsUsed, ascending) ||
+        sortNumeric(b.perSlot, a.perSlot, ascending) // inverted a and b, more perSlot -> "smaller" item
+    )
 }
 
 export function toInfo<T extends GearInfo>(g: Gear): T {
@@ -76,13 +92,43 @@ export function debounce<F extends (...args: any[]) => any>(
     }
 }
 
-// eslint-disable-next-line
-export function assertUnreachable(_x: never): never {
-    throw new Error("Didn't expect to get here")
-}
-
 export function compareDiceType(a: DiceType, b: DiceType) {
     return (
         DICE_TYPES.findIndex((d) => d === a) - DICE_TYPES.findIndex((d) => d === b)
     )
+}
+
+export function gearCostToTotal(g: GearInfo, quantity = 1): number {
+    return coinToTotal(g.cost) * quantity
+}
+
+export function playerMoneyToTotal(pc: PlayerCharacter): number {
+    return coinToTotal({gp: pc.gold, sp: pc.silver, cp: pc.copper})
+}
+
+export function coinToTotal(money: Cost): number {
+    return money.cp + money.sp * 10 + money.gp * 100
+}
+
+export function totalToCost(total: number): Cost {
+    const cost = {gp: Math.floor(total / 100), sp: 0, cp: 0}
+    total %= 100
+    cost.sp = Math.floor(total / 10)
+    cost.cp = total % 10
+    return cost
+}
+
+export function totalToPlayerMoney(pc: PlayerCharacter, total: number) {
+    pc.gold = Math.floor(total / 100)
+    total %= 100
+    pc.silver = Math.floor(total / 10)
+    pc.copper = total % 10
+}
+
+export function roundCostTo5(cost: Cost): Cost {
+    return {
+        gp: Math.floor(cost.gp / 5) * 5,
+        sp: Math.floor(cost.sp / 5) * 5,
+        cp: Math.floor(cost.cp / 5) * 5
+    }
 }

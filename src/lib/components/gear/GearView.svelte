@@ -3,11 +3,10 @@
     import GearButton from "./GearButton.svelte"
     import {findAny} from "../../compendium"
     import {calculateGearSlotsForPlayer, pc} from "../../model/PlayerCharacter"
-    import {alphabetically} from "../../utils"
+    import {sortAlphabetically, gearCostToTotal, playerMoneyToTotal, totalToPlayerMoney} from "../../utils"
     import type {Gear} from "../../types"
     import MenuOption from "../Menu/MenuOption.svelte"
     import Menu from "../Menu/Menu.svelte"
-    import {gearCostToTotal, playerMoneyToTotal, totalToPlayerMoney} from "../../services/Helper"
 
     // variables for right click menu
     let showMenu = false
@@ -19,7 +18,7 @@
     const COIN_NAME = "Extra Coins"
     $: costlyGear = $pc.gear
         .filter((g) => findAny(g.name)?.slots.freeCarry === 0)
-        .sort((a, b) => alphabetically(a.name, b.name))
+        .sort((a, b) => sortAlphabetically(a.name, b.name))
 
     $: totalCoins = $pc.gold + $pc.silver + $pc.copper
 
@@ -32,7 +31,7 @@
 
     $: freeGear = $pc.gear
         .filter((g) => findAny(g.name)?.slots.freeCarry)
-        .sort((a, b) => alphabetically(a.name, b.name))
+        .sort((a, b) => sortAlphabetically(a.name, b.name))
 
     $: totalSlots = calculateGearSlotsForPlayer($pc)
 

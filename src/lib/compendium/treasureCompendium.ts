@@ -1,6 +1,6 @@
 import type {TreasureInfo} from "../types"
 import {TREASURE_PROPERTIES} from "../constants"
-import {gearCostToTotal, totalToCost, roundCostTo5} from "../services/Helper"
+import {gearCostToTotal, totalToCost, roundCostTo5} from "../utils"
 
 export const TREASURE: TreasureInfo[] = [
     // #################################################################################################################

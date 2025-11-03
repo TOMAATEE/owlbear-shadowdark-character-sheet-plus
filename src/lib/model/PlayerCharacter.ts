@@ -29,10 +29,9 @@ import type {
     Title,
     WeaponInfo,
 } from "../types"
-import {alphabetically, clamp, compareDiceType, toInfo} from "../utils"
+import {sortAlphabetically, clamp, compareDiceType, toInfo, gearCostToTotal, playerMoneyToTotal} from "../utils"
 import {slotsForGear} from "./Gear"
 import SPELL_COMPENDIUM from "../compendium/spellCompendium"
-import {gearCostToTotal, playerMoneyToTotal} from "../services/Helper"
 
 export const PlayerCharacterStore = createUndoRedoStore(
     writable<PlayerCharacter>(defaultPC()),
@@ -404,7 +403,7 @@ export function calculateGearSlotsForPlayer(pc: PlayerCharacter) {
 export function calculateFreeSlotsForPlayer(pc: PlayerCharacter): number {
     const costlyGear = pc.gear
         .filter((g) => findAny(g.name)?.slots?.freeCarry === 0)
-        .sort((a, b) => alphabetically(a.name, b.name))
+        .sort((a, b) => sortAlphabetically(a.name, b.name))
 
     const totalSlots = calculateGearSlotsForPlayer(pc)
 

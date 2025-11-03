@@ -2,7 +2,7 @@
     import {findAny} from "../../compendium"
     import {CLASSES} from "../../constants"
     import {pc} from "../../model/PlayerCharacter"
-    import {alphabetically} from "../../utils"
+    import {sortAlphabetically} from "../../utils"
     import RollNewTalentButton from "../talents/RollNewTalentButton.svelte"
     import BonusView from "./BonusView.svelte"
     import CustomBonusButton from "./CustomBonusButton.svelte"
@@ -20,7 +20,7 @@
 
 <h2>Bonuses</h2>
 <ul class="px-1">
-    {#each $pc.bonuses.sort((a, b) => alphabetically(a.desc, b.desc)) as b}
+    {#each $pc.bonuses.sort((a, b) => sortAlphabetically(a.desc, b.desc)) as b}
         <li class="border-b">
             <BonusView bonus={b}/>
         </li>
@@ -29,7 +29,7 @@
 
 <h2>Bonuses From Items</h2>
 <ul>
-    {#each otherGearWithBonuses.sort((a, b) => alphabetically(a.name, b.name)) as g}
+    {#each otherGearWithBonuses.sort((a, b) => sortAlphabetically(a.name, b.name)) as g}
         <li class="border-b">
             <div class="font-bold bg-gray-300">{g.name}</div>
             <ul>
@@ -41,7 +41,7 @@
             </ul>
         </li>
     {/each}
-    {#each equippableGearWithBonuses.sort((a, b) => alphabetically(a.name, b.name)) as g}
+    {#each equippableGearWithBonuses.sort((a, b) => sortAlphabetically(a.name, b.name)) as g}
         <li class="border-b">
             <div class="font-bold bg-gray-300">{g.name}</div>
             <ul>

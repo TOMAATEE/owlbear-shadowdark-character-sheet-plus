@@ -266,6 +266,11 @@ export type Cost = {
     sp: number
     cp: number
 }
+export type Slots = {
+    perSlot: number
+    slotsUsed: number
+    freeCarry: number
+}
 export type Currency = keyof Cost
 export type GearProperty =
     | ShieldProperty
@@ -279,11 +284,7 @@ export type GearInfo = {
     properties?: GearProperty[]
     type: GearType
     canBeEquipped: boolean
-    slots: {
-        perSlot: number
-        slotsUsed: number
-        freeCarry: number
-    }
+    slots: Slots
     cost: Cost
     desc?: string
     playerBonuses?: Bonus[]
