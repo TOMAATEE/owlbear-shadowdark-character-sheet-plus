@@ -54,9 +54,13 @@ export async function init() {
 }
 
 function subscribeToRoomNotifications() {
-    OBR.broadcast.onMessage(NOTIFICATION_KEY, ({data: notif}) => {
+    OBR.broadcast.onMessage(NOTIFICATION_KEY, async ({data: notif}) => {
         if (typeof notif !== "string") return
-        showNotification(notif)
+        try {
+            await showNotification(notif)
+        } catch (e) {
+            console.error("Failed to show:", notif, "|", e)
+        }
     })
 }
 

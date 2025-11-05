@@ -28,6 +28,29 @@ export async function notify(msg: string, options: NotifyOptions = {}) {
 }
 
 let timeoutHandle: NodeJS.Timeout
+const notificationQueue: string[] = []
+let isShowing = false
+
+async function processQueue() {
+    if (isShowing || notificationQueue.length === 0) return
+    isShowing = true
+
+    const msg = notificationQueue.shift()
+    try {
+        const popoverId = await OBR.notification.show(msg)
+        await new Promise(resolve =>
+            setTimeout(resolve, (get(Settings).popoverDuration ?? 5) * 1000)
+        )
+        await OBR.notification.close(popoverId)
+    } catch (e) {
+        console.error("Notification display failed:", e)
+        alert(msg)
+    } finally {
+        isShowing = false
+        // next notification
+        await processQueue()
+    }
+}
 
 export async function showNotification(msg: string) {
     pushNotification(msg)
@@ -36,13 +59,8 @@ export async function showNotification(msg: string) {
         timeoutHandle = null
     }
     try {
-        const popoverId = await OBR.notification.show(msg)
-        timeoutHandle = setTimeout(
-            () => {
-                OBR.notification.close(popoverId)
-            },
-            (get(Settings).popoverDuration ?? 5) * 1000
-        ) as unknown as NodeJS.Timeout
+        notificationQueue.push(msg)
+        await processQueue()
     } catch {
         alert(msg)
     }
