@@ -1,6 +1,6 @@
 import {findAny} from "./compendium"
 import {DICE_TYPES, ValueForDiceType} from "./constants"
-import type {Cost, DiceType, Gear, GearInfo, PlayerCharacter, Slots} from "./types"
+import type {ArmorInfo, Cost, DiceType, Gear, GearInfo, PlayerCharacter, Slots, TreasureInfo, WeaponInfo} from "./types"
 
 export function clamp(n: number, min: number, max: number): number {
     return Math.max(Math.min(max, n), min)
@@ -131,4 +131,16 @@ export function roundCostTo5(cost: Cost): Cost {
         sp: Math.floor(cost.sp / 5) * 5,
         cp: Math.floor(cost.cp / 5) * 5
     }
+}
+
+export function isWeaponInfo(gear: GearInfo): gear is WeaponInfo {
+    return gear.type === "Weapon";
+}
+
+export function isArmorInfo(gear: GearInfo): gear is ArmorInfo {
+    return gear.type === "Armor";
+}
+
+export function isTreasureInfo(gear: GearInfo): gear is TreasureInfo {
+    return gear.type === "Treasure";
 }

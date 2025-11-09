@@ -8,7 +8,7 @@ export const WEAPONS: WeaponInfo[] = [
         canBeEquipped: true,
         slots: {freeCarry: 0, perSlot: 1, slotsUsed: 2},
         properties: ["Versatile"],
-        range: "Close",
+        range: ["Close"],
         weaponType: "Melee",
         damage: {
             oneHanded: {diceType: "d8", numDice: 1},
@@ -125,7 +125,7 @@ export const WEAPONS: WeaponInfo[] = [
         canBeEquipped: true,
         slots: {freeCarry: 0, perSlot: 1, slotsUsed: 2},
         properties: ["Versatile"],
-        range: "Close",
+        range: ["Close"],
         weaponType: "Melee",
         damage: {
             oneHanded: {diceType: "d8", numDice: 1},
@@ -213,7 +213,7 @@ export const WEAPONS: WeaponInfo[] = [
         canBeEquipped: true,
         slots: {freeCarry: 0, perSlot: 1, slotsUsed: 1},
         properties: ["Versatile"],
-        range: "Close",
+        range: ["Close"],
         weaponType: "Melee",
         damage: {
             oneHanded: {diceType: "d6", numDice: 1},
@@ -353,7 +353,7 @@ export const WEAPONS: WeaponInfo[] = [
         canBeEquipped: true,
         slots: {freeCarry: 0, perSlot: 1, slotsUsed: 1},
         properties: ["Versatile"],
-        range: "Close",
+        range: ["Close"],
         weaponType: "Melee",
         damage: {
             twoHanded: {diceType: "d4", numDice: 1},
@@ -366,7 +366,7 @@ export const WEAPONS: WeaponInfo[] = [
         canBeEquipped: true,
         slots: {freeCarry: 0, perSlot: 1, slotsUsed: 1},
         properties: ["Sundering", "Versatile"],
-        range: "Close",
+        range: ["Close"],
         weaponType: "Melee",
         damage: {
             twoHanded: {diceType: "d6", numDice: 1},

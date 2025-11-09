@@ -5,10 +5,14 @@
     import TREASURE_COMPENDIUM from "../../compendium/treasureCompendium"
     import { canPlayerAffordGear, pc } from "../../model/PlayerCharacter"
     import type { GearInfo } from "../../types"
-    import { sortAlphabetically, sortCost, sortSlots, gearCostToTotal, playerMoneyToTotal, totalToPlayerMoney } from "../../utils"
+    import {
+        sortAlphabetically, sortCost, sortSlots, gearCostToTotal, playerMoneyToTotal, totalToPlayerMoney,
+        isWeaponInfo, isArmorInfo
+    } from "../../utils"
     import Modal from "../Modal.svelte"
     import CustomGearForm from "./CustomGearForm.svelte"
     import TextInput from "../TextInput.svelte"
+    import {STATS} from "../../constants";
 
     let gear: GearInfo = undefined
     let showCustomGearEditModal = false
@@ -22,6 +26,7 @@
     let showBasic = true
     let showTreasure = false
     let showCustom = false
+    let showModal = false
 
     let gearInput: string = ""
 
@@ -148,7 +153,17 @@
             {#each allResults as g, i (g.name + g.type)}
                 {#key g.name + g.type}
                     <tr class="border-b" class:bg-gray-100={i % 2 === 0}>
-                        <td class="pl-3">{g.name}</td>
+                        <td class="pl-3">
+                            <div class="flex items-center justify-between w-full">
+                            {g.name}
+                            <button on:click={() => {
+                                            gear = g
+                                            showModal = true
+                            }}>
+                                <i class="material-icons">info</i>
+                            </button>
+                            </div>
+                        </td>
                         <td class="justify-end flex mr-2">{getCostForGear(g)}</td>
                         <td class="pr-3">{getSlotsForGear(g)}</td>
                         <td>
@@ -201,5 +216,36 @@
                     gear = undefined
                 }}
         />
+    </Modal>
+{/if}
+
+{#if showModal}
+    <Modal bind:showModal>
+        <h2 slot="header">{gear.name}</h2>
+        <div>Type: {gear.type}</div>
+        {#if gear.desc}
+            <div>Description: {gear.desc}</div>
+        {/if}
+        <div>Cost: {getCostForGear(gear).includes("p") ? getCostForGear(gear) : "Free"}</div>
+        {#if gear.properties && gear.properties.length !== 0}
+            <div>Properties: {gear.properties.join(", ")}</div>
+        {/if}
+        {#if isWeaponInfo(gear)}
+            <div>Range: {Object.values(gear.range).join(", ")}</div>
+            <div>
+                Damage: {#if gear.damage.oneHanded}One Handed: {gear.damage.oneHanded.numDice}{gear.damage.oneHanded.diceType}{/if}
+                {#if gear.damage.twoHanded}Two Handed: {gear.damage.twoHanded.numDice}{gear.damage.twoHanded.diceType}{/if}
+            </div>
+            {#if gear.playerBonuses.length > 0}
+                <div>
+                    Bonuses:
+                    {#each gear.playerBonuses as b}
+                        <strong>{b.name}: </strong>{b.desc + "\n"}
+                    {/each}
+                </div>
+            {/if}
+        {:else if isArmorInfo(gear)}
+            <div>Armor Value: Base: {gear.ac.base} Bonus: {gear.ac.modifier} Stat: {STATS[gear.ac.modifier]}</div>
+        {/if}
     </Modal>
 {/if}

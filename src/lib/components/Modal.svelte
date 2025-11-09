@@ -23,12 +23,14 @@
         on:click|self={() => dialog.close()}
 >
     <div on:click|stopPropagation>
-        <button
-                class="absolute top-0 right-0 p-4 hover:bg-gray-200 rounded-md"
-                on:click={() => {showModal = false}}
-        ><i class="material-icons">close</i>
-        </button>
-        <slot name="header"/>
+        <div class="flex items-center justify-between">
+            <slot name="header" />
+            <button
+                    class="p-1 hover:bg-gray-200 rounded-md"
+                    on:click={() => (showModal = false)}
+            ><i class="material-icons">close</i>
+            </button>
+        </div>
         <hr/>
         <slot/>
         <hr/>
