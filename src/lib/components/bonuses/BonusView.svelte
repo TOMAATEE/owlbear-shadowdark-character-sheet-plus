@@ -10,6 +10,7 @@
     import {addSign} from "../../utils"
     import Modal from "../Modal.svelte"
     import {addBonusToPlayer} from "../../model/PlayerCharacter.js"
+    import Labelled from "../Labelled.svelte"
 
     export let bonus: Bonus
     export let showInfo = true
@@ -91,8 +92,8 @@
 {#if showModal}
     <Modal bind:showModal>
         <h2 slot="header">{b.name}</h2>
-        <div>Description: {b.desc}</div>
-        <div>Source: {b.bonusSource ?? "none"}</div>
-        <div>Editable: {b.editable ?? "no"}</div>
+        <Labelled label="Description" text={b.desc}/>
+        <Labelled label="Source" text={b.bonusSource ?? "none"}/>
+        <Labelled label="Editable" text={b.editable ? "yes" : "no"}/>
     </Modal>
 {/if}

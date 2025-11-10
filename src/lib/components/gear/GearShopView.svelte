@@ -12,6 +12,7 @@
     import Modal from "../Modal.svelte"
     import CustomGearForm from "./CustomGearForm.svelte"
     import TextInput from "../TextInput.svelte"
+    import Labelled from "../Labelled.svelte"
 
     let gear: GearInfo = undefined
     let showCustomGearEditModal = false
@@ -224,32 +225,40 @@
 {#if showModal}
     <Modal bind:showModal>
         <h2 slot="header">{gear.name}</h2>
-        <div>Type: {gear.type}</div>
+        <Labelled label="Type" text={gear.type}/>
         {#if gear.desc}
-            <div>Description: {gear.desc}</div>
+            <Labelled label="Description" text={gear.desc}/>
         {/if}
-        <div>Cost: {getCostForGear(gear).includes("p") ? getCostForGear(gear) : "Free"}</div>
-        {#if gear.properties && gear.properties.length !== 0}
-            <div>Properties: {gear.properties.join(", ")}</div>
+        <Labelled label="Cost" text={getCostForGear(gear).includes("p") ? getCostForGear(gear) : "Free"}/>
+        {#if gear.properties?.length > 0}
+            <Labelled label="Properties" text={gear.properties.join(", ")}/>
         {/if}
         {#if isWeaponInfo(gear)}
-            <div>Range: {Object.values(gear.range).join(", ")}</div>
-            <div>
-                Damage: {#if gear.damage.oneHanded}One Handed: {gear.damage.oneHanded.numDice}{gear.damage.oneHanded.diceType}{/if}
-                {#if gear.damage.twoHanded}Two Handed: {gear.damage.twoHanded.numDice}{gear.damage.twoHanded.diceType}{/if}
-            </div>
-            {#if gear.playerBonuses.length > 0}
-                <div>
-                    Bonuses:
-                    {#each gear.playerBonuses as b}
-                        <strong>{b.name}: </strong>{b.desc + "\n"}
-                    {/each}
-                </div>
-            {/if}
+            <Labelled label="Range" text={Object.values(gear.range).join(", ")}/>
+            <Labelled
+                    label="Damage"
+                    subLabels={["One Handed", "Two Handed"]}
+                    subTexts={[
+                        gear.damage.oneHanded ? `${gear.damage.oneHanded.numDice}${gear.damage.oneHanded.diceType}` : "",
+                        gear.damage.twoHanded ? `${gear.damage.twoHanded.numDice}${gear.damage.twoHanded.diceType}` : ""
+                        ].filter(Boolean)
+                    }
+            />
         {:else if isArmorInfo(gear)}
-            <div>Armor Value: Base: {gear.ac.base} Bonus: {gear.ac.modifier} Stat: {gear.ac.stat ?? "None"}</div>
+            <Labelled label="Armor Value"
+                      text={gear.ac.base
+                            ? `${gear.ac.base}${gear.ac.stat ? ` + ${gear.ac.stat} Modifier` : ""}`
+                            : `+${gear.ac.modifier}`}
+            />
         {:else if isTreasureInfo(gear)}
-            <div>Treasure Tax: {Math.floor((treasureTax - 1) * 100)}%</div>
+            <Labelled label="Treasure Info" text={`${Math.floor((treasureTax - 1) * 100)}%`}/>
+        {/if}
+        {#if gear.playerBonuses?.length > 0}
+            <Labelled
+                    label="Bonuses"
+                    subLabels={gear.playerBonuses.map(b => b.name)}
+                    subTexts={gear.playerBonuses.map(b => b.desc)}
+            />
         {/if}
     </Modal>
 {/if}

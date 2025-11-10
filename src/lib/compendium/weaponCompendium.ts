@@ -38,7 +38,7 @@ export const WEAPONS: WeaponInfo[] = [
         range: ["Near"],
         weaponType: "Ranged",
         damage: {
-            oneHanded: {diceType: "d1", numDice: 0},
+            oneHanded: {diceType: "d1", numDice: 1},
         },
     },
     {
