@@ -7,18 +7,19 @@
     import type { GearInfo } from "../../types"
     import {
         sortAlphabetically, sortCost, sortSlots, gearCostToTotal, playerMoneyToTotal, totalToPlayerMoney,
-        isWeaponInfo, isArmorInfo
+        isWeaponInfo, isArmorInfo, coinToTotal, totalToCost, isTreasureInfo
     } from "../../utils"
     import Modal from "../Modal.svelte"
     import CustomGearForm from "./CustomGearForm.svelte"
     import TextInput from "../TextInput.svelte"
-    import {STATS} from "../../constants";
 
     let gear: GearInfo = undefined
     let showCustomGearEditModal = false
 
     let ascending = true
     let sortMode: "name" | "cost" | "slots"
+
+    let treasureTax = 1.01
 
     let showOnlyWhatICanAfford = false
     let showWeapon = true
@@ -79,9 +80,10 @@
     }
 
     function buyGear(g: GearInfo, quantity: number) {
-        if (canPlayerAffordGear($pc, g, quantity)) {
+        let m = quantity * (g.type === "Treasure" ? treasureTax : 1)
+        if (canPlayerAffordGear($pc, g, m)) {
             let pcTotal = playerMoneyToTotal($pc)
-            let costTotal = gearCostToTotal(g, quantity)
+            let costTotal = gearCostToTotal(g, m)
             pcTotal -= costTotal
             totalToPlayerMoney($pc, pcTotal)
             addGear(g, quantity)
@@ -98,8 +100,8 @@
         allResults = [...allResults]
     }
 
-    function getCostForGear(g: GearInfo): string {
-        const { gp, sp, cp } = g.cost
+    function getCostForGear(g: GearInfo, multiplier = 1): string {
+        const { gp, sp, cp } = totalToCost(coinToTotal(g.cost) * multiplier)
         return [gp && `${gp}gp`, sp && `${sp}sp`, cp && `${cp}cp`].filter(Boolean).join(" ")
     }
 
@@ -164,7 +166,7 @@
                             </button>
                             </div>
                         </td>
-                        <td class="justify-end flex mr-2">{getCostForGear(g)}</td>
+                        <td class="justify-end flex mr-2">{getCostForGear(g, g.type === "Treasure" ? treasureTax : 1)}</td>
                         <td class="pr-3">{getSlotsForGear(g)}</td>
                         <td>
                             <input
@@ -245,7 +247,9 @@
                 </div>
             {/if}
         {:else if isArmorInfo(gear)}
-            <div>Armor Value: Base: {gear.ac.base} Bonus: {gear.ac.modifier} Stat: {STATS[gear.ac.modifier]}</div>
+            <div>Armor Value: Base: {gear.ac.base} Bonus: {gear.ac.modifier} Stat: {gear.ac.stat ?? "None"}</div>
+        {:else if isTreasureInfo(gear)}
+            <div>Treasure Tax: {Math.floor((treasureTax - 1) * 100)}%</div>
         {/if}
     </Modal>
 {/if}
