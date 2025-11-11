@@ -2,7 +2,7 @@ import type {Class, SpellTier} from "./types"
 
 export const GEAR_TYPES = ["Basic", "Armor", "Weapon", "Treasure"] as const
 export const SHIELD_PROPERTIES = [
-    "Shield",
+    "Sundering",
     "OneHanded",
     "TwoHanded",
     "Magic",
@@ -278,3 +278,5 @@ export const ValueForDiceType = {
 } as const
 
 export const SPELL_TIERS: SpellTier[] = [0, 1, 2, 3, 4, 5]
+
+export const TREASURE_TAX = 1.01

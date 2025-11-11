@@ -8,8 +8,8 @@
         <button
                 class="absolute right-0"
                 on:click={() => {
-        value = ""
-      }}
+                    value = ""
+                }}
         >
             <i class="material-icons bg-gray-500 text-white rounded-full text-md p-1 scale-[60%]">
                 close

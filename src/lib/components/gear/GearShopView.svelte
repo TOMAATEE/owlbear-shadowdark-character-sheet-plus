@@ -6,21 +6,23 @@
     import { canPlayerAffordGear, pc } from "../../model/PlayerCharacter"
     import type { GearInfo } from "../../types"
     import {
-        sortAlphabetically, sortCost, sortSlots, gearCostToTotal, playerMoneyToTotal, totalToPlayerMoney,
-        isWeaponInfo, isArmorInfo, coinToTotal, totalToCost, isTreasureInfo
+        sortAlphabetically, sortCost, sortSlots, gearCostToTotal, playerMoneyToTotal, totalToPlayerMoney, getCostForGear
     } from "../../utils"
     import Modal from "../Modal.svelte"
     import CustomGearForm from "./CustomGearForm.svelte"
     import TextInput from "../TextInput.svelte"
-    import Labelled from "../Labelled.svelte"
+    import PropertyInfoModal from "./PropertyInfoModal.svelte"
+    import {TREASURE_TAX} from "../../constants"
+    import GearInfoModal from "./GearInfoModal.svelte"
 
     let gear: GearInfo = undefined
+
     let showCustomGearEditModal = false
+    let showGearInfoModal = false
+    let showPropertyModal = false
 
     let ascending = true
     let sortMode: "name" | "cost" | "slots"
-
-    let treasureTax = 1.01
 
     let showOnlyWhatICanAfford = false
     let showWeapon = true
@@ -28,7 +30,6 @@
     let showBasic = true
     let showTreasure = false
     let showCustom = false
-    let showModal = false
 
     let gearInput: string = ""
 
@@ -81,7 +82,7 @@
     }
 
     function buyGear(g: GearInfo, quantity: number) {
-        let m = quantity * (g.type === "Treasure" ? treasureTax : 1)
+        let m = quantity * (g.type === "Treasure" ? TREASURE_TAX : 1)
         if (canPlayerAffordGear($pc, g, m)) {
             let pcTotal = playerMoneyToTotal($pc)
             let costTotal = gearCostToTotal(g, m)
@@ -101,11 +102,6 @@
         allResults = [...allResults]
     }
 
-    function getCostForGear(g: GearInfo, multiplier = 1): string {
-        const { gp, sp, cp } = totalToCost(coinToTotal(g.cost) * multiplier)
-        return [gp && `${gp}gp`, sp && `${sp}sp`, cp && `${cp}cp`].filter(Boolean).join(" ")
-    }
-
     function getSlotsForGear(g: GearInfo) {
         return g.slots.freeCarry || g.slots.slotsUsed === 0
             ? "Free"
@@ -122,91 +118,99 @@
 </script>
 
 <div class="border-b flex flex-col gap-1">
-    <TextInput
-            bind:value={gearInput}
-            placeholder="search e.g. Torch"
-            class="w-full"
-    />
-    <div class="flex gap-1 items-center flex-wrap">
-        <div class="font-bold">Filter:</div>
-        <input id="showWeapon" type="checkbox" bind:checked={showWeapon}/>
-        <label for="showWeapon">Weapon</label>
-        <input id="showArmor" type="checkbox" bind:checked={showArmor}/>
-        <label for="showArmor">Armor</label>
-        <input id="showBasic" type="checkbox" bind:checked={showBasic}/>
-        <label for="showBasic">Basic</label>
-        <input id="showTreasure" type="checkbox" bind:checked={showTreasure}/>
-        <label for="showTreasure">Treasure</label>
-        <input id="showCustom" type="checkbox" bind:checked={showCustom}/>
-        <label for="showCustom">Custom</label>
-        <input id="showAffordable" type="checkbox" bind:checked={showOnlyWhatICanAfford}/>
-        <label for="showAffordable">Affordable</label>
+    <div class="sticky top-0 bg-white z-20 py-2">
+        <div class="flex items-center gap-2">
+            <div class="flex-grow">
+                <TextInput
+                        bind:value={gearInput}
+                        placeholder="search e.g. Torch"
+                        class="w-full flex-grow"
+                />
+            </div>
+            <button class="flex-shrink-0" on:click={() => {showPropertyModal = true}}>
+                <i class="material-icons">info</i>
+            </button>
+        </div>
+        <div class="flex gap-1 items-center flex-wrap">
+            <div class="font-bold">Filter:</div>
+            <input id="showWeapon" type="checkbox" bind:checked={showWeapon}/>
+            <label for="showWeapon">Weapon</label>
+            <input id="showArmor" type="checkbox" bind:checked={showArmor}/>
+            <label for="showArmor">Armor</label>
+            <input id="showBasic" type="checkbox" bind:checked={showBasic}/>
+            <label for="showBasic">Basic</label>
+            <input id="showTreasure" type="checkbox" bind:checked={showTreasure}/>
+            <label for="showTreasure">Treasure</label>
+            <input id="showCustom" type="checkbox" bind:checked={showCustom}/>
+            <label for="showCustom">Custom</label>
+            <input id="showAffordable" type="checkbox" bind:checked={showOnlyWhatICanAfford}/>
+            <label for="showAffordable">Affordable</label>
+        </div>
     </div>
-    <div>
-        <table class="w-full">
-            <thead class="text-center sticky top-0 bg-white cursor-pointer">
-                <tr>
-                    <th class="text-start hover:bg-gray-200" on:click={() => sort("name")}>Name</th>
-                    <th class="hover:bg-gray-200" on:click={() => sort("cost")}>Cost</th>
-                    <th class="hover:bg-gray-200" on:click={() => sort("slots")}>Slots</th>
-                    <th class="hover:bg-gray-200 cursor-auto">Amount</th>
+    <table class="w-full">
+        <thead class="text-center cursor-pointer sticky top-[4rem] bg-white z-20">
+            <tr>
+                <th class="text-start hover:bg-gray-200" on:click={() => sort("name")}>Name</th>
+                <th class="hover:bg-gray-200" on:click={() => sort("cost")}>Cost</th>
+                <th class="hover:bg-gray-200" on:click={() => sort("slots")}>Slots</th>
+                <th class="hover:bg-gray-200 cursor-auto">Amount</th>
+                <th/>
+            </tr>
+        </thead>
+        <tbody>
+        {#each allResults as g, i (g.name + g.type)}
+            {#key g.name + g.type}
+                <tr class="border-b" class:bg-gray-100={i % 2 === 0}>
+                    <td class="pl-3">
+                        <div class="flex items-center justify-between w-full">
+                        {g.name}
+                        <button on:click={() => {
+                                        gear = g
+                                        showGearInfoModal = true
+                        }}>
+                            <i class="material-icons">info</i>
+                        </button>
+                        </div>
+                    </td>
+                    <td class="justify-end flex mr-2">{getCostForGear(g, g.type === "Treasure" ? TREASURE_TAX : 1)}</td>
+                    <td class="pr-3">{getSlotsForGear(g)}</td>
+                    <td>
+                        <input
+                                type="number"
+                                class="w-14"
+                                min="0"
+                                value={resultGear.find(r => r.name === g.name && r.type === g.type)?.quantity ?? 1}
+                                on:input={(e) => updateQuantity(g, +e.currentTarget.value)}
+                        />
+                    </td>
+                    <td class="flex justify-end gap-1">
+                        {#if g.editable}
+                            <button
+                                    class="bg-black rounded-md text-white px-1 text-xs hover:bg-gray-600"
+                                    on:click={() => deleteCustomGear(g)}><i class="material-icons">delete</i>
+                            </button>
+                            <button
+                                    class="bg-black rounded-md text-white px-1 text-xs hover:bg-gray-600"
+                                    on:click={() => {
+                                        gear = g
+                                        showCustomGearEditModal = true
+                                    }}><i class="material-icons">edit</i>
+                            </button>
+                        {/if}
+                        <button class="px-1 hover:bg-gray-400"
+                                on:click={() => addGear(g, resultGear.find(r => r.name === g.name && r.type === g.type)?.quantity ?? 1)}
+                        ><i class="material-icons translate-y-1">add_circle</i>
+                        </button>
+                        <button class="px-1 hover:bg-gray-400"
+                                on:click={() => buyGear(g, resultGear.find(r => r.name === g.name && r.type === g.type)?.quantity ?? 1)}
+                        ><i class="material-icons translate-y-1">shopping_cart</i>
+                        </button>
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-            {#each allResults as g, i (g.name + g.type)}
-                {#key g.name + g.type}
-                    <tr class="border-b" class:bg-gray-100={i % 2 === 0}>
-                        <td class="pl-3">
-                            <div class="flex items-center justify-between w-full">
-                            {g.name}
-                            <button on:click={() => {
-                                            gear = g
-                                            showModal = true
-                            }}>
-                                <i class="material-icons">info</i>
-                            </button>
-                            </div>
-                        </td>
-                        <td class="justify-end flex mr-2">{getCostForGear(g, g.type === "Treasure" ? treasureTax : 1)}</td>
-                        <td class="pr-3">{getSlotsForGear(g)}</td>
-                        <td>
-                            <input
-                                    type="number"
-                                    class="w-14"
-                                    min="0"
-                                    value={resultGear.find(r => r.name === g.name && r.type === g.type)?.quantity ?? 1}
-                                    on:input={(e) => updateQuantity(g, +e.currentTarget.value)}
-                            />
-                        </td>
-                        <td class="flex justify-end gap-1">
-                            {#if g.editable}
-                                <button
-                                        class="bg-black rounded-md text-white px-1 text-xs hover:bg-gray-600"
-                                        on:click={() => deleteCustomGear(g)}><i class="material-icons">delete</i>
-                                </button>
-                                <button
-                                        class="bg-black rounded-md text-white px-1 text-xs hover:bg-gray-600"
-                                        on:click={() => {
-                                            gear = g
-                                            showCustomGearEditModal = true
-                                        }}><i class="material-icons">edit</i>
-                                </button>
-                            {/if}
-                            <button class="px-1 hover:bg-gray-400"
-                                    on:click={() => addGear(g, resultGear.find(r => r.name === g.name && r.type === g.type)?.quantity ?? 1)}
-                            ><i class="material-icons translate-y-1">add_circle</i>
-                            </button>
-                            <button class="px-1 hover:bg-gray-400"
-                                    on:click={() => buyGear(g, resultGear.find(r => r.name === g.name && r.type === g.type)?.quantity ?? 1)}
-                            ><i class="material-icons translate-y-1">shopping_cart</i>
-                            </button>
-                        </td>
-                    </tr>
-                {/key}
-            {/each}
-            </tbody>
-        </table>
-    </div>
+            {/key}
+        {/each}
+        </tbody>
+    </table>
 </div>
 
 {#if showCustomGearEditModal && gear}
@@ -222,43 +226,8 @@
     </Modal>
 {/if}
 
-{#if showModal}
-    <Modal bind:showModal>
-        <h2 slot="header">{gear.name}</h2>
-        <Labelled label="Type" text={gear.type}/>
-        {#if gear.desc}
-            <Labelled label="Description" text={gear.desc}/>
-        {/if}
-        <Labelled label="Cost" text={getCostForGear(gear).includes("p") ? getCostForGear(gear) : "Free"}/>
-        {#if gear.properties?.length > 0}
-            <Labelled label="Properties" text={gear.properties.join(", ")}/>
-        {/if}
-        {#if isWeaponInfo(gear)}
-            <Labelled label="Range" text={Object.values(gear.range).join(", ")}/>
-            <Labelled
-                    label="Damage"
-                    subLabels={["One Handed", "Two Handed"]}
-                    subTexts={[
-                        gear.damage.oneHanded ? `${gear.damage.oneHanded.numDice}${gear.damage.oneHanded.diceType}` : "",
-                        gear.damage.twoHanded ? `${gear.damage.twoHanded.numDice}${gear.damage.twoHanded.diceType}` : ""
-                        ].filter(Boolean)
-                    }
-            />
-        {:else if isArmorInfo(gear)}
-            <Labelled label="Armor Value"
-                      text={gear.ac.base
-                            ? `${gear.ac.base}${gear.ac.stat ? ` + ${gear.ac.stat} Modifier` : ""}`
-                            : `+${gear.ac.modifier}`}
-            />
-        {:else if isTreasureInfo(gear)}
-            <Labelled label="Treasure Info" text={`${Math.floor((treasureTax - 1) * 100)}%`}/>
-        {/if}
-        {#if gear.playerBonuses?.length > 0}
-            <Labelled
-                    label="Bonuses"
-                    subLabels={gear.playerBonuses.map(b => b.name)}
-                    subTexts={gear.playerBonuses.map(b => b.desc)}
-            />
-        {/if}
-    </Modal>
+{#if showGearInfoModal && gear}
+    <GearInfoModal bind:showModal={showGearInfoModal} {gear}/>
 {/if}
+
+<PropertyInfoModal bind:showModal={showPropertyModal}/>

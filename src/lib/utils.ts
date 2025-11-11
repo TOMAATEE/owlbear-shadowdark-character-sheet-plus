@@ -133,6 +133,11 @@ export function roundCostTo5(cost: Cost): Cost {
     }
 }
 
+export function getCostForGear(g: GearInfo, multiplier = 1): string {
+    const { gp, sp, cp } = totalToCost(coinToTotal(g.cost) * multiplier)
+    return [gp && `${gp}gp`, sp && `${sp}sp`, cp && `${cp}cp`].filter(Boolean).join(" ")
+}
+
 export function isWeaponInfo(gear: GearInfo): gear is WeaponInfo {
     return gear.type === "Weapon";
 }

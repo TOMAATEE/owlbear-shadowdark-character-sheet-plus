@@ -87,17 +87,10 @@ export const ARMORS: ArmorInfo[] = [
         name: "Round Shield",
         type: "Armor",
         cost: {gp: 15, sp: 0, cp: 0},
-        properties: ["OneHanded"],
+        properties: ["OneHanded", "Sundering"],
         canBeEquipped: true,
         slots: {freeCarry: 0, perSlot: 1, slotsUsed: 1},
         ac: {base: 0, modifier: 2},
-        playerBonuses: [
-            {
-                type: "generic",
-                name: "Sunder block",
-                desc: "Sunder to negate one melee hit's damage",
-            }
-        ]
     },
 ]
 
