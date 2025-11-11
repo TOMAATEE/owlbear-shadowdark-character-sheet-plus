@@ -4,11 +4,22 @@
     export let vh: number = undefined
 
     let dialog: HTMLDialogElement
+    let clickedInside = false
 
     $: if (dialog) {
         if (showModal) {
             dialog.showModal()
         } else {
+            dialog.close()
+        }
+    }
+
+    function handleMouseDown(event: MouseEvent) {
+        clickedInside = event.target !== dialog
+    }
+
+    function handleMouseUp(event: MouseEvent) {
+        if (!clickedInside && event.target === dialog) {
             dialog.close()
         }
     }
@@ -20,7 +31,8 @@
         style={`min-width: 20rem; width: ${vw}vw;` + vh ? `height: ${vh}vh` : ""}
         bind:this={dialog}
         on:close={() => (showModal = false)}
-        on:click|self={() => dialog.close()}
+        on:mousedown={handleMouseDown}
+        on:mouseup={handleMouseUp}
 >
     <div on:click|stopPropagation>
         <div class="flex items-center justify-between">
@@ -34,7 +46,6 @@
         <hr/>
         <slot/>
         <hr/>
-        <!-- svelte-ignore a11y-autofocus -->
     </div>
 </dialog>
 
