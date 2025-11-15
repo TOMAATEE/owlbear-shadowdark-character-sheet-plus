@@ -1,10 +1,10 @@
 <script lang="ts">
     import Modal from "../Modal.svelte"
     import Labelled from "../Labelled.svelte"
-    import {getCostForGear, isArmorInfo, isTreasureInfo, isWeaponInfo} from "../../utils"
+    import {addSign, getCostForGear, isArmorInfo, isTreasureInfo, isWeaponInfo} from "../../utils"
     import PropertyInfoModal from "./PropertyInfoModal.svelte"
     import type {GearInfo} from "../../types"
-    import {TREASURE_TAX} from "../../constants"
+    import {TREASURE_TAX_PERCENT} from "../../constants"
 
     export let showModal = false
     export let gear: GearInfo = undefined
@@ -21,7 +21,7 @@
             <Labelled label="Description" text={gear.desc}/>
         {/if}
         <Labelled label="Cost" text={cost.includes("p") ? cost : "Free"}/>
-        {#if gear.properties?.length > 0}
+        {#if gear.properties?.length > 0 && gear.type !== "Treasure"}
             <div class="flex items-center justify-between">
                 <Labelled label="Properties" text={gear.properties.join(", ")}/>
                 <button on:click={() => {showPropertyModal = true}}>
@@ -47,7 +47,7 @@
                             : `+${gear.ac.modifier}`}
             />
         {:else if isTreasureInfo(gear)}
-            <Labelled label="Treasure Info" text={`${Math.floor((TREASURE_TAX - 1) * 100)}%`}/>
+            <Labelled label="Treasure Tax" text={`${addSign(TREASURE_TAX_PERCENT)}% when buying (${getCostForGear(gear, TREASURE_TAX_PERCENT / 100)})`}/>
         {/if}
         {#if gear.playerBonuses?.length > 0}
             <Labelled

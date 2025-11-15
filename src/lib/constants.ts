@@ -279,4 +279,5 @@ export const ValueForDiceType = {
 
 export const SPELL_TIERS: SpellTier[] = [0, 1, 2, 3, 4, 5]
 
-export const TREASURE_TAX = 1.01
+export const TREASURE_TAX_PERCENT = 1
+export const TREASURE_TAX = 1 + TREASURE_TAX_PERCENT / 100

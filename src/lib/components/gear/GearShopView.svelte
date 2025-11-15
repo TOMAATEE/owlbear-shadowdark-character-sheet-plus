@@ -172,7 +172,7 @@
                         </button>
                         </div>
                     </td>
-                    <td class="justify-end flex mr-2">{getCostForGear(g, g.type === "Treasure" ? TREASURE_TAX : 1)}</td>
+                    <td class="pr-3 text-right">{getCostForGear(g, g.type === "Treasure" ? TREASURE_TAX : 1)}</td>
                     <td class="pr-3">{getSlotsForGear(g)}</td>
                     <td>
                         <input
@@ -183,18 +183,19 @@
                                 on:input={(e) => updateQuantity(g, +e.currentTarget.value)}
                         />
                     </td>
-                    <td class="flex justify-end gap-1">
+                    <td class="flex justify-end">
                         {#if g.editable}
                             <button
-                                    class="bg-black rounded-md text-white px-1 text-xs hover:bg-gray-600"
-                                    on:click={() => deleteCustomGear(g)}><i class="material-icons">delete</i>
+                                    class="px-1 hover:bg-gray-400"
+                                    on:click={() => deleteCustomGear(g)}
+                            ><i class="material-icons translate-y-1">delete</i>
                             </button>
                             <button
-                                    class="bg-black rounded-md text-white px-1 text-xs hover:bg-gray-600"
+                                    class="px-1 hover:bg-gray-400"
                                     on:click={() => {
                                         gear = g
                                         showCustomGearEditModal = true
-                                    }}><i class="material-icons">edit</i>
+                                    }}><i class="material-icons translate-y-1">edit</i>
                             </button>
                         {/if}
                         <button class="px-1 hover:bg-gray-400"
