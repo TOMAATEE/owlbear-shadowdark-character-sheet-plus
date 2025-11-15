@@ -79,6 +79,11 @@
         $pc = $pc
     }
 
+    function toggleBroken(g: Gear) {
+        g.broken = !g.broken
+        $pc = $pc
+    }
+
     function canInteractWithGear(_gear: Gear): boolean {
         return true
         // as nice as this is, it is ultimately limiting to the player's creativity
@@ -209,6 +214,13 @@
                                         on:click={() => toggleEquipped(g)}
                                 />
                             {/if}
+                            <input
+                                    title="broken"
+                                    type="checkbox"
+                                    class="w-6 h-6"
+                                    checked={g.broken}
+                                    on:click={() => toggleBroken(g)}
+                            />
                             <button
                                     on:click={() => deleteGear(g.name)}
                                     class="px-1 pt-1 rounded-md bg-black text-white"
@@ -246,6 +258,13 @@
                                     on:click={() => toggleEquipped(g)}
                             />
                         {/if}
+                        <input
+                                title="broken"
+                                type="checkbox"
+                                class="w-6 h-6"
+                                checked={g.broken}
+                                on:click={() => toggleBroken(g)}
+                        />
                         <button on:click={() => deleteGear(g.name)} class="px-1 pt-1 rounded-md bg-black text-white">
                             <i class="material-icons">delete</i>
                         </button>

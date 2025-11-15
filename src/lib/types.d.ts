@@ -295,6 +295,7 @@ export type Gear = {
     name: string
     quantity: number
     equipped?: boolean
+    broken?: boolean
 }
 export type TreasureProperty = keyof typeof TREASURE_PROPERTIES
 export type TreasureInfo = Merge<
