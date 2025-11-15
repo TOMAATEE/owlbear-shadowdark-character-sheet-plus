@@ -1,10 +1,10 @@
 <script lang="ts">
     export let showModal: boolean = true
-    export let vw: number = 85
+    export let vw: number = undefined
     export let vh: number = undefined
 
     let dialog: HTMLDialogElement
-    let clickedInside = false
+    let content: HTMLElement
 
     $: if (dialog) {
         if (showModal) {
@@ -14,27 +14,32 @@
         }
     }
 
-    function handleMouseDown(event: MouseEvent) {
-        clickedInside = event.target !== dialog
+    function handleDialogClick(event: MouseEvent) {
+        if (!content) return
+
+        const rect = content.getBoundingClientRect()
+        const x = event.clientX
+        const y = event.clientY
+
+        if (x < rect.left || x > rect.right || y < rect.top || y > rect.bottom) {
+            showModal = false
+        }
     }
 
-    function handleMouseUp(event: MouseEvent) {
-        if (!clickedInside && event.target === dialog) {
-            dialog.close()
-        }
+    function onDialogClose() {
+        showModal = false
     }
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <dialog
         class="max-w-3xl"
-        style={`min-width: 20rem; width: ${vw}vw;` + vh ? `height: ${vh}vh` : ""}
+        style={`min-width: 10rem;` + (vw ? ` width: ${vw}vw;` : "") + (vh ? ` height: ${vh}vh;` : "")}
         bind:this={dialog}
-        on:close={() => (showModal = false)}
-        on:mousedown={handleMouseDown}
-        on:mouseup={handleMouseUp}
+        on:click={handleDialogClick}
+        on:close={onDialogClose}
 >
-    <div on:click|stopPropagation>
+    <div bind:this={content} on:click|stopPropagation>
         <div class="flex items-center justify-between">
             <slot name="header" />
             <button
