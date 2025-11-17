@@ -14,6 +14,11 @@
     let showTier4 = true
     let showTier5 = true
 
+    let showLawful = true
+    let showNeutral = true
+    let showChaotic = true
+    let showAny = true
+
     let showPriest = true
     let showWizard = true
     let showWitch = true
@@ -38,6 +43,11 @@
             if (!showTier3 && s.tier === 3) return false
             if (!showTier4 && s.tier === 4) return false
             if (!showTier5 && s.tier === 5) return false
+
+            if (!showLawful && s.alignment === "Lawful") return false
+            if (!showNeutral && s.alignment === "Neutral") return false
+            if (!showChaotic && s.alignment === "Chaotic") return false
+            if (!showAny && s.alignment === undefined) return false
 
             if (!showSelf && s.range === "Self") return false
             if (!showClose && s.range === "Close") return false
@@ -94,6 +104,17 @@
                 <label for="showTier4">4</label>
                 <input id="showTier5" type="checkbox" bind:checked={showTier5}/>
                 <label for="showTier5">5</label>
+            </div>
+            <div class="flex gap-1 items-center">
+                <div class="font-bold">Alignment:</div>
+                <input id="showLawful" type="checkbox" bind:checked={showLawful}/>
+                <label for="showLawful">Lawful</label>
+                <input id="showNeutral" type="checkbox" bind:checked={showNeutral}/>
+                <label for="showNeutral">Neutral</label>
+                <input id="showChaotic" type="checkbox" bind:checked={showChaotic}/>
+                <label for="showChaotic">Chaotic</label>
+                <input id="showAny" type="checkbox" bind:checked={showAny}/>
+                <label for="showAny">Any</label>
             </div>
             <div class="flex gap-1 items-center">
                 <div class="font-bold">Class:</div>

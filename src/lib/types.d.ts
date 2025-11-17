@@ -65,6 +65,7 @@ export type SpellClass =
 export type SpellInfo = {
     name: string
     class: SpellClass
+    alignment?: Alignment
     stat?: Stat
     tier: SpellTier
     range: RangeType

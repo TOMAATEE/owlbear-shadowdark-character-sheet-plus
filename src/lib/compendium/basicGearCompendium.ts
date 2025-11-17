@@ -1,4 +1,4 @@
-import type {GearInfo} from "../types"
+import type {GearInfo, GenericBonus} from "../types"
 
 export const GEAR: GearInfo[] = [
     {
@@ -77,6 +77,14 @@ export const GEAR: GearInfo[] = [
         canBeEquipped: false,
         type: "Basic",
         slots: {perSlot: 10, slotsUsed: 1, freeCarry: 0},
+    },
+    {
+        name: "Health Potion",
+        desc: "Heal 1d6 hp",
+        cost: {gp: 0, sp: 1, cp: 0},
+        canBeEquipped: false,
+        type: "Basic",
+        slots: {perSlot: 1, slotsUsed: 1, freeCarry: 0},
     },
     {
         name: "Lantern",

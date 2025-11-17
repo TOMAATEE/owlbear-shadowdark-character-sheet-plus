@@ -69,6 +69,14 @@
             {duration}{s.duration.roll?.numDice ?? ""}{s.duration.roll?.diceType ?? ""}{" " + s.duration.type}{theS}
         </span>
     </div>
+    {#if s.alignment}
+        <div>
+            <span class="font-bold">Alignment:</span>
+            <span>
+                {s.alignment}
+            </span>
+        </div>
+    {/if}
     {#if s.roll && s.roll.numDice > 0}
         <div>
             <span class="font-bold">Dice:</span>
