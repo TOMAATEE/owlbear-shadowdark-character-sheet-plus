@@ -13,13 +13,31 @@ export const SPELLS: SpellInfo[] = [
         duration: {type: "Day", amt: 1},
     },
     {
+        name: "Blight",
+        range: "Self",
+        class: "Wizard",
+        alignment: "Chaotic",
+        tier: 1,
+        desc: "When you cast this spell, a close-sized patch of earth around you crumbles into lifeless ash. You gain +1 to your spellcasting checks for the spell's duration.",
+        duration: {type: "Round", amt: 5},
+    },
+    {
         name: "Burning Hands",
-        range: "Close",
+        range: "Self",
         class: "Wizard",
         tier: 1,
         effect: {type: "Damage", diceType: "d6", numDice: 1},
         desc: "You spread your fingers with thumbs touching, unleashing a circle of flame that fills a close area around where you stand. Creatures within the area of effect take 1d6 damage. Unattended flammable objects ignite.",
         duration: {type: "Instant"},
+    },
+    {
+        name: "Breath",
+        range: "Close",
+        class: "Wizard",
+        alignment: "Neutral",
+        tier: 1,
+        desc: "You can hold your breath for the spell's duration.",
+        duration: {type: "Round", amt: 10},
     },
     {
         name: "Cauldron",
@@ -47,6 +65,15 @@ export const SPELLS: SpellInfo[] = [
         tier: 1,
         desc: "You magically beguile one humanoid of LV 2 or less within near range, who regards you as a friend for the duration. The spell ends if you or your allies do anything harmful to the target. The target knows it was magically charmed after the spell ends. Roll 1d8 to determine amount of days effective",
         duration: {type: "Day", roll: {numDice: 1, diceType: "d8"}},
+    },
+    {
+        name: "Cleanse",
+        range: "Close",
+        class: "Wizard",
+        alignment: "Lawful",
+        tier: 1,
+        desc: "You expunge natural toxins from one creature you touch. End the effects of one poison currently affecting the target.",
+        duration: {type: "Instant"},
     },
     {
         name: "Cure Wounds",
@@ -101,12 +128,31 @@ export const SPELLS: SpellInfo[] = [
         duration: {type: "Instant"},
     },
     {
+        name: "Eyebite",
+        range: "Near",
+        class: "Wizard",
+        alignment: "Chaotic",
+        tier: 1,
+        effect: {type: "Damage", diceType: "d4", numDice: 1},
+        desc: "One creature you target takes 1d4 damage, and it can't see you until the end of its next turn.",
+        duration: {type: "Instant"},
+    },
+    {
         name: "Feather Fall",
         range: "Self",
         class: "Wizard",
         tier: 1,
         desc: "You may make an attempt to cast this spell when you fall. Your rate of descent slows so that you land safely on your feet.",
         duration: {type: "Instant"},
+    },
+    {
+        name: "Flare",
+        range: "Near",
+        class: "Wizard",
+        alignment: "Lawful",
+        tier: 1,
+        desc: "A flash of blinding, white light bursts from you. All enemies in range who see it are blinded for the spell's duration.",
+        duration: {type: "Round", amt: 1},
     },
     {
         name: "Floating Disk",
@@ -118,7 +164,7 @@ export const SPELLS: SpellInfo[] = [
     },
     {
         name: "Fog",
-        range: "Close",
+        range: "Self",
         class: "Witch",
         tier: 1,
         desc: "A thick cloud of fog blooms in a close area around you, making you hard to see. The cloud moves with you. Attacks against creatures in the cloud have disadvantage.",
@@ -159,6 +205,15 @@ export const SPELLS: SpellInfo[] = [
         duration: {type: "Focus"},
     },
     {
+        name: "Instill",
+        range: "Self",
+        class: "Wizard",
+        alignment: "Neutral",
+        tier: 1,
+        desc: "One weapon you wield is imbued with life force. It becomes a +1 weapon for the spell's duration. If the weapon is a staff, it deals d6 damage instead of d4.",
+        duration: {type: "Round", amt: 5},
+    },
+    {
         name: "Light",
         range: "Close",
         class: "Priest, Wizard",
@@ -184,12 +239,31 @@ export const SPELLS: SpellInfo[] = [
         duration: {type: "Instant"},
     },
     {
+        name: "Mischief",
+        range: "Near",
+        class: "Wizard",
+        alignment: "Chaotic",
+        tier: 1,
+        desc: "You magically beguile one humanoid of level 2 or less within near range. The target is overcome with a compulsion to commit harmful mischief for the spell's duration. Each round, it tries to commit a sneaky, cruel act that would hinder or inconvenience its nearest ally. The spell ends if you or your allies do anything to hurt the target that it notices.",
+        duration: {type: "Round", amt: 5},
+    },
+    {
         name: "Oak, Ash, Thorn",
         range: "Self",
         class: "Witch",
         tier: 1,
         desc: "For the spell's duration, faeries, demons, and devils can't attack you. These beings also can't possess, compel, or beguile you.",
         duration: {type: "Focus"},
+    },
+    {
+        name: "Oxidize",
+        range: "Close",
+        class: "Wizard",
+        alignment: "Neutral",
+        tier: 1,
+        effect: {type: "Amount", diceType: "d100", numDice: 1},
+        desc: "One inanimate object you touch the size of a door or less ages d100 years.",
+        duration: {type: "Instant"},
     },
     {
         name: "Potion",
@@ -227,11 +301,20 @@ export const SPELLS: SpellInfo[] = [
     {
         name: "Protection From Good",
         range: "Close",
-        class: "Priest",
+        class: "Priest, Wizard",
         alignment: "Chaotic",
         tier: 1,
         desc: "For the spell’s duration, lawful beings have disadvantage on attack rolls and hostile spellcasting checks against the target. These beings also can’t possess, compel, or beguile it. When cast on an already-possessed target, the possessing entity makes a CHA check vs. the last spellcasting check. On a failure, the entity is expelled.",
         duration: {type: "Focus"},
+    },
+    {
+        name: "Reveal",
+        range: "Near",
+        class: "Wizard",
+        alignment: "Lawful",
+        tier: 1,
+        desc: "End all invisibility effects out to a near distance from you. You also become aware of the location of any hiding creatures within range.",
+        duration: {type: "Instant"},
     },
     {
         name: "Shadowdance",
@@ -276,6 +359,24 @@ export const SPELLS: SpellInfo[] = [
         duration: {type: "Round", amt: 5},
     },
     {
+        name: "Ward",
+        range: "Far",
+        class: "Wizard",
+        alignment: "Lawful",
+        tier: 1,
+        desc: "You ward yourself with a magical charm against ambush. For the spell's duration, you can't be surprised (you roll initiative during surprise rounds and are treated as aware of all enemies).",
+        duration: {type: "Round", amt: 10},
+    },
+    {
+        name: "Whisperwind",
+        range: "Far",
+        class: "Wizard",
+        alignment: "Neutral",
+        tier: 1,
+        desc: "You send a brief, whispered message that reaches any creature in range.",
+        duration: {type: "Instant"},
+    },
+    {
         name: "Willowman",
         range: "Near",
         class: "Witch",
@@ -294,6 +395,15 @@ export const SPELLS: SpellInfo[] = [
     // #################################################################################################################
     // ----------------------------------------------Tier 2 Spells------------------------------------------------------
     // #################################################################################################################
+    {
+        name: "Absorb",
+        range: "Self",
+        class: "Wizard",
+        alignment: "Lawful",
+        tier: 2,
+        desc: "You create an absorptive barrier of force around you. Halve all damage you take for the spell's duration (round down).",
+        duration: {type: "Round", amt: 5},
+    },
     {
         name: "Acid Arrow",
         range: "Far",
@@ -318,6 +428,24 @@ export const SPELLS: SpellInfo[] = [
         tier: 2,
         desc: "You interpret the meaning of supernatural portents and omens. Ask the GM one question about a specific course of action. The GM says whether the action will lead to “weal” or “woe.”",
         duration: {type: "Instant"},
+    },
+    {
+        name: "Barkskin",
+        range: "Self",
+        class: "Wizard",
+        alignment: "Neutral",
+        tier: 2,
+        desc: "Your skin hardens into tough tree bark. Your AC becomes 15 (18 on a critical spellcasting check) for the spell's duration. You take double damage from fire while you are under the spell's effects.",
+        duration: {type: "Day", amt: 1},
+    },
+    {
+        name: "Befriend",
+        range: "Close",
+        class: "Wizard",
+        alignment: "Neutral",
+        tier: 2,
+        desc: "A tiny natural creature you touch (such as a mouse or moth) regards you as a friend for the spell's duration. You may give the creature one command, which it tries to complete to the best of its ability and intelligence even after the spell ends. If the command would directly harm the creature, it abandons the task.",
+        duration: {type: "Round", amt: 5},
     },
     {
         name: "Bless",
@@ -383,6 +511,15 @@ export const SPELLS: SpellInfo[] = [
         tier: 2,
         desc: "You peer into the mind of one creature you can see within the spell’s range. Each round, you learn the target’s immediate thoughts. On its turn, the target makes a Wisdom check opposed by your last spellcasting check. If the target succeeds, it notices your presence in its mind and the spell ends.",
         duration: {type: "Focus"},
+    },
+    {
+        name: "Envenom",
+        range: "Close",
+        class: "Wizard",
+        alignment: "Chaotic",
+        tier: 2,
+        desc: "You turn one cup or vial of potable liquid into a toxic poison. It still appears to be the original liquid in all ways. A living creature of LV 10 or less who drinks the liquid must pass a DC 15 CON check or go to 0 HP.",
+        duration: {type: "Instant"},
     },
     {
         name: "Extract",
@@ -472,6 +609,24 @@ export const SPELLS: SpellInfo[] = [
         duration: {type: "Focus"},
     },
     {
+        name: "Magnetize",
+        range: "Close",
+        class: "Wizard",
+        alignment: "Neutral",
+        tier: 2,
+        desc: "One object you touch up to the size of a horse becomes powerfully magnetized. It attracts all smaller magnetic objects within near. If it can move, it is pulled toward larger magnetic objects within near. A metal creature must pass a STR check equal to your spellcasting check to resist.",
+        duration: {type: "Round", amt: 5},
+    },
+    {
+        name: "Meld",
+        range: "Self",
+        class: "Wizard",
+        alignment: "Lawful",
+        tier: 2,
+        desc: "You merge slightly with the ethereal plane, freeing yourself from physical hindrances. You may ignore any effect that would impact your movement for the spell's duration.",
+        duration: {type: "Round", amt: 5},
+    },
+    {
         name: "Mirror Image",
         range: "Self",
         class: "Wizard",
@@ -488,6 +643,15 @@ export const SPELLS: SpellInfo[] = [
         duration: {type: "Instant"},
     },
     {
+        name: "Pacify",
+        range: "Near",
+        class: "Wizard",
+        alignment: "Lawful",
+        tier: 2,
+        desc: "Choose one creature within range of LV 3 or less. It must make a morale check (creatures immune to morale checks are not affected by this spell).",
+        duration: {type: "Instant"},
+    },
+    {
         name: "Peace",
         range: "Near",
         class: "Priest",
@@ -497,12 +661,30 @@ export const SPELLS: SpellInfo[] = [
         duration: {type: "Round", amt: 5},
     },
     {
+        name: "Phantoms",
+        range: "Near",
+        class: "Wizard",
+        alignment: "Chaotic",
+        tier: 2,
+        desc: "You conjure a terrifying illusion that appears in the mind of one target of LV 3 or less in range. The target must immediately make a morale check.",
+        duration: {type: "Instant"},
+    },
+    {
         name: "Poison",
         range: "Close",
         class: "Witch",
         tier: 2,
         desc: "One worn or carried object you touch becomes toxic for the spell's duration. Any creature in contact with the object at the start of its turn takes 1d6 damage.",
         duration: {type: "Round", amt: 5},
+    },
+    {
+        name: "Push/Pull",
+        range: "Near",
+        class: "Wizard",
+        alignment: "Lawful",
+        tier: 2,
+        desc: "You move one human-sized object or a creature of LV 4 or less a near distance. If the target is anchored in a way that prevents free movement, the DC to cast this spell is 18.",
+        duration: {type: "Instant"},
     },
     {
         name: "Read The Runes",
@@ -572,12 +754,40 @@ export const SPELLS: SpellInfo[] = [
         duration: {type: "Instant"},
     },
     {
+        name: "Truespeech",
+        range: "Close",
+        class: "Wizard",
+        alignment: "Neutral",
+        tier: 2,
+        desc: "A natural creature you touch understands and can communicate with you in the true language of all animals. You can ask the creature one yes or no question. The GM truthfully answers 'yes' or 'no'. If you cast this spell more than once on the same creature in 24 hours, treat a failed spellcasting check for it as a critical failure instead.",
+        duration: {type: "Instant"},
+    },
+    {
         name: "Web",
         range: "Far",
         class: "Wizard",
         tier: 2,
         desc: "You create a near-sized cube of sticky, dense spider web within the spell’s range. A creature stuck in the web can’t move and must succeed on a Strength check opposed by your spellcasting check to free itself.",
         duration: {type: "Round", amt: 5},
+    },
+    {
+        name: "Wither",
+        range: "Close",
+        class: "Wizard",
+        alignment: "Chaotic",
+        tier: 2,
+        effect: {type: "Damage", diceType: "d6", numDice: 1},
+        desc: "Your touch drains the life-energy of one target in range, dealing it 1d6 damage. The target takes double damage from the next attack or damage-dealing spell that strikes it.",
+        duration: {type: "Instant"},
+    },
+    {
+        name: "Wrack",
+        range: "Far",
+        class: "Wizard",
+        alignment: "Chaotic",
+        tier: 2,
+        desc: "A creature you can see within range of LV 5 or less is overcome by agonizing pain. The target must pass a CON check on its turn equal to your last spellcasting check or it cannot move or act.",
+        duration: {type: "Focus"},
     },
     {
         name: "Zone of Truth",
@@ -591,12 +801,49 @@ export const SPELLS: SpellInfo[] = [
     // ----------------------------------------------Tier 3 Spells------------------------------------------------------
     // #################################################################################################################
     {
+        name: "Alchemy",
+        range: "Close",
+        class: "Wizard",
+        alignment: "Neutral",
+        tier: 3,
+        desc: "One inanimate object of human size or less you touch turns into another material of equal or lesser value.",
+        duration: {type: "Instant"},
+    },
+    {
+        name: "Anima",
+        range: "Close",
+        class: "Wizard",
+        alignment: "Neutral",
+        tier: 3,
+        desc: "You animate the life force of one natural object you touch the size of a horse or less. The object becomes a loyal creature for the spell's duration using the below stats. Its level is equal to yours. The creature acts on your turn. You may use your action to command it, which it obeys. Otherwise, it does not act.\n" +
+            "AC 10 + LV, HP 4.5 x LV, ATK 2 bash +7 (1d12), MV near, S +4, D +0, C +0, I -4, W +0, Ch +0, AL N, LV *",
+        duration: {type: "Focus"},
+    },
+    {
         name: "Animate Dead",
         range: "Close",
         class: "Wizard",
         tier: 3,
         desc: "You touch one humanoid’s remains, and it rises as a zombie or skeleton under your control. The remains must have at least three limbs and its head intact. The undead creature acts on your turn. After 1 day, the creature collapses into grave dust.",
         duration: {type: "Day", amt: 1},
+    },
+    {
+        name: "Banish",
+        range: "Near",
+        class: "Wizard",
+        alignment: "Lawful",
+        tier: 3,
+        desc: "With a word of power, you send one extraplanar creature of LV 6 or less who hears you back to its dimension of origin.",
+        duration: {type: "Instant"},
+    },
+    {
+        name: "Betrayal",
+        range: "Near",
+        class: "Wizard",
+        alignment: "Chaotic",
+        tier: 3,
+        desc: "One creature of LV 7 or less you can see in range turns on its allies, regarding them as hostile enemies for the spell's duration.",
+        duration: {type: "Focus"},
     },
     {
         name: "Blood Rite",
@@ -646,6 +893,15 @@ export const SPELLS: SpellInfo[] = [
         alignment: "Lawful",
         tier: 3,
         desc: "You become a beacon of cosmic order, banishing the forces of chaos and entropy. For the spell's duration, you are immune to all spells and magical effects from chaotic sources. If your deity is Madeera, cast this spell with ADV.",
+        duration: {type: "Round", amt: 5},
+    },
+    {
+        name: "Defile",
+        range: "Self",
+        class: "Wizard",
+        alignment: "Chaotic",
+        tier: 3,
+        desc: "When you cast this spell, a near-sized circle of earth around you disintegrates into infertile ash. For this spell's duration, treat all tier 1-3 spells you successfully cast as critical successes. You cannot cast this spell while under its effects.",
         duration: {type: "Round", amt: 5},
     },
     {
@@ -699,6 +955,15 @@ export const SPELLS: SpellInfo[] = [
         duration: {type: "Round", amt: 5},
     },
     {
+        name: "Forbid",
+        range: "Self",
+        class: "Wizard",
+        alignment: "Lawful",
+        tier: 3,
+        desc: "Creatures cannot teleport into, out of, or within an area of effect extending out to double near from you. This area of effect moves with you.",
+        duration: {type: "Round", amt: 10},
+    },
+    {
         name: "Gaseous Form",
         range: "Self",
         class: "Wizard",
@@ -720,6 +985,15 @@ export const SPELLS: SpellInfo[] = [
         class: "Witch",
         tier: 3,
         desc: "All enemies within near range of you must immediately make a morale check. This spell does not affect creatures that are immune to morale checks.",
+        duration: {type: "Instant"},
+    },
+    {
+        name: "Identify",
+        range: "Close",
+        class: "Wizard",
+        alignment: "Lawful",
+        tier: 3,
+        desc: "You learn all the magical properties of one item you touch. You cannot cast this spell again until you complete a rest.",
         duration: {type: "Instant"},
     },
     {
@@ -748,6 +1022,15 @@ export const SPELLS: SpellInfo[] = [
         duration: {type: "Instant"},
     },
     {
+        name: "Locusts",
+        range: "Self",
+        class: "Wizard",
+        alignment: "Neutral",
+        tier: 3,
+        desc: "A disorienting cloud of angry, biting locusts fills an area around you out to near. The cloud moves with you as you move. You are not affected by it. Creatures in the area of effect take 1d10 damage per round at the start of their turn. They must pass a CON check equal to your last spellcasting check or be unable to move on their turn.",
+        duration: {type: "Focus"},
+    },
+    {
         name: "Magic Circle",
         range: "Near",
         class: "Wizard",
@@ -763,6 +1046,15 @@ export const SPELLS: SpellInfo[] = [
         effect: {type: "Heal", diceType: "d6", numDice: 2},
         desc: "All allies within near range of you regain 2d6 HP.",
         duration: {type: "Instant"},
+    },
+    {
+        name: "Mazzim's Mesmerism",
+        range: "Near",
+        class: "Wizard",
+        alignment: "Chaotic",
+        tier: 3,
+        desc: "You weave a mind-numbing miasma of dark magic around your targets. At the start of their turn, all humanoid creatures of LV 5 or less in range must pass a CHA check vs. the last spellcasting check you made. Creatures who fail stand motionless and agape, staring at unseen images.",
+        duration: {type: "Focus"},
     },
     {
         name: "Mistletoe",
@@ -857,12 +1149,40 @@ export const SPELLS: SpellInfo[] = [
         duration: {type: "Instant"},
     },
     {
+        name: "Speak with Object",
+        range: "Close",
+        class: "Wizard",
+        alignment: "Lawful",
+        tier: 3,
+        desc: "An object you touch mentally answers your questions. The object's wit matches the rarity of its primary materials. A diamond is wittier than a stone. You can ask the object up to three yes or no questions (one at a time). The GM truthfully answers 'yes' or 'no' to each. If you cast this spell more than once in 24 hours, treat a failed spellcasting check for it as a critical failure instead.",
+        duration: {type: "Instant"},
+    },
+    {
         name: "Swarm",
         range: "Far",
         class: "Witch",
         tier: 3,
         desc: "A dense swarm of biting bats, rats, or locusts appears in a nearsized cube around a point you can see within range. All creatures that start their turn within the swarm take 2d6 damage and are blinded.",
         duration: {type: "Focus"},
+    },
+    {
+        name: "Treeshape",
+        range: "Self",
+        class: "Wizard",
+        alignment: "Neutral",
+        tier: 3,
+        desc: "You and your gear turn into a treant with the below stats for the spell's duration. You do not have the treant's Animate Tree talent. You cannot cast spells while under the effect of this spell. You retain your INT, WIS, and CHA stats.\n" +
+            "AC 14, HP 38, ATK 2 slam +8 (1d12) or 1 rock (far) +8 (2d6), MV near, S +4, D -1, C +2, I *, W *, Ch *, AL N, LV 8",
+        duration: {type: "Round", amt: 10},
+    },
+    {
+        name: "Unlife",
+        range: "Close",
+        class: "Wizard",
+        alignment: "Chaotic",
+        tier: 3,
+        desc: "A humanoid skull you touch regains a semblance of its former life, animating with red witchlight in its eyes. The skull can converse in Common. It retains its personality and memories from life, but its recall can be spotty if it's been dead a long time. When the spell ends, the skull crumbles into grave dust.",
+        duration: {type: "Day", amt: 1},
     },
     {
         name: "Void Stare",
@@ -970,13 +1290,13 @@ export const SPELLS: SpellInfo[] = [
         range: "Close",
         class: "Witch",
         tier: 4,
-        desc: "A creature you touch is afflicted by one of the following curses: \n" +
-            "• Hideous boils and warts \n" +
-            "• All food tastes of ash \n" +
-            "• Voice becomes shrill \n" +
-            "• Disturbing nightmares \n" +
-            "• Always lose at gambling \n" +
-            "• An ally turns into an enemy \n" +
+        desc: "A creature you touch is afflicted by one of the following curses:\n" +
+            "• Hideous boils and warts\n" +
+            "• All food tastes of ash\n" +
+            "• Voice becomes shrill\n" +
+            "• Disturbing nightmares\n" +
+            "• Always lose at gambling\n" +
+            "• An ally turns into an enemy\n" +
             "• Fear of something ordinary",
         duration: {type: "Permanent", amt: 8},
     },
@@ -989,12 +1309,31 @@ export const SPELLS: SpellInfo[] = [
         duration: {type: "Instant"},
     },
     {
+        name: "Dismember",
+        range: "Near",
+        class: "Wizard",
+        alignment: "Chaotic",
+        tier: 4,
+        effect: {type: "Damage", diceType: "d8", numDice: 1},
+        desc: "One creature in range of LV 9 or less loses an arm or leg (roll randomly to determine which). It takes 1d8 damage each time this happens. The target loses a new limb each round of the spell's duration. If it has no other limbs to lose, it is instead beheaded and dies.",
+        duration: {type: "Focus"},
+    },
+    {
         name: "Divination",
         range: "Self",
         class: "Wizard",
         tier: 4,
         desc: 'You throw the divining bones or peer into the blackness between the stars, seeking a portent. You can ask the GM one yes or no question. The GM truthfully answers "yes" or "no." If you cast this spell more than once in 24 hours, treat a failed spellcasting check for it as a critical failure, instead.',
         duration: {type: "Instant"},
+    },
+    {
+        name: "Dominate",
+        range: "Near",
+        class: "Wizard",
+        alignment: "Chaotic",
+        tier: 4,
+        desc: "You subjugate the will of one creature of LV 9 or less that you can see within range. The creature cannot act except to follow your commands for the spell's duration. On your turn, you can command the creature to take actions and move. The creature acts and moves on its turn, following any instructions you gave it.",
+        duration: {type: "Focus"},
     },
     {
         name: "Flame Strike",
@@ -1022,6 +1361,20 @@ export const SPELLS: SpellInfo[] = [
         duration: {type: "Focus"},
     },
     {
+        name: "Glyph",
+        range: "Close",
+        class: "Wizard",
+        alignment: "Lawful",
+        tier: 4,
+        desc: "You draw an arcane symbol on an object that imparts one of the following magical effects:\n" +
+            "• Bind. A reader of LV 6 or less is paralyzed for 1 hour.\n" +
+            "• Harm. The reader takes 3d6 damage.\n" +
+            "• Message. The reader hears a brief mental message.\n" +
+            "• Teleportation Sigil. Treat the object as a teleportation sigil per the teleport spell.\n" +
+            "The glyph disappears once activated.",
+        duration: {type: "Week", amt: 1},
+    },
+    {
         name: "Halo",
         range: "Self",
         class: "Priest",
@@ -1045,6 +1398,15 @@ export const SPELLS: SpellInfo[] = [
         tier: 4,
         effect: {type: "Damage", diceType: "d6", numDice: 3},
         desc: "A wavering ray of silvery moonlight strikes one creature within far. It takes 3d6 damage.",
+        duration: {type: "Instant"},
+    },
+    {
+        name: "Mycelium",
+        range: "Self",
+        class: "Wizard",
+        alignment: "Neutral",
+        tier: 4,
+        desc: "You connect your mind with the earth's vast fungi network. Ask the GM one question of up to 15 words. The GM answers truthfully using up to 15 words. If you cast this spell more than once in 24 hours, treat a failed spellcasting check for it as a critical failure instead.",
         duration: {type: "Instant"},
     },
     {
@@ -1098,11 +1460,20 @@ export const SPELLS: SpellInfo[] = [
     },
     {
         name: "Resilient Sphere",
-        range: "Close",
+        range: "Self",
         class: "Wizard",
         tier: 4,
         desc: "You conjure a weightless, glassy sphere around you that extends out to close range. For the spell's duration, nothing can pass through or crush the sphere. You can roll the sphere a near distance on your turn.",
         duration: {type: "Round", amt: 5},
+    },
+    {
+        name: "Summon Storm",
+        range: "Self",
+        class: "Wizard",
+        alignment: "Neutral",
+        tier: 4,
+        desc: "You summon a violent storm that affects an area around you out to one mile for the duration. The storm brings darkened skies, severe wind, and driving rain. For the duration of the spell, you can cast control water (Shadowdark RPG pg. 57) and lightning bolt (Shadowdark RPG pg. 64), even if you do not know the spells.",
+        duration: {type: "Round", amt: 10},
     },
     {
         name: "Stoneskin",
@@ -1120,6 +1491,15 @@ export const SPELLS: SpellInfo[] = [
         tier: 4,
         desc: "You suppress the magical effects on one creature or from one object in range for the spell's duration. You also suppress the effects of all spells cast on the target except this spell for its duration. You have ADV on the next spell you cast after this one ends. If your deity is Ord, cast this spell with ADV.",
         duration: {type: "Focus"},
+    },
+    {
+        name: "Stasis",
+        range: "Close",
+        class: "Wizard",
+        alignment: "Lawful",
+        tier: 4,
+        desc: "A willing creature you touch becomes suspended in time. If the target is unwilling, it must be of LV 5 or less. The target becomes unconscious and does not age. Its bodily functions cease, though it remains alive. You may end the spell at any time or when a predefined condition you chose while casting the spell is met.",
+        duration: {type: "Permanent"},
     },
     {
         name: "Telekinesis",
@@ -1176,6 +1556,15 @@ export const SPELLS: SpellInfo[] = [
     // #################################################################################################################
     // ----------------------------------------------Tier 5 Spells------------------------------------------------------
     // #################################################################################################################
+    {
+        name: "Abjure",
+        range: "Close",
+        class: "Wizard",
+        alignment: "Lawful",
+        tier: 5,
+        desc: "You and one creature you touch both die.",
+        duration: {type: "Instant"},
+    },
     {
         name: "Anathema",
         range: "Close",
@@ -1260,12 +1649,30 @@ export const SPELLS: SpellInfo[] = [
         duration: {type: "Instant"},
     },
     {
+        name: "Earthquake",
+        range: "2xNear",
+        class: "Wizard",
+        alignment: "Neutral",
+        tier: 5,
+        desc: "The earth shakes violently and splits open, swallowing creatures down to their doom. All creatures standing on the ground within double near of you take 4d6 damage. Each affected creature of LV 9 or less must pass a DEX check equal to the damage they took or else be swallowed by the earth, never to be seen again.",
+        duration: {type: "Day", amt: 1},
+    },
+    {
         name: "Enfeeble",
         range: "Close",
         class: "Witch",
         tier: 5,
         desc: "A creature you touch has a random stat reduced to 3 (-4) for one week. Roll a d6 to determine which stat: 1. Strength, 2. Dexterity, 3. Constitution, 4. Intelligence, 5. Wisdom, 6. Charisma. If you fail the spellcasting check, you have a random stat reduced to 3 for a week instead.",
         duration: {type: "Day", amt: 1},
+    },
+    {
+        name: "Feeblemind",
+        range: "Near",
+        class: "Wizard",
+        alignment: "Chaotic",
+        tier: 5,
+        desc: "One creature of LV 10 or less within range has its INT and CHA reduced to 1 for the duration. It can't cast spells.",
+        duration: {type: "Day", roll: {numDice: 1, diceType: "d8"}},
     },
     {
         name: "Finger of Death",
@@ -1315,6 +1722,24 @@ export const SPELLS: SpellInfo[] = [
         tier: 5,
         desc: "You beseech the Mother of Night to lend you power. Make a single wish, stating it as exactly as possible. Your wish occurs, as interpreted by the GM. If you fail this spellcasting check, the Mother of Night pulls you into The Nightfall for judgment. You can't cast this spell again until you appease her demands.",
         duration: {type: "Instant"},
+    },
+    {
+        name: "Naming",
+        range: "Close",
+        class: "Wizard",
+        alignment: "Neutral",
+        tier: 5,
+        desc: "You learn the True Name (Shadowdark RPG pg. 319) of one creature you touch. If the creature is willing, you may give it a new True Name. A creature may only change its True Name once in its lifetime. If it does so, its alignment changes to your alignment.",
+        duration: {type: "Instant"},
+    },
+    {
+        name: "Permanence",
+        range: "Close",
+        class: "Wizard",
+        alignment: "Lawful",
+        tier: 5,
+        desc: "In order to cast this spell, you must sprinkle a powdered diamond on the target. Choose one object in range that is currently under the effects of a spell you have cast. The duration of that spell becomes 1 year. You cannot alter the original spell's effects after casting permanence. For instance, you can no longer move an object under the effects of telekinesis.",
+        duration: {type: "Year", amt: 1},
     },
     {
         name: "Plane Shift",
@@ -1398,6 +1823,15 @@ export const SPELLS: SpellInfo[] = [
         tier: 5,
         desc: "You transfer the soul of one creature you touch of LV 9 or less into a vessel, such as a jar. The creature's body becomes comatose, but it doesn't die. If the vessel opens or breaks, the creature's soul returns to its body. You can possess the empty body with your own spirit, taking control of it. Your body becomes comatose during this time. If the body dies while you possess it, your soul returns to your body.",
         duration: {type: "Permanent", amt: 0},
+    },
+    {
+        name: "Subjugate",
+        range: "Close",
+        class: "Wizard",
+        alignment: "Chaotic",
+        tier: 5,
+        desc: "In order to cast this spell, you must sprinkle a powdered diamond on the target. Choose one creature in range that is currently under the effects of a dominate, feeblemind, or polymorph spell you have cast. The duration of that spell becomes 1 year.",
+        duration: {type: "Year", amt: 1},
     },
     {
         name: "Summon Extraplanar",

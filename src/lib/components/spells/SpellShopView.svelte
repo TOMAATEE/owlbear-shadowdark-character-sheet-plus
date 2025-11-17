@@ -49,12 +49,12 @@
             if (!showChaotic && s.alignment === "Chaotic") return false
             if (!showAny && s.alignment === undefined) return false
 
-            if (!showSelf && s.range === "Self") return false
-            if (!showClose && s.range === "Close") return false
-            if (!showNear && s.range === "Near") return false
-            if (!showFar && s.range === "Far") return false
-            if (!showPlane && s.range === "Plane") return false
-            if (!showUnlimited && s.range === "Unlimited") return false
+            if (!showSelf && s.range.includes("Self")) return false
+            if (!showClose && s.range.includes("Close")) return false
+            if (!showNear && s.range.includes("Near")) return false
+            if (!showFar && s.range.includes("Far")) return false
+            if (!showPlane && s.range.includes("Plane")) return false
+            if (!showUnlimited && s.range.includes("Unlimited")) return false
 
             if (showCustom && !$pc.customSpells.find((cs) => cs.name === s.name)) return false
 

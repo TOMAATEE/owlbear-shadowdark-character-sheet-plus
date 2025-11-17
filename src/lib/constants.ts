@@ -7,8 +7,8 @@ export const SHIELD_PROPERTIES = [
     "TwoHanded",
     "Magic",
 ] as const
-export const RANGE_TYPES = ["Self", "Close", "2xClose", "Near", "Far", "Plane", "Unlimited"] as const
-export const DICE_TYPES = ["d1", "d4", "d6", "d8", "d10", "d12", "d20"] as const
+export const RANGE_TYPES = ["Self", "Close", "2xClose", "Near", "2xNear", "Far", "Plane", "Unlimited"] as const
+export const DICE_TYPES = ["d1", "d4", "d6", "d8", "d10", "d12", "d20", "d100"] as const
 export const SCHEMA_VERSION = "1.0.0"
 export const SCHEMA_TYPE = "sd-char-sheet"
 export const STATS = ["STR", "DEX", "CON", "INT", "WIS", "CHA", "LVL", "None"] as const

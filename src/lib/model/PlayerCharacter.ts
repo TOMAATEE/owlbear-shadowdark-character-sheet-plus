@@ -432,8 +432,9 @@ export function playerCanLearnSpell(pc: PlayerCharacter, spell: SpellInfo) {
     if (pc.class === "Knight of St. Ydris") canAlsoLearn = "Witch"
     return (
         pc.hasCustomClass ||
-        spell.class.toLowerCase().includes(pc.class.toLowerCase()) ||
-        spell.class.toLowerCase().includes(canAlsoLearn.toLowerCase())
+        ((spell.class.toLowerCase().includes(pc.class.toLowerCase()) ||
+        spell.class.toLowerCase().includes(canAlsoLearn.toLowerCase())) &&
+            (!spell.alignment || spell.alignment.includes(pc.alignment)))
     )
 }
 
