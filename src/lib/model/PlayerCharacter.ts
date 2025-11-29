@@ -384,10 +384,10 @@ export function calculateGearSlotsForPlayer(pc: PlayerCharacter) {
     const base = Math.max(10, pc.stats.STR)
 
     const bonuses = pc.bonuses.reduce((acc: number, b: Bonus) => {
-        if (b.type === "modifyAmt" && b.bonusTo === "gearSlots") {
+        if (b.type === "modifyAmt") {
             if (b.metadata?.type === "stat") {
-                acc += Math.max(b.bonusAmount, calculateModifierForPlayerStat(pc, b.metadata.stat))
-            } else {
+                if (b.metadata.stat === "STR") acc += Math.max(b.bonusAmount, 0)
+            } else if (b.bonusTo === "gearSlots") {
                 acc += calculateBonusAmount(pc, b)
             }
         }

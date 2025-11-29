@@ -33,7 +33,10 @@
             <Labelled label="Range" text={Object.values(gear.range).join(", ")}/>
             <Labelled
                     label="Damage"
-                    subLabels={["One Handed", "Two Handed"]}
+                    subLabels={[
+                        gear.damage.oneHanded ? "One Handed" : "",
+                        gear.damage.twoHanded ? "Two Handed" : ""
+                        ].filter(Boolean)}
                     subTexts={[
                         gear.damage.oneHanded ? `${gear.damage.oneHanded.numDice}${gear.damage.oneHanded.diceType}` : "",
                         gear.damage.twoHanded ? `${gear.damage.twoHanded.numDice}${gear.damage.twoHanded.diceType}` : ""
