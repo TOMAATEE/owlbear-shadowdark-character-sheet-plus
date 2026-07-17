@@ -20,7 +20,7 @@
 
 <h2>Bonuses</h2>
 <ul class="px-1">
-    {#each $pc.bonuses.sort((a, b) => sortAlphabetically(a.desc, b.desc)) as b}
+    {#each $pc.bonuses.filter((b) => !b.inactive).sort((a, b) => sortAlphabetically(a.desc, b.desc)) as b}
         <li class="border-b">
             <BonusView bonus={b}/>
         </li>

@@ -14,10 +14,10 @@ import {
     STATS,
     BONUS_TOS,
     ROLL_BONUS_TOS,
-    SHIELD_PROPERTIES,
+    ARMOR_PROPERTIES,
     GEAR_TYPES,
     NUMERICAL_BONUS_TOS,
-    TREASURE_PROPERTIES,
+    TREASURE_PROPERTIES, PATRONS,
 } from "./constants"
 
 export type Merge<T, R> = Omit<T, keyof R> & R
@@ -59,8 +59,13 @@ export type Talent = GenericTalent | BonusTalent | ChooseBonusTalent
 ///// Spell
 export type SpellTier = 0 | 1 | 2 | 3 | 4 | 5
 export type SpellClass =
-    | Extract<Class, "Bard" | "Basilisk Warrior" | "Desert Rider" | "Knight of St. Ydris" | "Pit Fighter" | "Priest" | "Ranger" | "Ras-Godai" | "Sea Wolf" | "Seer" | "Wizard" | "Witch">
-    | "Priest, Wizard" | "Wizard, Witch" | "Priest, Witch"
+    Extract<
+        Class, "Bard" | "Basilisk Warrior" | "Desert Rider" | "Delver" | "Duelist" | "Green Knight"
+        | "Knight of St. Ydris" | "Kyzian Archer" | "Monk of Yag-Kesh" | "Necromancer" | "Pit Fighter" | "Priest"
+        | "Ranger" | "Ras-Godai" | "Sea Wolf" | "Seer" | "Warlock" | "Wizard" | "Witch"
+    >
+    | "Priest, Wizard" | "Wizard, Witch" | "Priest, Witch" | "Wizard, Necromancer" | "Priest, Necromancer"
+    | "Priest, Wizard, Necromancer" | "Wizard, Witch, Necromancer" | "Wizard, Green Knight" | "Halfling, Warlock"
     | "Other"
 export type SpellInfo = {
     name: string
@@ -88,7 +93,7 @@ export type SpellInfo = {
     disabled?: boolean //  spellcasting check failed or daily uses reached
 }
 
-export type MishapClass = Extract<Class, "Wizard"> | "Diabolical"
+export type MishapClass = Extract<Class, "Wizard", "Necromancer"> | "Diabolical"
 export type Mishap = {
     name: string
     tiers: SpellTier[]
@@ -103,6 +108,7 @@ export type Mishap = {
 
 ///// PlayerCharacter
 export type Alignment = (typeof ALIGNMENTS)[number]
+export type Patron = (typeof PATRONS)[string]
 export type Deity = (typeof DEITIES)[number]
 export type Background = (typeof BACKGROUNDS)[string]
 export type Class = (typeof CLASSES)[number]
@@ -125,6 +131,7 @@ export type PlayerCharacter = {
     background: Background | ""
     hasCustomBackground?: boolean
     deity: Deity
+    hasCustomDeity?: boolean
     gear: Gear[]
     customGear: GearInfo[]
     notes: string
@@ -153,7 +160,7 @@ export type NumericalBonusTo = (typeof NUMERICAL_BONUS_TOS)[number]
 export type RollBonusTo = (typeof ROLL_BONUS_TOS)[number]
 export type BonusTo = (typeof BONUS_TOS)[number]
 export type BonusSourceCategory = "Ability" | "Talent"
-export type BonusSourceType = "Ancestry" | "Class" | "Gear" | "Talent"
+export type BonusSourceType = "Ancestry" | "Class" | "Gear" | "Talent" | "Boon"
 export type WeaponBonusMetaData = {
     type: "weapon"
     weapon: string
@@ -188,11 +195,19 @@ export type BonusMetaData =
 export type GenericBonus = {
     name: string
     desc: string
-    bonusSource?: BonusSourceType
+    bonusSource: BonusSourceType
     type: "generic"
     metadata?: BonusMetaData
+    inactive?: boolean
     editable?: boolean
 }
+export type SelectBonus = Merge<
+    GenericBonus,
+    {
+        type: "select"
+        bonuses: Bonus[]
+    }
+>
 export type ModifyBonus = Merge<
     GenericBonus,
     {
@@ -242,6 +257,7 @@ export type DisadvantageBonus = Merge<
     }
 >
 export type Bonus =
+    | SelectBonus
     | GenericBonus
     | ModifyBonus
     | DiceTypeBonus
@@ -326,7 +342,7 @@ export type WeaponInfo = Merge<
 >
 
 ////// Armor
-export type ShieldProperty = (typeof SHIELD_PROPERTIES)[number]
+export type ShieldProperty = (typeof ARMOR_PROPERTIES)[number]
 export type ArmorAC = {
     base: number
     modifier: number

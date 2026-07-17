@@ -1,4 +1,4 @@
-import type {GearInfo, GenericBonus} from "../types"
+import type {GearInfo} from "../types"
 
 export const GEAR: GearInfo[] = [
     {
@@ -16,6 +16,20 @@ export const GEAR: GearInfo[] = [
         slots: {perSlot: 1, slotsUsed: 1, freeCarry: 1},
     },
     {
+        name: "Ball bearing",
+        cost: {gp: 1, sp: 0, cp: 0},
+        canBeEquipped: false,
+        type: "Basic",
+        slots: {perSlot: 1, slotsUsed: 0, freeCarry: 0},
+    },
+    {
+        name: "Bolas",
+        cost: {gp: 2, sp: 0, cp: 0},
+        canBeEquipped: false,
+        type: "Basic",
+        slots: {perSlot: 1, slotsUsed: 0, freeCarry: 0},
+    },
+    {
         name: "Bottle",
         cost: {gp: 0, sp: 3, cp: 0},
         canBeEquipped: false,
@@ -24,7 +38,7 @@ export const GEAR: GearInfo[] = [
     },
     {
         name: "Bucket",
-        cost: {gp: 0, sp: 0, cp: 0},
+        cost: {gp: 0, sp: 5, cp: 0},
         canBeEquipped: false,
         type: "Basic",
         slots: {perSlot: 1, slotsUsed: 0, freeCarry: 1},
@@ -32,6 +46,20 @@ export const GEAR: GearInfo[] = [
     {
         name: "Caltrops",
         cost: {gp: 0, sp: 5, cp: 0},
+        canBeEquipped: false,
+        type: "Basic",
+        slots: {perSlot: 1, slotsUsed: 1, freeCarry: 0},
+    },
+    {
+        name: "Candle",
+        cost: {gp: 0, sp: 0, cp: 2},
+        canBeEquipped: false,
+        type: "Basic",
+        slots: {perSlot: 3, slotsUsed: 1, freeCarry: 0},
+    },
+    {
+        name: "Charcoal jar",
+        cost: {gp: 1, sp: 0, cp: 0},
         canBeEquipped: false,
         type: "Basic",
         slots: {perSlot: 1, slotsUsed: 1, freeCarry: 0},
@@ -51,6 +79,13 @@ export const GEAR: GearInfo[] = [
         slots: {perSlot: 1, slotsUsed: 1, freeCarry: 0},
     },
     {
+        name: "Flash seed",
+        cost: {gp: 1, sp: 0, cp: 0},
+        canBeEquipped: false,
+        type: "Basic",
+        slots: {perSlot: 1, slotsUsed: 1, freeCarry: 0},
+    },
+    {
         name: "Flask",
         cost: {gp: 0, sp: 3, cp: 0},
         canBeEquipped: false,
@@ -65,8 +100,22 @@ export const GEAR: GearInfo[] = [
         slots: {perSlot: 1, slotsUsed: 1, freeCarry: 0},
     },
     {
+        name: "Glow paste jar",
+        cost: {gp: 2, sp: 0, cp: 0},
+        canBeEquipped: false,
+        type: "Basic",
+        slots: {perSlot: 1, slotsUsed: 1, freeCarry: 0},
+    },
+    {
         name: "Grappling Hook",
         cost: {gp: 1, sp: 0, cp: 0},
+        canBeEquipped: false,
+        type: "Basic",
+        slots: {perSlot: 1, slotsUsed: 1, freeCarry: 0},
+    },
+    {
+        name: "Holy water flask",
+        cost: {gp: 0, sp: 5, cp: 0},
         canBeEquipped: false,
         type: "Basic",
         slots: {perSlot: 1, slotsUsed: 1, freeCarry: 0},
@@ -94,6 +143,20 @@ export const GEAR: GearInfo[] = [
         slots: {perSlot: 1, slotsUsed: 1, freeCarry: 0},
     },
     {
+        name: "Lantern hook",
+        cost: {gp: 0, sp: 5, cp: 0},
+        canBeEquipped: false,
+        type: "Basic",
+        slots: {perSlot: 1, slotsUsed: 1, freeCarry: 0},
+    },
+    {
+        name: "Miner's putty jar",
+        cost: {gp: 0, sp: 5, cp: 0},
+        canBeEquipped: false,
+        type: "Basic",
+        slots: {perSlot: 1, slotsUsed: 1, freeCarry: 0},
+    },
+    {
         name: "Mirror",
         cost: {gp: 10, sp: 0, cp: 0},
         canBeEquipped: false,
@@ -101,7 +164,14 @@ export const GEAR: GearInfo[] = [
         slots: {perSlot: 1, slotsUsed: 1, freeCarry: 0},
     },
     {
-        name: "Oil, Flask",
+        name: "Net",
+        cost: {gp: 0, sp: 5, cp: 0},
+        canBeEquipped: false,
+        type: "Basic",
+        slots: {perSlot: 1, slotsUsed: 1, freeCarry: 0},
+    },
+    {
+        name: "Oil flask",
         cost: {gp: 0, sp: 5, cp: 0},
         canBeEquipped: false,
         type: "Basic",
@@ -129,8 +199,50 @@ export const GEAR: GearInfo[] = [
         slots: {perSlot: 1, slotsUsed: 1, freeCarry: 0},
     },
     {
+        name: "Rope, morzo silk",
+        cost: {gp: 50, sp: 0, cp: 0},
+        canBeEquipped: false,
+        type: "Basic",
+        slots: {perSlot: 1, slotsUsed: 1, freeCarry: 0},
+    },
+    {
+        name: "Saddle",
+        cost: {gp: 30, sp: 0, cp: 0},
+        canBeEquipped: false,
+        type: "Basic",
+        slots: {perSlot: 1, slotsUsed: 1, freeCarry: 0},
+    },
+    {
+        name: "Spear-thrower",
+        cost: {gp: 2, sp: 0, cp: 0},
+        canBeEquipped: false,
+        type: "Basic",
+        slots: {perSlot: 3, slotsUsed: 1, freeCarry: 0},
+    },
+    {
+        name: "Tallow jar",
+        cost: {gp: 0, sp: 5, cp: 0},
+        canBeEquipped: false,
+        type: "Basic",
+        slots: {perSlot: 1, slotsUsed: 1, freeCarry: 0},
+    },
+    {
         name: "Torch",
         cost: {gp: 0, sp: 5, cp: 0},
+        canBeEquipped: false,
+        type: "Basic",
+        slots: {perSlot: 1, slotsUsed: 1, freeCarry: 0},
+    },
+    {
+        name: "Traveler's lamp",
+        cost: {gp: 10, sp: 0, cp: 0},
+        canBeEquipped: false,
+        type: "Basic",
+        slots: {perSlot: 1, slotsUsed: 1, freeCarry: 0},
+    },
+    {
+        name: "Wagon",
+        cost: {gp: 120, sp: 0, cp: 0},
         canBeEquipped: false,
         type: "Basic",
         slots: {perSlot: 1, slotsUsed: 1, freeCarry: 0},
@@ -162,6 +274,13 @@ export const GEAR: GearInfo[] = [
     // #################################################################################################################
     // ----------------------------------------------Class Items--------------------------------------------------------
     // #################################################################################################################
+    {
+        name: "Kyzian Arrow",
+        cost: {gp: 0, sp: 0, cp: 5},
+        canBeEquipped: false,
+        type: "Basic",
+        slots: {perSlot: 80, slotsUsed: 1, freeCarry: 0},
+    },
     {
         name: "Holy Symbol",
         cost: {gp: 0, sp: 0, cp: 0},

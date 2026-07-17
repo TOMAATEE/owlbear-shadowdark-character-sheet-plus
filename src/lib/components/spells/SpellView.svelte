@@ -14,6 +14,7 @@
     import {findSpell} from "../../compendium"
 
     export let s: SpellInfo
+    export let canLearnOverride: boolean = false
     $: Object.assign(s, fixSpell(s))
     $: duration = s.duration.amt > 0 ? s.duration.amt : ""
     $: theS = Boolean(s.duration.amt > 1 || s.duration.roll) ? "s" : ""
@@ -96,7 +97,7 @@
     <div class="flex gap-1">
         {#if playerHasSpell($pc, s)}
             <button class="bg-black text-white w-full p-3" on:click={() => unLearnSpell(s)}>Unlearn</button>
-        {:else if playerCanLearnSpell($pc, s)}
+        {:else if playerCanLearnSpell($pc, s) || canLearnOverride}
             <button class="bg-black text-white w-full p-3" on:click={() => learnSpell(s)}>Learn</button>
         {:else}
             <button class="bg-gray-600 text-white w-full p-3" on:click={() => learnSpell(s)} disabled>Cannot Learn</button>

@@ -27,6 +27,7 @@ export const CLASS_TALENTS: { [key in Class]: Talent[] } = {
                             desc: `+1 to attack for ${w.name}`,
                             type: "modifyAmt",
                             bonusAmount: 1,
+                            bonusIncreaseRatePerLevel: 0.5,
                             bonusTo: "attackRoll",
                             bonusSource: "Talent",
                             editable: true,
@@ -40,6 +41,7 @@ export const CLASS_TALENTS: { [key in Class]: Talent[] } = {
                             desc: `+1 to damage for ${w.name}`,
                             type: "modifyAmt",
                             bonusAmount: 1,
+                            bonusIncreaseRatePerLevel: 0.5,
                             bonusTo: "damageRoll",
                             bonusSource: "Talent",
                             editable: true,
@@ -410,6 +412,7 @@ export const CLASS_TALENTS: { [key in Class]: Talent[] } = {
     ],
     "Ranger": [
         {
+            name: "You deal d12 damage with one weapon type you choose",
             type: "chooseBonus",
             choices: (["Melee", "Ranged"] as const).map((w) => (
                 {
@@ -425,7 +428,6 @@ export const CLASS_TALENTS: { [key in Class]: Talent[] } = {
                         weaponType: w,
                     },
                 })) as DiceTypeBonus[],
-            name: "You deal d12 damage with one weapon type you choose",
         },
         {
             name: "+1 to melee or ranged attacks and damage",
@@ -1374,6 +1376,966 @@ export const CLASS_TALENTS: { [key in Class]: Talent[] } = {
                     metadata: {
                         type: "spell",
                         spell: "Petrifying Gaze",
+                    },
+                },
+            ] as ModifyBonus[],
+        },
+    ],
+    "Delver": [
+        {
+            name: "You gain 2 gear slots and an additional Trusty Gear",
+            type: "bonus",
+            bonuses: [
+                {
+                    name: "+2 Gear Slots",
+                    desc: "+2 Gear Slots",
+                    type: "modifyAmt",
+                    bonusTo: "gearSlots",
+                    bonusAmount: 2,
+                    bonusSource: "Talent",
+                    editable: true,
+                },
+                {
+                    name: "+1 Trusty Gear",
+                    type: "generic"
+                }
+            ] as ModifyBonus[],
+        },
+        {
+            name: "+1 to melee or ranged attacks and damage",
+            type: "chooseBonus",
+            choices: (["Melee", "Ranged"] as const).map((w) => [
+                {
+                    name: `+1 to attack for ${w} weapons`,
+                    desc: `+1 to attack for ${w} weapons`,
+                    type: "modifyAmt",
+                    bonusAmount: 1,
+                    bonusTo: "attackRoll",
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "weaponType",
+                        weaponType: w,
+                    },
+                },
+                {
+                    name: `+1 to damage for ${w} weapons`,
+                    desc: `+1 to damage for ${w} weapons`,
+                    type: "modifyAmt",
+                    bonusAmount: 1,
+                    bonusTo: "damageRoll",
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "weaponType",
+                        weaponType: w,
+                    },
+                },
+            ]) as ModifyBonus[][],
+        },
+        {
+            name: "+2 to Strength, Dexterity, or Constitution stat",
+            type: "chooseBonus",
+            choices: [
+                {
+                    name: "+2 to STR",
+                    type: "modifyAmt",
+                    desc: "+2 to STR",
+                    bonusTo: "stat",
+                    bonusAmount: 2,
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "stat",
+                        stat: "STR",
+                    },
+                },
+                {
+                    name: "+2 to DEX",
+                    type: "modifyAmt",
+                    desc: "+2 to DEX",
+                    bonusTo: "stat",
+                    bonusAmount: 2,
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "stat",
+                        stat: "DEX",
+                    },
+                },
+                {
+                    name: "+2 to CON",
+                    type: "modifyAmt",
+                    desc: "+2 to CON",
+                    bonusTo: "stat",
+                    bonusAmount: 2,
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "stat",
+                        stat: "CON",
+                    },
+                },
+            ] as ModifyBonus[],
+        },
+        {
+            name: "Add one more point to your Scavenger success range",
+            type: "bonus",
+            bonuses: [
+                {
+                    name: "Scavenger success range",
+                    desc: "Add one more point to your Scavenger success range",
+                    type: "modifyAmt",
+                    bonusTo: "talentRoll",
+                    bonusAmount: 1,
+                },
+            ] as ModifyBonus[],
+        },
+    ],
+    "Duelist": [
+        {
+            name: "1/day, all attacks that would hit you this round miss instead",
+            type: "bonus",
+            bonuses: [
+                {
+                    name: "Parry Everything",
+                    desc: "1/day, all attacks that would hit you this round miss instead",
+                    type: "spell",
+                    spell: "Parry Everything",
+                    bonusSource: "Talent",
+                    editable: true,
+                },
+            ] as SpellBonus[],
+        },
+        {
+            name: "+1 to melee attacks and damage or +1 Parry per day",
+            type: "chooseBonus",
+            choices: [
+                [
+                    {
+                        name: "+1 to attack for melee weapons",
+                        desc: "+1 to attack for melee weapons",
+                        type: "modifyAmt",
+                        bonusAmount: 1,
+                        bonusTo: "attackRoll",
+                        bonusSource: "Talent",
+                        editable: true,
+                        metadata: {
+                            type: "weaponType",
+                            weaponType: "melee",
+                        },
+                    },
+                    {
+                        name: "+1 to damage for melee weapons",
+                        desc: "+1 to damage for melee weapons",
+                        type: "modifyAmt",
+                        bonusAmount: 1,
+                        bonusTo: "damageRoll",
+                        bonusSource: "Talent",
+                        editable: true,
+                        metadata: {
+                            type: "weaponType",
+                            weaponType: "melee",
+                        },
+                    },
+                ],
+                [
+                    {
+                        name: "+1 Parry per day",
+                        desc: "+1 Parry per day",
+                        type: "modifyAmt",
+                        bonusAmount: 1,
+                        bonusTo: "damageRoll",
+                        bonusSource: "Talent",
+                        editable: true,
+                        metadata: {
+                            type: "weaponType",
+                            weaponType: "Melee",
+                        },
+                    },
+                ],
+            ] as ModifyBonus[][],
+        },
+        {
+            name: "+2 to Strength, Dexterity or Charisma stat",
+            type: "chooseBonus",
+            choices: [
+                {
+                    name: "+2 to STR",
+                    type: "modifyAmt",
+                    desc: "+2 to STR",
+                    bonusTo: "stat",
+                    bonusAmount: 2,
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "stat",
+                        stat: "STR",
+                    },
+                },
+                {
+                    name: "+2 to DEX",
+                    type: "modifyAmt",
+                    desc: "+2 to DEX",
+                    bonusTo: "stat",
+                    bonusAmount: 2,
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "stat",
+                        stat: "DEX",
+                    },
+                },
+                {
+                    name: "+2 to CHA",
+                    type: "modifyAmt",
+                    desc: "+2 to CHA",
+                    bonusTo: "stat",
+                    bonusAmount: 2,
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "stat",
+                        stat: "CHA",
+                    },
+                },
+            ] as ModifyBonus[],
+        },
+        {
+            name: "Deal +1d6 damage when you hit with a Taunt attack",
+            type: "bonus",
+            bonuses: [
+                {
+                    name: "Increased Taunt attack",
+                    desc: "Increase the damage you deal from Taunt by 1d6",
+                    type: "diceAmount",
+                    bonusAmount: 1,
+                    diceType: "d6",
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "spell",
+                        spell: "Taunt",
+                    },
+                },
+            ] as DiceAmountBonus[],
+        },
+    ],
+    "Green Knight": [
+        {
+            name: "1/day, step into a tree and exit from another within far",
+            type: "bonus",
+            bonuses: [
+                {
+                    name: "One with the Forest",
+                    desc: "1/day, step into a tree and exit from another within far",
+                    type: "spell",
+                    spell: "One with the Forest",
+                    bonusSource: "Talent",
+                    editable: true,
+                },
+            ] as SpellBonus[],
+        },
+        {
+            name: "+1 to melee or ranged attacks and damage",
+            type: "chooseBonus",
+            choices: (["Melee", "Ranged"] as const).map((w) => [
+                {
+                    name: `+1 to attack for ${w} weapons`,
+                    desc: `+1 to attack for ${w} weapons`,
+                    type: "modifyAmt",
+                    bonusAmount: 1,
+                    bonusTo: "attackRoll",
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "weaponType",
+                        weaponType: w,
+                    },
+                },
+                {
+                    name: `+1 to damage for ${w} weapons`,
+                    desc: `+1 to damage for ${w} weapons`,
+                    type: "modifyAmt",
+                    bonusAmount: 1,
+                    bonusTo: "damageRoll",
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "weaponType",
+                        weaponType: w,
+                    },
+                },
+            ]) as ModifyBonus[][],
+        },
+        {
+            name: "+2 to Strength, Dexterity or Constitution stat",
+            type: "chooseBonus",
+            choices: [
+                {
+                    name: "+2 to STR",
+                    type: "modifyAmt",
+                    desc: "+2 to STR",
+                    bonusTo: "stat",
+                    bonusAmount: 2,
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "stat",
+                        stat: "STR",
+                    },
+                },
+                {
+                    name: "+2 to DEX",
+                    type: "modifyAmt",
+                    desc: "+2 to DEX",
+                    bonusTo: "stat",
+                    bonusAmount: 2,
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "stat",
+                        stat: "DEX",
+                    },
+                },
+                {
+                    name: "+2 to CON",
+                    type: "modifyAmt",
+                    desc: "+2 to CON",
+                    bonusTo: "stat",
+                    bonusAmount: 2,
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "stat",
+                        stat: "CON",
+                    },
+                },
+            ] as ModifyBonus[],
+        },
+        {
+            name: "+2 to Wisdom stat or +1 to spellcasting checks",
+            type: "chooseBonus",
+            choices: [
+                {
+                    name: "+2 to WIS",
+                    type: "modifyAmt",
+                    desc: "+2 to WIS",
+                    bonusTo: "stat",
+                    bonusAmount: 2,
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "stat",
+                        stat: "WIS",
+                    },
+                },
+                {
+                    name: "+1 to spellcasting checks",
+                    desc: "+1 to spellcasting checks",
+                    type: "modifyAmt",
+                    bonusAmount: 1,
+                    bonusTo: "spellcastRoll",
+                    bonusSource: "Talent",
+                    editable: true,
+                },
+            ] as ModifyBonus[],
+        },
+    ],
+    "Kyzian Archer": [
+        {
+            name: "You deal d10 damage with one weapon type you choose",
+            type: "chooseBonus",
+            choices: (["Melee", "Ranged"] as const).map((w) => (
+                {
+                    name: `d10 damage for ${w} weapons`,
+                    desc: `d10 damage for ${w} weapons`,
+                    type: "diceType",
+                    bonusTo: "damageRoll",
+                    bonusSource: "Talent",
+                    diceType: "d10",
+                    editable: true,
+                    metadata: {
+                        type: "weaponType",
+                        weaponType: w,
+                    },
+                })) as DiceTypeBonus[],
+        },
+        {
+            name: "+1 to ranged attacks and damage",
+            type: "bonus",
+            bonuses: [
+                {
+                    name: "+1 to ranged attacks",
+                    desc: "+1 to ranged attacks",
+                    type: "modifyAmt",
+                    bonusAmount: 1,
+                    bonusTo: "attackRoll",
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "weaponType",
+                        weaponType: "Ranged",
+                    },
+                },
+                {
+                    name: "+1 to ranged damage",
+                    desc: "+1 to ranged damage",
+                    type: "modifyAmt",
+                    bonusAmount: 1,
+                    bonusTo: "damageRoll",
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "weaponType",
+                        weaponType: "Ranged",
+                    },
+                },
+            ] as ModifyBonus[],
+        },
+        {
+            name: "+2 to Strength, Dexterity or Constitution stat",
+            type: "chooseBonus",
+            choices: [
+                {
+                    name: "+2 to STR",
+                    type: "modifyAmt",
+                    desc: "+2 to STR",
+                    bonusTo: "stat",
+                    bonusAmount: 2,
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "stat",
+                        stat: "STR",
+                    },
+                },
+                {
+                    name: "+2 to DEX",
+                    type: "modifyAmt",
+                    desc: "+2 to DEX",
+                    bonusTo: "stat",
+                    bonusAmount: 2,
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "stat",
+                        stat: "DEX",
+                    },
+                },
+                {
+                    name: "+2 to CON",
+                    type: "modifyAmt",
+                    desc: "+2 to CON",
+                    bonusTo: "stat",
+                    bonusAmount: 2,
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "stat",
+                        stat: "CON",
+                    },
+                },
+            ] as ModifyBonus[],
+        },
+        {
+            name: "+1 use per day of Hawk Eye",
+            type: "bonus",
+            bonuses: [
+                {
+                    name: "+1 use per day of Hawk Eye",
+                    desc: "+1 use per day of Hawk Eye",
+                    type: "modifyAmt",
+                    bonusTo: "spellMax",
+                    bonusAmount: 1,
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "spell",
+                        spell: "Hawk Eye",
+                    },
+                },
+            ] as ModifyBonus[],
+        },
+    ],
+    "Monk of Yag-Kesh": [
+        {
+            name: "1/day, double your movement speed for 3 rounds",
+            type: "bonus",
+            bonuses: [
+                {
+                    name: "Sprint",
+                    desc: "1/day, double your movement speed for 3 rounds",
+                    type: "spell",
+                    spell: "Sprint",
+                    bonusSource: "Talent",
+                    editable: true,
+                },
+            ] as SpellBonus[],
+        },
+        {
+            name: "+1 to melee attacks and damage",
+            type: "bonus",
+            bonuses: [
+                {
+                    name: "+1 to melee attacks",
+                    desc: "+1 to melee attacks",
+                    type: "modifyAmt",
+                    bonusAmount: 1,
+                    bonusTo: "attackRoll",
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "weaponType",
+                        weaponType: "Melee",
+                    },
+                },
+                {
+                    name: "+1 to melee damage",
+                    desc: "+1 to melee damage",
+                    type: "modifyAmt",
+                    bonusAmount: 1,
+                    bonusTo: "damageRoll",
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "weaponType",
+                        weaponType: "Melee",
+                    },
+                },
+            ] as ModifyBonus[],
+        },
+        {
+            name: "+2 to Strength, Dexterity or Wisdom stat",
+            type: "chooseBonus",
+            choices: [
+                {
+                    name: "+2 to STR",
+                    type: "modifyAmt",
+                    desc: "+2 to STR",
+                    bonusTo: "stat",
+                    bonusAmount: 2,
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "stat",
+                        stat: "STR",
+                    },
+                },
+                {
+                    name: "+2 to DEX",
+                    type: "modifyAmt",
+                    desc: "+2 to DEX",
+                    bonusTo: "stat",
+                    bonusAmount: 2,
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "stat",
+                        stat: "DEX",
+                    },
+                },
+                {
+                    name: "+2 to WIS",
+                    type: "modifyAmt",
+                    desc: "+2 to WIS",
+                    bonusTo: "stat",
+                    bonusAmount: 2,
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "stat",
+                        stat: "WIS",
+                    },
+                },
+            ] as ModifyBonus[],
+        },
+        {
+            name: "+1 use per day of Sun On The Water",
+            type: "bonus",
+            bonuses: [
+                {
+                    name: "+1 use per day of Sun On The Water",
+                    desc: "+1 use per day of Sun On The Water",
+                    type: "modifyAmt",
+                    bonusTo: "spellMax",
+                    bonusAmount: 1,
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "spell",
+                        spell: "Sun On The Water",
+                    },
+                },
+            ] as ModifyBonus[],
+        },
+    ],
+    "Necromancer": [
+        {
+            name: "The next time you die, you may return to life with full HP",
+            type: "generic",
+        },
+        {
+            name: "+1 to spellcasting checks or +1 to melee attacks",
+            type: "chooseBonus",
+            choices: [
+                {
+                    name: "+1 to spellcasting checks",
+                    desc: "+1 to spellcasting checks",
+                    type: "modifyAmt",
+                    bonusAmount: 1,
+                    bonusTo: "spellcastRoll",
+                    bonusSource: "Talent",
+                    editable: true,
+                },
+                {
+                    name: "+1 to melee attacks",
+                    desc: "+1 to melee attacks",
+                    type: "modifyAmt",
+                    bonusTo: "attackRoll",
+                    bonusSource: "Talent",
+                    bonusAmount: 1,
+                    editable: true,
+                    metadata: {
+                        type: "weaponType",
+                        weaponType: "Melee",
+                    },
+                },
+            ] as ModifyBonus[],
+        },
+        {
+            name: "+2 to Strength, Constitution, or Charisma stat",
+            type: "chooseBonus",
+            choices: [
+                {
+                    name: "+2 to STR",
+                    type: "modifyAmt",
+                    desc: "+2 to STR",
+                    bonusTo: "stat",
+                    bonusAmount: 2,
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "stat",
+                        stat: "STR",
+                    },
+                },
+                {
+                    name: "+2 to CON",
+                    type: "modifyAmt",
+                    desc: "+2 to CON",
+                    bonusTo: "stat",
+                    bonusAmount: 2,
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "stat",
+                        stat: "CON",
+                    },
+                },
+                {
+                    name: "+2 to CHA",
+                    type: "modifyAmt",
+                    desc: "+2 to CHA",
+                    bonusTo: "stat",
+                    bonusAmount: 2,
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "stat",
+                        stat: "CHA",
+                    },
+                },
+            ] as ModifyBonus[],
+        },
+        {
+            name: "Gain advantage on casting one spell you know",
+            type: "chooseBonus",
+            choices: SPELLS.map((s) => ({
+                name: `Advantage to cast ${s.name}`,
+                desc: `Advantage to cast ${s.name}`,
+                type: "advantage",
+                bonusTo: "spellcastRoll",
+                bonusSource: "Talent",
+                editable: true,
+                metadata: {
+                    type: "spell",
+                    spell: s.name,
+                },
+            })) as AdvantageBonus[],
+        },
+    ],
+    "Paladin": [
+        {
+            name: "Your Named Blade gains a random magic weapon benefit",
+            type: "generic",
+        },
+        {
+            name: "+1 to attacks and damage with your Named Blade",
+            type: "bonus",
+            bonuses: [
+                {
+                    name: "+1 to Named Blade attacks",
+                    desc: "Please ignore for other weapons. Its coded as melee attacks",
+                    type: "modifyAmt",
+                    bonusAmount: 1,
+                    bonusTo: "attackRoll",
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "weaponType",
+                        weaponType: "Melee",
+                    },
+                },
+                {
+                    name: "+1 to Named Blade damage",
+                    desc: "Please ignore for other weapons. Its coded as melee damage",
+                    type: "modifyAmt",
+                    bonusAmount: 1,
+                    bonusTo: "damageRoll",
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "weaponType",
+                        weaponType: "Melee",
+                    },
+                },
+            ] as ModifyBonus[],
+        },
+        {
+            name: "+2 to Strength, Constitution, or Charisma stat",
+            type: "chooseBonus",
+            choices: [
+                {
+                    name: "+2 to STR",
+                    type: "modifyAmt",
+                    desc: "+2 to STR",
+                    bonusTo: "stat",
+                    bonusAmount: 2,
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "stat",
+                        stat: "STR",
+                    },
+                },
+                {
+                    name: "+2 to CON",
+                    type: "modifyAmt",
+                    desc: "+2 to CON",
+                    bonusTo: "stat",
+                    bonusAmount: 2,
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "stat",
+                        stat: "CON",
+                    },
+                },
+                {
+                    name: "+2 to CHA",
+                    type: "modifyAmt",
+                    desc: "+2 to CHA",
+                    bonusTo: "stat",
+                    bonusAmount: 2,
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "stat",
+                        stat: "CHA",
+                    },
+                },
+            ] as ModifyBonus[],
+        },
+        {
+            name: "Increase your Inspiring Presence dying roll range by 1",
+            type: "generic",
+        },
+    ],
+    "Roustabout": [
+        {
+            name: "+1 to any stat and roll another talent",
+            type: "chooseBonus",
+            choices: [
+                {
+                    name: "+1 to STR",
+                    type: "modifyAmt",
+                    desc: "+1 to STR",
+                    bonusTo: "stat",
+                    bonusAmount: 1,
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "stat",
+                        stat: "STR",
+                    },
+                },
+                {
+                    name: "+1 to INT",
+                    type: "modifyAmt",
+                    desc: "+1 to INT",
+                    bonusTo: "stat",
+                    bonusAmount: 1,
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "stat",
+                        stat: "INT",
+                    },
+                },
+                {
+                    name: "+1 to DEX",
+                    type: "modifyAmt",
+                    desc: "+1 to DEX",
+                    bonusTo: "stat",
+                    bonusAmount: 1,
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "stat",
+                        stat: "DEX",
+                    },
+                },
+                {
+                    name: "+1 to WIS",
+                    type: "modifyAmt",
+                    desc: "+1 to WIS",
+                    bonusTo: "stat",
+                    bonusAmount: 1,
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "stat",
+                        stat: "WIS",
+                    },
+                },
+                {
+                    name: "+1 to CON",
+                    type: "modifyAmt",
+                    desc: "+1 to CON",
+                    bonusTo: "stat",
+                    bonusAmount: 1,
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "stat",
+                        stat: "CON",
+                    },
+                },
+                {
+                    name: "+1 to CHA",
+                    type: "modifyAmt",
+                    desc: "+1 to CHA",
+                    bonusTo: "stat",
+                    bonusAmount: 1,
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "stat",
+                        stat: "CHA",
+                    },
+                },
+            ] as ModifyBonus[],
+        },
+        {
+            name: "Gain the ability to wield a new weapon or armor",
+            type: "generic",
+        },
+        {
+            name: "+1 to any two stats (they can’t be the same)",
+            type: "generic",
+        },
+        {
+            name: "Roll an extra hit points die this level",
+            type: "generic",
+        },
+        {
+            name: "Learn any spell of a tier equal to half your level rounded down (min. 1). Cast it using that class's spellcasting stat",
+            type: "generic",
+        },
+    ],
+    "Wyrdling": [
+        {
+            name: "Gain two new Corruption talents",
+            type: "generic",
+        },
+        {
+            name: "+2 to Strength, Dexterity, or Charisma stat",
+            type: "chooseBonus",
+            choices: [
+                {
+                    name: "+2 to STR",
+                    type: "modifyAmt",
+                    desc: "+2 to STR",
+                    bonusTo: "stat",
+                    bonusAmount: 2,
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "stat",
+                        stat: "STR",
+                    },
+                },
+                {
+                    name: "+2 to DEX",
+                    type: "modifyAmt",
+                    desc: "+2 to DEX",
+                    bonusTo: "stat",
+                    bonusAmount: 2,
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "stat",
+                        stat: "DEX",
+                    },
+                },
+                {
+                    name: "+2 to CHA",
+                    type: "modifyAmt",
+                    desc: "+2 to CHA",
+                    bonusTo: "stat",
+                    bonusAmount: 2,
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "stat",
+                        stat: "CHA",
+                    },
+                },
+            ] as ModifyBonus[],
+        },
+        {
+            name: "Gain one new Corruption talents",
+            type: "generic",
+        },
+        {
+            name: "+1 to attacks and damage with your pseudopod",
+            type: "bonus",
+            bonuses: [
+                {
+                    name: "+1 to pseudopod attacks",
+                    desc: "Please ignore for other weapons. Its coded as melee attacks",
+                    type: "modifyAmt",
+                    bonusAmount: 1,
+                    bonusTo: "attackRoll",
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "weaponType",
+                        weaponType: "Melee",
+                    },
+                },
+                {
+                    name: "+1 to pseudopod damage",
+                    desc: "Please ignore for other weapons. Its coded as melee damage",
+                    type: "modifyAmt",
+                    bonusAmount: 1,
+                    bonusTo: "damageRoll",
+                    bonusSource: "Talent",
+                    editable: true,
+                    metadata: {
+                        type: "weaponType",
+                        weaponType: "Melee",
                     },
                 },
             ] as ModifyBonus[],

@@ -10,20 +10,29 @@
 
     function getClassHpDice(c: Class) {
         switch (c) {
+            case "Roustabout":
             case "Thief":
             case "Witch":
             case "Wizard":
                 return "d4"
             case "Bard":
+            case "Delver":
+            case "Green Knight":
             case "Knight of St. Ydris":
+            case "Kyzian Archer":
+            case "Necromancer":
             case "Priest":
             case "Ras-Godai":
             case "Seer":
             case "Warlock":
+            case "Wyrdling":
             default: // Custom classes
                 return "d6"
             case "Basilisk Warrior":
             case "Desert Rider":
+            case "Duelist":
+            case "Monk of Yag-Kesh":
+            case "Paladin":
             case "Pit Fighter":
             case "Fighter":
             case "Ranger":

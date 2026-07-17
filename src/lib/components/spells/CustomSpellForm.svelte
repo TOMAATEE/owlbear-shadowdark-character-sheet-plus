@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {STATS, RANGE_TYPES, DICE_TYPES, TIME_UNITS} from "../../constants"
+    import {STATS, RANGE_TYPES, DICE_TYPES, TIME_UNITS, CLASSES} from "../../constants"
     import type {DiceType, SpellInfo, SpellTier} from "../../types"
     import {pc} from "../../model/PlayerCharacter"
     import {createEventDispatcher} from "svelte"
@@ -73,8 +73,9 @@
 
     <label for="spellClass">Class</label>
     <select bind:value={spellClass}>
-        <option>Priest</option>
-        <option>Wizard</option>
+        {#each CLASSES as c}
+            <option>{c}</option>
+        {/each}
         <option value="Priest, Wizard">Priest or Wizard</option>
         <option>Other</option>
     </select>

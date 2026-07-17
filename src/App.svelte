@@ -27,6 +27,7 @@
     import NotificationsButton from "./lib/components/NotificationsButton.svelte"
     import {initSettings} from "./lib/services/SettingsTracker"
     import BackgroundView from "./lib/components/BackgroundView.svelte"
+    import DeityView from "./lib/components/DeityView.svelte";
 
     const {isGM} = OBRHelper
 
@@ -231,8 +232,7 @@
                 </div>
 
                 <div class="col-span-full cell">
-                    <h2>DEITY</h2>
-                    <input bind:value={$pc.deity}/>
+                    <DeityView/>
                 </div>
             </div>
             <div class="flex-[3] min-w-[257px] min-[805px]:h-[700px] grid grid-rows-2 gap-2">

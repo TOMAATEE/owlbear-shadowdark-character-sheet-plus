@@ -10,6 +10,7 @@
         SpellBonusMetaData,
         Stat,
     } from "../../types"
+    import {BOONS} from "../../compendium/boonCompendium";
 
     let showModal = false
 
@@ -55,8 +56,7 @@
     let updateAction = () => {}
 
     function setOptionsForHighlight(highlight: number) {
-        options = []
-        const highlightedTalent = CLASS_TALENTS[$pc.class][highlight]
+        const highlightedTalent = (table === $pc.class ? CLASS_TALENTS : BOONS)[table][highlight]
 
         switch (highlightedTalent?.type) {
             case "generic":
@@ -64,6 +64,7 @@
                     $pc = addBonusToPlayer($pc, {
                         name: highlightedTalent.name,
                         desc: highlightedTalent.name,
+                        bonusSource: "Talent",
                         type: "generic",
                         editable: true,
                     })
@@ -156,7 +157,6 @@
     let statDistributionRemaining = 2
 
     function onTalentSelectChange(e: Event) {
-        options = []
         setOptionsForHighlight(parseInt((e.target as HTMLSelectElement).value))
     }
 
@@ -172,6 +172,11 @@
         newStats[s] = Math.max($pc.stats[s], newStats[s] - 1)
         statDistributionRemaining += 1
     }
+
+    $: table = $pc.class
+    function setTable(pointerEvent) {
+        table = pointerEvent.target.value
+    }
 </script>
 
 <button
@@ -181,6 +186,12 @@
 
 <Modal bind:showModal>
     <h2 slot="header" class="text-lg">Roll New Talent</h2>
+    <select on:change={setTable}>
+        <option>{$pc.class}</option>
+        {#each Object.keys(BOONS) as boon}
+            <option>{boon}</option>
+        {/each}
+    </select>
     <table>
         <tr class="text-left border-b border-black">
             <th class="w-20">2d6</th>
@@ -189,7 +200,7 @@
         {#each ranges as r, i}
             <tr class="border-b border-black" class:bg-yellow-300={highlight === i}>
                 <td>{r.min === r.max ? r.min : `${r.min} - ${r.max}`}</td>
-                <td>{CLASS_TALENTS[$pc.class][i]?.name}</td>
+                <td>{(table === $pc.class ? CLASS_TALENTS : BOONS)[table][i]?.name}</td>
             </tr>
         {/each}
     </table>
@@ -223,12 +234,21 @@
         {/if}
         {#if talentChoiceOrStatsChoice === "talent"}
             <select on:change={onTalentSelectChange} value={highlight} class="w-full">
-                {#each CLASS_TALENTS[$pc.class].map((t) => t.name) as t, i}
-                    {#if i < 4 && !"+2 points to distribute to stats".includes(t)}
-                        <option value={i}>{t}</option>
+                {#each (table === $pc.class ? CLASS_TALENTS : BOONS)[table].map((t) => t.name) as talent, i}
+                    {#if i < 4 && !"+2 points to distribute to stats".includes(talent)}
+                        <option value={i}>{talent}</option>
                     {/if}
                 {/each}
             </select>
+            {#if options.length && !Array.isArray(options[0]) && !(options[0]?.name === "Choose a talent")}
+                <select on:change={onTalentSelectChange} bind:value={selectedOption} class="w-full">
+                    {#each options as option}
+                        {#if !Array.isArray(option)}
+                            <option value={option}>{stringForOption(option)}</option>
+                        {/if}
+                    {/each}
+                </select>
+            {/if}
         {:else if talentChoiceOrStatsChoice === "stats"}
             <div class="self-center">
                 Stats Points remaining: {statDistributionRemaining}

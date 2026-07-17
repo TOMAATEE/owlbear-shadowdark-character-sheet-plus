@@ -23,6 +23,8 @@
     let showWizard = true
     let showWitch = true
     let showSeer = true
+    let showNecromancer = true
+    let showGreenKnight = true
     let showOther = true
 
     let showSelf = true
@@ -33,6 +35,7 @@
     let showUnlimited = true
 
     let showCustom = false
+    let learnAny = false
 
     $: spells = Object.values(SPELL_COMPENDIUM)
         .concat($pc.customSpells ?? [])
@@ -63,7 +66,9 @@
             if (showWizard) allowedClasses.push("Wizard")
             if (showWitch) allowedClasses.push("Witch")
             if (showSeer) allowedClasses.push("Seer")
-            if (showOther) allowedClasses.push("Fighter", "Thief", "Ranger", "Bard", "Knight of St. Ydris", "Warlock", "Desert Rider", "Pit Fighter", "Ras-Godai", "Sea Wolf", "Basilisk Warrior")
+            if (showNecromancer) allowedClasses.push("Necromancer")
+            if (showGreenKnight) allowedClasses.push("Green Knight")
+            if (showOther) allowedClasses.push("Bard", "Basilisk Warrior", "Desert Rider", "Delver", "Duelist", "Knight of St. Ydris", "Kyzian Archer", "Monk of Yag-Kesh", "Pit Fighter", "Ranger", "Ras-Godai", "Sea Wolf")
             if (allowedClasses.length === 0) return false
 
             const spellClasses = s.class.split(",").map(c => c.trim())
@@ -126,6 +131,10 @@
                 <label for="showWitch">Witch</label>
                 <input id="showSeer" type="checkbox" bind:checked={showSeer}/>
                 <label for="showSeer">Seer</label>
+                <input id="showNecromancer" type="checkbox" bind:checked={showNecromancer}/>
+                <label for="showNecromancer">Necromancer</label>
+                <input id="showGreenKnight" type="checkbox" bind:checked={showGreenKnight}/>
+                <label for="showGreenKnight">Green Knight</label>
                 <input id="showOther" type="checkbox" bind:checked={showOther}/>
                 <label for="showOther">Other</label>
             </div>
@@ -144,9 +153,15 @@
                 <input id="showUnlimited" type="checkbox" bind:checked={showUnlimited}/>
                 <label for="showUnlimited">Unlimited</label>
             </div>
-            <div class="flex gap-1 items-center">
-                <label for="showCustom" class="font-bold">Custom</label>
-                <input id="showCustom" type="checkbox" bind:checked={showCustom}/>
+            <div class="flex justify-between">
+                <div>
+                    <label for="showCustom" class="font-bold">Custom</label>
+                    <input id="showCustom" type="checkbox" bind:checked={showCustom}/>
+                </div>
+                <div>
+                    <label for="learnAny" class="font-bold">Learn any spell</label>
+                    <input id="learnAny" type="checkbox" bind:checked={learnAny}/>
+                </div>
             </div>
         {/if}
     </div>
@@ -155,7 +170,7 @@
             {#each spells as s}
                 <li>
                     <div class="shadow-md border border-gray-200 mb-3 p-2">
-                        <SpellView {s}/>
+                        <SpellView {s} canLearnOverride={learnAny}/>
                     </div>
                 </li>
             {/each}

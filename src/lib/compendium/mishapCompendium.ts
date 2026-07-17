@@ -1,7 +1,7 @@
 import type {MishapClass, Mishap} from "../types"
 
 export const MISHAPS: { [key in MishapClass]: Mishap[] } = {
-    "Wizard": [
+    Wizard: [
 // #####################################################################################################################
 // ------------------------------------------------------ Tier 1-2 -----------------------------------------------------
 // #####################################################################################################################
@@ -347,5 +347,133 @@ export const MISHAPS: { [key in MishapClass]: Mishap[] } = {
             tiers: [4, 5],
             desc: "Somewhere, a child is born who will grow up to become a mighty, sworn enemy to you"
         },
-    ]
+    ],
+// #####################################################################################################################
+// ----------------------------------------------------- Tier 1-3 ------------------------------------------------------
+// #####################################################################################################################
+    Necromancer: [
+        {
+            name: "Calamity",
+            tiers: [1, 2, 3],
+            desc: "Roll twice and combine both effects (reroll any further 1s)"
+        },
+        {
+            name: "Life drain",
+            tiers: [1, 2, 3],
+            desc: "You take 1d6 damage per spell tier"
+        },
+        {
+            name: "Zombification",
+            tiers: [1, 2, 3],
+            desc: "You transform into a mindless zombie for 1d4 rounds (if you go to 0 HP, you return to normal at 1 HP)"
+        },
+        {
+            name: "Misfire",
+            tiers: [1, 2, 3],
+            desc: "Your spell targets a random creature you can see, even if it would not normally be possible"
+        },
+        {
+            name: "Spectral hands",
+            tiers: [1, 2, 3],
+            desc: "You lose a random piece of gear"
+        },
+        {
+            name: "Skeletons",
+            tiers: [1, 2, 3],
+            desc: "1d4 hostile skeletons appear within near of you and target you with their attacks"
+        },
+        {
+            name: "Leech",
+            tiers: [1, 2, 3],
+            desc: "You cannot cast this spell again for a week"
+        },
+        {
+            name: "Silence",
+            tiers: [1, 2, 3],
+            desc: "You cannot speak or cast spells for 10 rounds"
+        },
+        {
+            name: "Somnolence",
+            tiers: [1, 2, 3],
+            desc: "You fall into a deep sleep for 1d4 rounds"
+        },
+        {
+            name: "Slow",
+            tiers: [1, 2, 3],
+            desc: "For the next 5 rounds, you can only move or take an action on your turn, not both"
+        },
+        {
+            name: "Ennui",
+            tiers: [1, 2, 3],
+            desc: "Next round, you must pass a DC 12 CHA check on your turn or you cannot act"
+        },
+        {
+            name: "Memory Fog",
+            tiers: [1, 2, 3],
+            desc: "You have DISADV on casting spells of the same tier for the next 10 rounds"
+        },
+// #####################################################################################################################
+// ----------------------------------------------------- Tier 4-5 ------------------------------------------------------
+// #####################################################################################################################
+        {
+            name: "Calamity",
+            tiers: [4, 5],
+            desc: "Roll twice and combine both effects (reroll any further 1s)"
+        },
+        {
+            name: "Necrotic backlash",
+            tiers: [4, 5],
+            desc: "You deal 3d8 damage to yourself and all living creatures within near. all undead within the same area are healed this amount"
+        },
+        {
+            name: "Pain for power",
+            tiers: [4, 5],
+            desc: "You must permanently sacrifice either 1d4 HP or the ability to cast this spell"
+        },
+        {
+            name: "Flung into death",
+            tiers: [4, 5],
+            desc: "You are ripped away on an involuntary tumble through the River of Death; you reappear after 1d4 rounds standing in the nearest river"
+        },
+        {
+            name: "Hunger of the dead",
+            tiers: [4, 5],
+            desc: "Greedy spirits permanently take 1d4 random pieces of your gear"
+        },
+        {
+            name: "Decay",
+            tiers: [4, 5],
+            desc: "You are cursed with necrotic rot; you lose 1 point of CON each day until you find a way to end the curse"
+        },
+        {
+            name: "Memento mori",
+            tiers: [4, 5],
+            desc: "Visions of mortality fill your mind, causing you to lose 1d4 spells from each tier until you rest"
+        },
+        {
+            name: "Possession",
+            tiers: [4, 5],
+            desc: "A hostile ghost appears and uses its action to try to possess you for 1d4 rounds before disappearing"
+        },
+        {
+            name: "Escapees",
+            tiers: [4, 5],
+            desc: "1d4 wraiths break through the border between life and death and wreak havoc on the living around them"
+        },
+        {
+            name: "Hopelessness",
+            tiers: [4, 5],
+            desc: "Your spirit is drained of all hope and will, leaving you unable to act for the next 5 rounds"
+        },
+        {
+            name: "Sap power",
+            tiers: [4, 5],
+            desc: "You have DISADV on casting all spells for the next 10 rounds"
+        },
+        {
+            name: "Wellspring",
+            tiers: [4, 5],
+            desc: "The River of Death breaks through into the world where you stand, causing a spring of necrotic water to bubble forth. hordes of undead emerge through this breach each day until it is somehow closed"
+        },
+    ],
 }

@@ -39,7 +39,7 @@
         }
     }
 
-    function deleteBonus() {
+    function deleteB() {
         if (bonuses?.length >= 0) {
             bonuses = deleteBonusForList(bonuses, b)
             $pc = $pc
@@ -47,12 +47,46 @@
             $pc = deleteBonusForPlayer($pc, b)
         }
     }
+
+    function deleteBonus() {
+        if ($pc.ancestry === "Elf") {
+            if (["Ranged Farsight", "Spell Farsight"].includes(b.name)) {
+                deleteB()
+                $pc.bonuses.find((x) => x.name === "Farsight").inactive = false
+            } else if (b.name === "Farsight") { // deactivate select, reactivatable if player wants to respec
+                b.inactive = true
+            }
+            $pc = $pc
+        } else {
+            deleteB()
+        }
+    }
+
+    function selectedBonus(pointerEvent) {
+        if (b.type === "select") {
+            deleteBonus()
+            let bonus = b.bonuses.find((x) => x.name === pointerEvent.target.value)
+            $pc = addBonusToPlayer($pc, bonus)
+        }
+    }
 </script>
 
 <div class="flex justify-between gap-3 items-center">
     <div class="flex gap-1">
-        {#if b.type === "generic"}
-            <div>{b.desc}</div>
+        {#if b.type === "select" && b.bonuses}
+            <select on:change={selectedBonus}>
+                {#each b.bonuses as bonus}
+                    <option value={bonus.name}>
+                        {bonus.desc}
+                    </option>
+                {/each}
+            </select>
+        {:else if b.type === "generic"}
+            {#if b.desc.length > 100}
+                <div class="font-bold">{b.name}</div>
+            {:else}
+                <div>{b.desc}</div>
+            {/if}
         {:else if b.type === "modifyAmt"}
             <div class="font-bold">{displayableName}</div>
             <div>{addSign(calculateBonusAmount($pc, b))} to {b.bonusTo}</div>

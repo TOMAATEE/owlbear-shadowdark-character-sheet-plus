@@ -21,20 +21,7 @@ export const WEAPONS: WeaponInfo[] = [
         cost: {gp: 5, sp: 0, cp: 0},
         canBeEquipped: true,
         slots: {freeCarry: 0, perSlot: 1, slotsUsed: 1},
-        properties: ["Blowgun"],
-        range: ["Near"],
-        weaponType: "Ranged",
-        damage: {
-            oneHanded: {diceType: "d1", numDice: 1},
-        },
-    },
-    {
-        name: "Bolas",
-        type: "Weapon",
-        cost: {gp: 2, sp: 0, cp: 0},
-        canBeEquipped: true,
-        slots: {freeCarry: 0, perSlot: 1, slotsUsed: 1},
-        properties: ["Bolas", "Thrown"],
+        properties: ["Sniper"],
         range: ["Near"],
         weaponType: "Ranged",
         damage: {
@@ -44,7 +31,7 @@ export const WEAPONS: WeaponInfo[] = [
     {
         name: "Boomerang",
         type: "Weapon",
-        cost: {gp: 2, sp: 0, cp: 0},
+        cost: {gp: 3, sp: 0, cp: 0},
         canBeEquipped: true,
         slots: {freeCarry: 0, perSlot: 1, slotsUsed: 1},
         properties: ["Returning", "Thrown"],
@@ -55,16 +42,16 @@ export const WEAPONS: WeaponInfo[] = [
         },
     },
     {
-        name: "Crossbow",
+        name: "Chakram",
         type: "Weapon",
-        cost: {gp: 8, sp: 0, cp: 0},
+        cost: {gp: 20, sp: 0, cp: 0},
         canBeEquipped: true,
         slots: {freeCarry: 0, perSlot: 1, slotsUsed: 1},
-        properties: ["Loading"],
-        range: ["Far"],
+        properties: ["Returning", "Thrown"],
+        range: ["Near"],
         weaponType: "Ranged",
         damage: {
-            twoHanded: {diceType: "d6", numDice: 1},
+            oneHanded: {diceType: "d6", numDice: 1},
         },
     },
     {
@@ -82,7 +69,7 @@ export const WEAPONS: WeaponInfo[] = [
     {
         name: "Club (obsidian)",
         type: "Weapon",
-        cost: {gp: 5, sp: 0, cp: 0},
+        cost: {gp: 5, sp: 0, cp: 5},
         canBeEquipped: true,
         slots: {freeCarry: 0, perSlot: 1, slotsUsed: 1},
         properties: ["Breakable"],
@@ -90,6 +77,19 @@ export const WEAPONS: WeaponInfo[] = [
         weaponType: "Melee",
         damage: {
             oneHanded: {diceType: "d6", numDice: 1},
+        },
+    },
+    {
+        name: "Crossbow",
+        type: "Weapon",
+        cost: {gp: 8, sp: 0, cp: 0},
+        canBeEquipped: true,
+        slots: {freeCarry: 0, perSlot: 1, slotsUsed: 1},
+        properties: ["Loading"],
+        range: ["Far"],
+        weaponType: "Ranged",
+        damage: {
+            twoHanded: {diceType: "d6", numDice: 1},
         },
     },
     {
@@ -108,7 +108,7 @@ export const WEAPONS: WeaponInfo[] = [
     {
         name: "Dagger (obsidian)",
         type: "Weapon",
-        cost: {gp: 3, sp: 0, cp: 0},
+        cost: {gp: 5, sp: 5, cp: 0},
         canBeEquipped: true,
         slots: {freeCarry: 0, perSlot: 1, slotsUsed: 1},
         properties: ["Breakable", "Finesse", "Thrown"],
@@ -116,6 +116,19 @@ export const WEAPONS: WeaponInfo[] = [
         weaponType: "MeleeRanged",
         damage: {
             oneHanded: {diceType: "d6", numDice: 1},
+        },
+    },
+    {
+        name: "Falchion",
+        type: "Weapon",
+        cost: {gp: 12, sp: 0, cp: 0},
+        canBeEquipped: true,
+        slots: {freeCarry: 0, perSlot: 1, slotsUsed: 1},
+        properties: ["Finesse"],
+        range: ["Close"],
+        weaponType: "Melee",
+        damage: {
+            twoHanded: {diceType: "d8", numDice: 1},
         },
     },
     {
@@ -138,7 +151,6 @@ export const WEAPONS: WeaponInfo[] = [
         cost: {gp: 12, sp: 0, cp: 0},
         canBeEquipped: true,
         slots: {freeCarry: 0, perSlot: 1, slotsUsed: 2},
-        properties: ["Finesse", "Thrown"],
         range: ["Close"],
         weaponType: "Melee",
         damage: {
@@ -151,6 +163,7 @@ export const WEAPONS: WeaponInfo[] = [
         cost: {gp: 2, sp: 0, cp: 0},
         canBeEquipped: true,
         slots: {freeCarry: 0, perSlot: 1, slotsUsed: 1},
+        properties: ["Finesse", "Thrown"],
         range: ["Close", "Near"],
         weaponType: "MeleeRanged",
         damage: {
@@ -168,6 +181,19 @@ export const WEAPONS: WeaponInfo[] = [
         weaponType: "MeleeRanged",
         damage: {
             oneHanded: {diceType: "d4", numDice: 1},
+        },
+    },
+    {
+        name: "Lance",
+        type: "Weapon",
+        cost: {gp: 15, sp: 0, cp: 0},
+        canBeEquipped: true,
+        slots: {freeCarry: 0, perSlot: 1, slotsUsed: 3},
+        properties: ["Charge", "Devastating", "Mounted"],
+        range: ["Close"],
+        weaponType: "Melee",
+        damage: {
+            twoHanded: {diceType: "d12", numDice: 1},
         },
     },
     {
@@ -207,7 +233,7 @@ export const WEAPONS: WeaponInfo[] = [
         },
     },
     {
-        name: "Morning Star",
+        name: "Morningstar",
         type: "Weapon",
         cost: {gp: 5, sp: 0, cp: 0},
         canBeEquipped: true,
@@ -233,14 +259,27 @@ export const WEAPONS: WeaponInfo[] = [
         },
     },
     {
+        name: "Rapier",
+        type: "Weapon",
+        cost: {gp: 8, sp: 0, cp: 0},
+        canBeEquipped: true,
+        slots: {freeCarry: 0, perSlot: 1, slotsUsed: 1},
+        properties: ["Breakable", "Finesse"],
+        range: ["Close"],
+        weaponType: "Melee",
+        damage: {
+            oneHanded: {diceType: "d8", numDice: 1},
+        },
+    },
+    {
         name: "Razor Chain",
         type: "Weapon",
         cost: {gp: 12, sp: 0, cp: 0},
         canBeEquipped: true,
         slots: {freeCarry: 0, perSlot: 1, slotsUsed: 1},
-        properties: ["Finesse", "Lash"],
+        properties: ["Finesse"],
         range: ["Near"],
-        weaponType: "MeleeRanged",
+        weaponType: "Melee",
         damage: {
             oneHanded: {diceType: "d6", numDice: 1},
         },
@@ -288,7 +327,7 @@ export const WEAPONS: WeaponInfo[] = [
         cost: {gp: 1, sp: 0, cp: 0},
         canBeEquipped: true,
         slots: {freeCarry: 0, perSlot: 1, slotsUsed: 1},
-        properties: ["Thrown"],
+        properties: ["Caltrops"],
         range: ["Near"],
         weaponType: "Ranged",
         damage: {
@@ -301,6 +340,7 @@ export const WEAPONS: WeaponInfo[] = [
         cost: {gp: 0, sp: 5, cp: 0},
         canBeEquipped: true,
         slots: {freeCarry: 0, perSlot: 1, slotsUsed: 1},
+        properties: ["Loading"],
         range: ["Far"],
         weaponType: "Ranged",
         damage: {
@@ -323,7 +363,7 @@ export const WEAPONS: WeaponInfo[] = [
     {
         name: "Spear (obsidian)",
         type: "Weapon",
-        cost: {gp: 4, sp: 0, cp: 0},
+        cost: {gp: 5, sp: 5, cp: 0},
         canBeEquipped: true,
         slots: {freeCarry: 0, perSlot: 1, slotsUsed: 1},
         properties: ["Breakable", "Thrown"],
@@ -334,25 +374,11 @@ export const WEAPONS: WeaponInfo[] = [
         },
     },
     {
-        name: "Spear thrower",
-        type: "Weapon",
-        cost: {gp: 2, sp: 0, cp: 0},
-        canBeEquipped: true,
-        slots: {freeCarry: 0, perSlot: 1, slotsUsed: 1},
-        properties: ["Spear-thrower"],
-        range: [],
-        weaponType: "MeleeRanged",
-        damage: {
-            oneHanded: {diceType: "d1", numDice: 0},
-        },
-    },
-    {
         name: "Staff",
         type: "Weapon",
         cost: {gp: 0, sp: 5, cp: 0},
         canBeEquipped: true,
         slots: {freeCarry: 0, perSlot: 1, slotsUsed: 1},
-        properties: ["Versatile"],
         range: ["Close"],
         weaponType: "Melee",
         damage: {
@@ -365,7 +391,7 @@ export const WEAPONS: WeaponInfo[] = [
         cost: {gp: 2, sp: 0, cp: 0},
         canBeEquipped: true,
         slots: {freeCarry: 0, perSlot: 1, slotsUsed: 1},
-        properties: ["Sundering", "Versatile"],
+        properties: ["Sundering"],
         range: ["Close"],
         weaponType: "Melee",
         damage: {
@@ -390,11 +416,23 @@ export const WEAPONS: WeaponInfo[] = [
         cost: {gp: 10, sp: 0, cp: 0},
         canBeEquipped: true,
         slots: {freeCarry: 0, perSlot: 1, slotsUsed: 1},
-        properties: ["Finesse", "Lash"],
+        properties: ["Finesse"],
         range: ["Near"],
-        weaponType: "MeleeRanged",
+        weaponType: "Melee",
         damage: {
             oneHanded: {diceType: "d4", numDice: 1},
+        },
+    },
+    {
+        name: "Fist of the Moon God",
+        type: "Weapon",
+        cost: {gp: 0, sp: 0, cp: 0},
+        canBeEquipped: true,
+        slots: {freeCarry: 0, perSlot: 1, slotsUsed: 0},
+        range: ["Close"],
+        weaponType: "Melee",
+        damage: {
+            oneHanded: {diceType: "d8", numDice: 1},
         },
     },
 ]

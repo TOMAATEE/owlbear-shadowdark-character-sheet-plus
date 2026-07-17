@@ -15,7 +15,7 @@ import type {
     ArmorInfo,
     Background,
     Bonus,
-    Class,
+    Class, Deity,
     DiceAmountBonus,
     DiceType,
     DiceTypeBonus,
@@ -100,6 +100,10 @@ export function setAncestryForPlayer(pc: PlayerCharacter, a: Ancestry | "") {
 
 export function setBackgroundForPlayer(pc: PlayerCharacter, b: Background | "") {
     pc.background = b
+}
+
+export function setDeityForPlayer(pc: PlayerCharacter, d: Deity | "") {
+    pc.deity = d
 }
 
 export function calculateStatValueForPlayerStat(pc: PlayerCharacter, stat: Stat): number {
@@ -271,6 +275,7 @@ export function calculateSpellCastingModifierForPlayer(pc: PlayerCharacter, spel
     let stat = spell.stat
     if (!stat) {
         switch (pc.class) {
+            case "Green Knight":
             case "Priest":
             case "Seer":
                 stat = "WIS"
@@ -280,6 +285,7 @@ export function calculateSpellCastingModifierForPlayer(pc: PlayerCharacter, spel
                 break
             case "Bard":
             case "Knight of St. Ydris":
+            case "Necromancer":
             case "Witch":
                 stat = "CHA"
                 break

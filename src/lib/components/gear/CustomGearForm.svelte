@@ -4,7 +4,7 @@
         WEAPON_PROPERTIES,
         RANGE_TYPES,
         DICE_TYPES,
-        SHIELD_PROPERTIES,
+        ARMOR_PROPERTIES,
         STATS,
     } from "../../constants"
     import type {
@@ -410,7 +410,7 @@
             <MultiSelect
                     id="armorProperties"
                     bind:values={vm.armorProperties}
-                    options={SHIELD_PROPERTIES}
+                    options={ARMOR_PROPERTIES}
             />
 
             <label for="baseAC">Base AC</label>
