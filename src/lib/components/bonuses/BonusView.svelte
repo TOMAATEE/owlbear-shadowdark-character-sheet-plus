@@ -3,7 +3,7 @@
         addBonusToList,
         calculateBonusAmount,
         deleteBonusForList,
-        deleteBonusForPlayer,
+        deleteBonusForPlayer, getCapForStatMod,
         pc,
     } from "../../model/PlayerCharacter"
     import type {Bonus} from "../../types"
@@ -87,18 +87,23 @@
             {:else}
                 <div>{b.desc}</div>
             {/if}
-        {:else if b.type === "modifyAmt"}
+        {:else}
             <div class="font-bold">{displayableName}</div>
-            <div>{addSign(calculateBonusAmount($pc, b))} to {b.bonusTo}</div>
-        {:else if b.type === "diceAmount"}
-            <div class="font-bold">{displayableName}</div>
-            <div>{addSign(b.bonusAmount)}{b.diceType}</div>
-        {:else if b.type === "disadvantage" || b.type === "advantage"}
-            <div class="font-bold">{displayableName}</div>
-            <div>{b.type} on {b.bonusTo}s</div>
-        {:else if b.type === "diceType"}
-            <div class="font-bold">{displayableName}</div>
-            <div>{b.diceType} on {b.bonusTo}</div>
+            {#if b.type === "modifyAmt"}
+                <div>{addSign(calculateBonusAmount($pc, b))} to {b.bonusTo}</div>
+            {:else if b.type === "diceAmount"}
+                <div>{addSign(b.bonusAmount)}{b.diceType}</div>
+            {:else if b.type === "disadvantage" || b.type === "advantage"}
+                <div>{b.type} on {b.bonusTo}s</div>
+            {:else if b.type === "diceType"}
+                <div>{b.diceType} on {b.bonusTo}</div>
+            {:else if (b.type === "min" || b.type === "max") && b.metadata?.type === "statMod"}
+                <div>{addSign(getCapForStatMod($pc, b.metadata.statMod, b.type))} to modifier {b.type}</div>
+            {:else if (b.type === "min" || b.type === "max") && b.metadata?.type === "stat"}
+                <div>{addSign(getCapForStatMod($pc, b.metadata.stat, b.type))} to stat {b.type}</div>
+            {:else if b.type === "setToAmt" && b.metadata?.type === "stat"}
+                <div>base amount is {b.setTo}</div>
+            {/if}
         {/if}
         {#if showInfo}
             <button on:click={() => { showModal = true }}>
@@ -108,7 +113,7 @@
     </div>
     {#if b.editable}
         <div class="flex gap-1">
-            {#if ["modifyAmt", "diceType", "diceAmount"].includes(b.type)}
+            {#if ["modifyAmt", "diceType", "diceAmount", "min", "max", "setToAmt"].includes(b.type)}
                 <button class="pt-1 px-1 rounded-md bg-black text-white" on:click={plusBonus}>
                     <i class="material-icons">add</i>
                 </button>

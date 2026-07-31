@@ -62,11 +62,11 @@ export type SpellClass =
     Extract<
         Class, "Bard" | "Basilisk Warrior" | "Desert Rider" | "Delver" | "Duelist" | "Green Knight"
         | "Knight of St. Ydris" | "Kyzian Archer" | "Monk of Yag-Kesh" | "Necromancer" | "Pit Fighter" | "Priest"
-        | "Ranger" | "Ras-Godai" | "Sea Wolf" | "Seer" | "Warlock" | "Wizard" | "Witch"
+        | "Ranger" | "Ras-Godai" | "Sea Wolf" | "Seer" | "Wizard" | "Witch"
     >
     | "Priest, Wizard" | "Wizard, Witch" | "Priest, Witch" | "Wizard, Necromancer" | "Priest, Necromancer"
     | "Priest, Wizard, Necromancer" | "Wizard, Witch, Necromancer" | "Wizard, Green Knight" | "Halfling, Warlock"
-    | "Other"
+    | "Other" | "Boon"
 export type SpellInfo = {
     name: string
     class: SpellClass
@@ -161,7 +161,7 @@ export type NumericalBonusTo = (typeof NUMERICAL_BONUS_TOS)[number]
 export type RollBonusTo = (typeof ROLL_BONUS_TOS)[number]
 export type BonusTo = (typeof BONUS_TOS)[number]
 export type BonusSourceCategory = "Ability" | "Talent"
-export type BonusSourceType = "Ancestry" | "Class" | "Gear" | "Talent" | "Boon"
+export type BonusSourceType = "Ancestry" | "Class" | "Gear" | "Talent" | "Boon" | "Black Lotus" | "Custom"
 export type WeaponBonusMetaData = {
     type: "weapon"
     weapon: string
@@ -178,6 +178,10 @@ export type StatBonusMetaData = {
     type: "stat"
     stat: Stat
 }
+export type StatModBonusMetaData = {
+    type: "statMod"
+    statMod: Stat
+}
 export type SpellBonusMetaData = {
     type: "spell"
     spell: string
@@ -191,6 +195,7 @@ export type BonusMetaData =
     | WeaponTypeBonusMetaData
     | ArmorBonusMetaData
     | StatBonusMetaData
+    | StatModBonusMetaData
     | SpellBonusMetaData
     | MaxUsesMetaData
 export type GenericBonus = {
@@ -216,6 +221,14 @@ export type ModifyBonus = Merge<
         bonusTo: BonusTo
         bonusAmount: number
         bonusIncreaseRatePerLevel?: number // bonus amount increases at this rate per level (rounded down)
+    }
+>
+export type SetToBonus = Merge<
+    GenericBonus,
+    {
+        type: "setToAmt"
+        bonusTo: BonusTo
+        setTo: number
     }
 >
 export type DiceTypeBonus = Merge<
@@ -253,19 +266,28 @@ export type AdvantageBonus = Merge<
 export type DisadvantageBonus = Merge<
     GenericBonus,
     {
-        bonusTo: RollBonusTo
         type: "disadvantage"
+        bonusTo: RollBonusTo
+    }
+>
+export type ModifierCapBonus = Merge<
+    GenericBonus,
+    {
+        type: "min" | "max"
+        amount: number
     }
 >
 export type Bonus =
     | SelectBonus
     | GenericBonus
     | ModifyBonus
+    | SetToBonus
     | DiceTypeBonus
     | SpellBonus
     | DiceAmountBonus
     | AdvantageBonus
     | DisadvantageBonus
+    | ModifierCapBonus
 
 ///// ShadowDarklings
 export type SDBonus = {
@@ -348,6 +370,7 @@ export type ArmorAC = {
     base: number
     modifier: number
     stat?: Stat
+    posStat?: Stat
 }
 export type ArmorInfo = Merge<
     GearInfo,

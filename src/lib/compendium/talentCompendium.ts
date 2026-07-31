@@ -707,7 +707,7 @@ export const CLASS_TALENTS: { [key in Class]: Talent[] } = {
     ],
     "Warlock": [
         {
-            name: "Roll a Patron Boon from any patron, an unexplained gift", // TODO
+            name: "Roll a Patron Boon from any patron, an unexplained gift",
             type: "generic",
         },
         {

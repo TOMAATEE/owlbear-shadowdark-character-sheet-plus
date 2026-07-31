@@ -346,9 +346,14 @@ export const BOONS: { [key in Patron]: Talent[] } = {
                         {
                             name: `set ${s} to 18`,
                             desc: `set ${s} to 18`,
-                            type: "generic",
+                            type: "setToAmt",
+                            setTo: 18,
                             bonusSource: "Boon",
                             editable: true,
+                            metadata: {
+                                type: "stat",
+                                stat: s,
+                            }
                         },
                     ],
                 ),
@@ -1061,17 +1066,45 @@ export const BOONS: { [key in Patron]: Talent[] } = {
     "Yag-Kesh": [
         {
             name: "Your Wisdom stat becomes 20 (+5)",
-            type: "generic",
+            type: "bonus",
+            bonuses: [
+                {
+                    name: "Your Wisdom modifier becomes +5",
+                    desc: "Your Wisdom modifier becomes +5",
+                    type: "max",
+                    amount: 1,
+                    bonusSource: "Boon",
+                    editable: true,
+                    metadata: {
+                        type: "statMod",
+                        statMod: "WIS",
+                    }
+                },
+                {
+                    name: "WIS is 20",
+                    desc: "WIS is 20",
+                    type: "setToAmt",
+                    bonusTo: "stat",
+                    setTo: 20,
+                    bonusSource: "Boon",
+                    editable: true,
+                    metadata: {
+                        type: "stat",
+                        stat: "WIS",
+                    },
+                }
+            ],
         },
         {
             name: "Gain +2 to Strength, Dexterity, or Wisdom stat",
             type: "chooseBonus",
             choices: (["STR", "DEX", "WIS"] as const).map((stat) => [
                     {
-                        name: `+1 to ${stat}`,
-                        desc: `+1 to ${stat}`,
+                        name: `+2 to ${stat}`,
+                        desc: `+2 to ${stat}`,
                         type: "modifyAmt",
-                        bonusAmount: 1,
+                        bonusTo: "stat",
+                        bonusAmount: 2,
                         bonusSource: "Boon",
                         editable: true,
                         metadata: {

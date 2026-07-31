@@ -4,14 +4,15 @@
         PlayerCharacterStore,
         calculateBonusForPlayerStat,
         calculateModifierForPlayerStat,
-        calculateStatValueForPlayerStat,
+        calculateStatValueForPlayerStat, getCapForStat,
     } from "../model/PlayerCharacter"
     import type {Stat} from "../types"
+    import {clamp} from "../utils";
 
     export let forStat: Stat
     const pc = PlayerCharacterStore
     $: modifier = calculateModifierForPlayerStat($pc, forStat)
-    $: statValue = calculateStatValueForPlayerStat($pc, forStat)
+    $: statValue = clamp(calculateStatValueForPlayerStat($pc, forStat), 1 + getCapForStat($pc, forStat, "min"), 20 + getCapForStat($pc, forStat, "max"))
 
     function onInput(e: Event) {
         $pc.stats[forStat] =
@@ -30,8 +31,8 @@
                 inputmode="numeric"
                 value={statValue}
                 on:input={onInput}
-                min="1"
-                max="20"
+                min='{1 + getCapForStat($pc, forStat, "min")}'
+                max='{20 + getCapForStat($pc, forStat, "max")}'
                 class="w-1/2"
         />&nbsp/&nbsp<RollButton {modifier}/>
     </div>

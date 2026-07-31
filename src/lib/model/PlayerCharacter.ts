@@ -21,9 +21,9 @@ import type {
     DiceTypeBonus,
     DisadvantageBonus,
     Gear,
-    GearInfo,
+    GearInfo, ModifierCapBonus,
     ModifyBonus,
-    PlayerCharacter,
+    PlayerCharacter, SetToBonus,
     SpellInfo,
     Stat,
     Title,
@@ -76,11 +76,25 @@ export function calculateModifierForPlayerStat(pc: PlayerCharacter, stat: Stat):
     let finalModifier = 0
     const baseModifier = clamp(
         Math.floor((calculateStatValueForPlayerStat(pc, stat) - 10) / 2),
-        -4,
-        4,
+        -4 + getCapForStatMod(pc, stat, "min"),
+        4 + getCapForStatMod(pc, stat, "max"),
     )
     finalModifier += baseModifier
     return finalModifier
+}
+
+function capCalculator(pc: PlayerCharacter, stat: Stat, type: "min" | "max", metatype: "stat" | "statMod"): number {
+    return pc.bonuses.reduce((sum, b) =>
+            b.type === type && b.metadata.type === metatype && b.metadata[metatype] === stat
+                ? sum + (b as ModifierCapBonus).amount : sum, 0)
+}
+
+export function getCapForStatMod(pc: PlayerCharacter, stat: Stat, type: "min" | "max"): number {
+    return capCalculator(pc, stat, type, "statMod")
+}
+
+export function getCapForStat(pc: PlayerCharacter, stat: Stat, type: "min" | "max"): number {
+    return capCalculator(pc, stat, type, "stat")
 }
 
 export function setClassForPlayer(pc: PlayerCharacter, c: Class) {
@@ -108,8 +122,15 @@ export function setDeityForPlayer(pc: PlayerCharacter, d: Deity | "") {
 
 export function calculateStatValueForPlayerStat(pc: PlayerCharacter, stat: Stat): number {
     if (stat === "LVL") return pc.level + 10
-    const baseStat = pc.stats[stat]
+    const bonusBase = getBaseForStat(pc, stat)
+    const baseStat = bonusBase > -100 ? bonusBase : pc.stats[stat]
     return baseStat + calculateBonusForPlayerStat(pc, stat)
+}
+
+export function getBaseForStat(pc: PlayerCharacter, stat: Stat): number {
+    return pc.bonuses.reduce((max, b) =>
+            b.type === "setToAmt" && b.metadata.type === "stat" && b.metadata.stat === stat
+                ? Math.max(max, (b as SetToBonus).setTo) : max, -100)
 }
 
 function doesBonusApplyToWeapon(b: Bonus, w: WeaponInfo): boolean {
@@ -218,6 +239,10 @@ export function calculateArmorClassForPlayer(pc: PlayerCharacter) {
         if (a.ac.stat && a.ac.stat !== "DEX") {
             modsFromStat = calculateModifierForPlayerStat(pc, a.ac.stat)
         }
+        if (a.ac.posStat) {
+            const posStat = calculateModifierForPlayerStat(pc, a.ac.posStat)
+            modsFromStat += posStat > 0 ? posStat : 0
+        }
 
         modsFromArmor += a.ac.modifier
 
@@ -232,6 +257,7 @@ export function calculateArmorClassForPlayer(pc: PlayerCharacter) {
 
         if (a.ac.base > 0) {
             shouldAddStat = Boolean(a.ac.stat)
+            console.log(a.ac.stat, shouldAddStat)
             baseAC = Math.max(a.ac.base, baseAC)
         }
     }
@@ -437,7 +463,7 @@ export function playerCanLearnSpell(pc: PlayerCharacter, spell: SpellInfo) {
     let canAlsoLearn = "###"
     if (pc.class === "Knight of St. Ydris") canAlsoLearn = "Witch"
     return (
-        pc.hasCustomClass ||
+        pc.hasCustomClass || spell.class === "Boon" ||
         ((spell.class.toLowerCase().includes(pc.class.toLowerCase()) ||
         spell.class.toLowerCase().includes(canAlsoLearn.toLowerCase())) &&
             (!spell.alignment || spell.alignment.includes(pc.alignment)))
@@ -491,6 +517,10 @@ export function addBonusToList(bonuses: Bonus[], b: Bonus, customAmount: number 
     } else if (b.type === "diceType" && b.bonusSteps) {
         bonus = bonus as DiceTypeBonus
         bonus.diceType = DICE_TYPES[clamp(DICE_TYPES.indexOf(bonus.diceType) + (customAmount ?? b.bonusSteps), 0, DICE_TYPES.length - 1)]
+    } else if (b.type === "min" || b.type === "max") {
+        (bonus as ModifierCapBonus).amount += customAmount ?? b.amount
+    } else if (b.type === "setToAmt") {
+        (bonus as SetToBonus).setTo += customAmount ?? b.setTo
     }
     return bonuses
 }

@@ -15,6 +15,7 @@
         "Loading": "You must forgo moving to reload this weapon",
         "Loud": "You have DISADV on checks to move stealthily while wearing this armor",
         "Magic": "Gear with additional benefits and/or curses, sometimes has a personality",
+        "Mount": "Mounts can wear this armor. The armor's properties affect the mount",
         "Mounted": "This weapon can only be wielded while mounted",
         "Restrictive": "You have DISADV on checks to swim while wearing this armor",
         "Returning": "This weapon returns to the thrower",

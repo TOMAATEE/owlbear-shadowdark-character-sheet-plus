@@ -11,12 +11,9 @@
         Stat,
     } from "../../types"
     import {BOONS} from "../../compendium/boonCompendium";
+    import {BLACK_LOTUS} from "../../compendium/blackLotusCompendium";
 
     let showModal = false
-
-    $: if (!showModal) {
-        reset()
-    }
 
     const ranges: {
         min: number
@@ -31,24 +28,46 @@
 
     let rolled = false
     let highlight = -1
+    let lotus1_1 = -1
+    let lotus1_2 = -1
 
     function rollTalent() {
         if (rolled) reset()
-        const result = rollDice("d6", 2)
-
         rolled = true
 
-        for (let i = 0; i < ranges.length; i++) {
-            const r = ranges[i]
-            if (result >= r.min && result <= r.max) {
-                highlight = i
-                break
+        if (table === "Black Lotus") {
+            highlight = rollDice("d12", 1)
+            if (highlight === 1) {
+                let notDone = true
+                while (notDone) {
+                    lotus1_1 = rollDice("d12", 1)
+                    notDone = (lotus1_1 === 1
+                        || ([3, 6].includes(lotus1_1) && $pc.bonuses.includes(BLACK_LOTUS[lotus1_1 - 1] as Bonus)) //impossible duplicates
+                    )
+                }
+                notDone = true
+                while (notDone) {
+                    lotus1_2 = rollDice("d12", 1)
+                    notDone = (lotus1_2 === 1
+                        || ([3, 6].includes(lotus1_2) && (lotus1_1 === lotus1_2 || $pc.bonuses.includes(BLACK_LOTUS[lotus1_2 - 1] as Bonus))) //impossible duplicates
+                    )
+                }
             }
+        } else {
+            const result = rollDice("d6", 2)
+
+            for (let i = 0; i < ranges.length; i++) {
+                const r = ranges[i]
+                if (result >= r.min && result <= r.max) {
+                    highlight = i
+                    break
+                }
+            }
+            if (table === "Bard") {
+                if (highlight === 2) talentChoiceOrStatsChoice = "stats"
+                if (highlight === 4) talentChoiceOrStatsChoice = "talent"
+            } else if (table === "Warlock" && highlight === 1) talentChoiceOrStatsChoice = "stats"
         }
-        if ($pc.class === "Bard") {
-            if (highlight === 2) talentChoiceOrStatsChoice = "stats"
-            if (highlight === 4) talentChoiceOrStatsChoice = "talent"
-        } else if ($pc.class === "Warlock" && highlight === 1) talentChoiceOrStatsChoice = "stats"
     }
 
     let options: (Bonus | Bonus[])[] = []
@@ -56,40 +75,62 @@
     let updateAction = () => {}
 
     function setOptionsForHighlight(highlight: number) {
-        const highlightedTalent = (table === $pc.class ? CLASS_TALENTS : BOONS)[table][highlight]
-
-        switch (highlightedTalent?.type) {
-            case "generic":
-                updateAction = () => {
-                    $pc = addBonusToPlayer($pc, {
-                        name: highlightedTalent.name,
-                        desc: highlightedTalent.name,
-                        bonusSource: "Talent",
-                        type: "generic",
-                        editable: true,
-                    })
-                }
-                break
-            case "bonus":
-                updateAction = () => {
-                    for (const b of highlightedTalent.bonuses) {
-                        $pc = addBonusToPlayer($pc, b)
+        if (table === "Black Lotus" && highlight === 1) { //2 Black Lotus Talents
+            updateAction = () => {
+                [BLACK_LOTUS[lotus1_1 - 1], BLACK_LOTUS[lotus1_2 - 1]].forEach(talent => {
+                    switch (talent.type) {
+                        case "generic":
+                            addBonusToPlayer($pc, {
+                                name: talent.name,
+                                desc: talent.name,
+                                bonusSource: "Black Lotus",
+                                type: "generic",
+                                editable: true,
+                            })
+                            break
+                        case "bonus":
+                            for (const b of talent.bonuses) {
+                                addBonusToPlayer($pc, b)
+                            }
                     }
-                }
-                break
-            case "chooseBonus":
-                const firstChoice = highlightedTalent.choices[0]
-                // hacky solution to filter out known spells
-                if (!Array.isArray(firstChoice) && firstChoice.metadata && firstChoice.metadata.type === "spell") {
-                    options = (highlightedTalent.choices as ModifyBonus[]).filter((b) =>
-                        $pc.spells.find(
-                            (s) => s.name === (b.metadata as SpellBonusMetaData)?.spell,
-                        ),
-                    )
-                } else {
-                    options = highlightedTalent.choices
-                }
-                break
+                })
+            }
+        } else {
+            const highlightedTalent = table === "Black Lotus" ? BLACK_LOTUS[highlight - 1] : (table === $pc.class ? CLASS_TALENTS : BOONS)[table][highlight]
+
+            switch (highlightedTalent?.type) {
+                case "generic":
+                    updateAction = () => {
+                        $pc = addBonusToPlayer($pc, {
+                            name: highlightedTalent.name,
+                            desc: highlightedTalent.name,
+                            bonusSource: "Talent",
+                            type: "generic",
+                            editable: true,
+                        })
+                    }
+                    break
+                case "bonus":
+                    updateAction = () => {
+                        for (const b of highlightedTalent.bonuses) {
+                            $pc = addBonusToPlayer($pc, b)
+                        }
+                    }
+                    break
+                case "chooseBonus":
+                    const firstChoice = highlightedTalent.choices[0]
+                    // hacky solution to filter out known spells
+                    if (!Array.isArray(firstChoice) && firstChoice.metadata && firstChoice.metadata.type === "spell") {
+                        options = (highlightedTalent.choices as ModifyBonus[]).filter((b) =>
+                            $pc.spells.find(
+                                (s) => s.name === (b.metadata as SpellBonusMetaData)?.spell,
+                            ),
+                        )
+                    } else {
+                        options = highlightedTalent.choices
+                    }
+                    break
+            }
         }
     }
 
@@ -108,6 +149,8 @@
     function reset() {
         rolled = false
         highlight = -1
+        lotus1_1 = -1
+        lotus1_2 = -1
         options = []
         selectedOption = undefined
         talentChoiceOrStatsChoice = undefined
@@ -173,42 +216,55 @@
         statDistributionRemaining += 1
     }
 
-    $: table = $pc.class
-    function setTable(pointerEvent) {
-        table = pointerEvent.target.value
+    let table: string = $pc.class
+    function setTable(e: Event) {
+        table = (e.target as HTMLSelectElement).value
     }
 </script>
 
 <button
         class="bg-black text-white w-full p-2"
-        on:click={() => (showModal = true)}>Roll New Talent
+        on:click={() => {
+            showModal = true
+            reset()
+        }}>Roll New Talent
 </button>
 
 <Modal bind:showModal>
     <h2 slot="header" class="text-lg">Roll New Talent</h2>
     <select on:change={setTable}>
         <option>{$pc.class}</option>
+        <option>Black Lotus</option>
         {#each Object.keys(BOONS) as boon}
             <option>{boon}</option>
         {/each}
     </select>
     <table>
         <tr class="text-left border-b border-black">
-            <th class="w-20">2d6</th>
+            <th class="w-20">{table === "Black Lotus" ? "1d12" : "2d6"}</th>
             <th>Effect</th>
         </tr>
-        {#each ranges as r, i}
-            <tr class="border-b border-black" class:bg-yellow-300={highlight === i}>
-                <td>{r.min === r.max ? r.min : `${r.min} - ${r.max}`}</td>
-                <td>{(table === $pc.class ? CLASS_TALENTS : BOONS)[table][i]?.name}</td>
-            </tr>
-        {/each}
+        {#if table === "Black Lotus"}
+            {#each BLACK_LOTUS as bl, i}
+                <tr class="border-b border-black" class:bg-yellow-300={highlight === i + 1} class:bg-green-300={(lotus1_1 === i + 1) !== (lotus1_2 === i + 1)} class:bg-green-500={(lotus1_1 === i + 1) && (lotus1_2 === i + 1)}>
+                    <td>{i + 1}</td>
+                    <td>{bl.name}</td>
+                </tr>
+            {/each}
+        {:else}
+            {#each ranges as r, i}
+                <tr class="border-b border-black" class:bg-yellow-300={highlight === i}>
+                    <td>{r.min === r.max ? r.min : `${r.min} - ${r.max}`}</td>
+                    <td>{(table === $pc.class ? CLASS_TALENTS : BOONS)[table][i]?.name}</td>
+                </tr>
+            {/each}
+        {/if}
     </table>
     <button class="w-full bg-black text-white p-1" on:click={rollTalent}>
         {rolled ? "REROLL" : "ROLL"}
     </button>
     <div class="flex flex-col gap-1">
-        {#if highlight === 4}
+        {#if highlight === 4 && table !== "Black Lotus"}
             <div class="flex gap-5 items-center justify-center p-2">
                 <label for="chooseTalentCheckBox">Choose Talent</label>
                 <input

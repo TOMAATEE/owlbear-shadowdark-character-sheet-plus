@@ -123,7 +123,6 @@
     }
 
     function updatePerMishap(mishap: Mishap) {
-        console.log(affected)
         if (mishap.target) {
             switch (mishap.target.category) {
                 case "Gear":

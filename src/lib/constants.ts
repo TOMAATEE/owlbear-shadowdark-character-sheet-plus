@@ -6,7 +6,7 @@ export const ARMOR_PROPERTIES = [
     "OneHanded",
     "TwoHanded",
     "Magic",
-    "Mounted",
+    "Mount",
     "Loud",
     "Heavy",
     "Restrictive",
@@ -53,6 +53,7 @@ export const NUMERICAL_BONUS_TOS = [
     "backstabDice",
     "hp",
     "spellMax",
+    "modifierCap"
 ] as const
 
 export const ROLL_BONUS_TOS = [

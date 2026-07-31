@@ -77,20 +77,20 @@
         let b: Bonus
         switch (type) {
             case "generic":
-                b = {name, desc, type}
+                b = {name, desc, type, bonusSource: "Custom"}
                 break
             case "modifyAmt":
-                b = {name, desc, type, bonusTo, bonusAmount}
+                b = {name, desc, type, bonusTo, bonusAmount, bonusSource: "Custom"}
                 break
             case "advantage":
             case "disadvantage": {
                 let rbto = bonusTo as RollBonusTo
-                b = {name, desc, type, bonusTo: rbto}
+                b = {name, desc, type, bonusTo: rbto, bonusSource: "Custom"}
                 break
             }
             case "diceType":
                 let rbto = bonusTo as RollBonusTo
-                b = {name, desc, type, bonusTo: rbto, diceType}
+                b = {name, desc, type, bonusTo: rbto, diceType, bonusSource: "Custom"}
                 break
         }
         switch (mdType) {

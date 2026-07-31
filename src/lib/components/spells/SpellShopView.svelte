@@ -3,6 +3,7 @@
     import {pc} from "../../model/PlayerCharacter"
     import TextInput from "../TextInput.svelte"
     import SpellView from "./SpellView.svelte"
+    import {CLASSES} from "../../constants";
 
     let spellInput: string = ""
     let showFilters = true
@@ -19,13 +20,14 @@
     let showChaotic = true
     let showAny = true
 
-    let showPriest = true
-    let showWizard = true
-    let showWitch = true
-    let showSeer = true
-    let showNecromancer = true
-    let showGreenKnight = true
-    let showOther = true
+    let showPriest = $pc.hasCustomClass || $pc.class === "Priest"
+    let showWizard = $pc.hasCustomClass || $pc.class === "Wizard"
+    let showWitch = $pc.hasCustomClass || $pc.class === "Witch"
+    let showSeer = $pc.hasCustomClass || $pc.class === "Seer"
+    let showNecromancer = $pc.hasCustomClass || $pc.class === "Necromancer"
+    let showGreenKnight = $pc.hasCustomClass || $pc.class === "Green Knight"
+    let showBoon = true
+    let showOther = $pc.hasCustomClass || !(showPriest || showWizard || showWitch || showSeer || showNecromancer || showGreenKnight)
 
     let showSelf = true
     let showClose = true
@@ -68,7 +70,8 @@
             if (showSeer) allowedClasses.push("Seer")
             if (showNecromancer) allowedClasses.push("Necromancer")
             if (showGreenKnight) allowedClasses.push("Green Knight")
-            if (showOther) allowedClasses.push("Bard", "Basilisk Warrior", "Desert Rider", "Delver", "Duelist", "Knight of St. Ydris", "Kyzian Archer", "Monk of Yag-Kesh", "Pit Fighter", "Ranger", "Ras-Godai", "Sea Wolf")
+            if (showBoon) allowedClasses.push("Boon")
+            if (showOther) allowedClasses.push(...CLASSES.filter((c) => !["Priest", "Wizard", "Witch", "Seer", "Necromancer", "Green Knight"].includes(c)))
             if (allowedClasses.length === 0) return false
 
             const spellClasses = s.class.split(",").map(c => c.trim())
@@ -135,6 +138,8 @@
                 <label for="showNecromancer">Necromancer</label>
                 <input id="showGreenKnight" type="checkbox" bind:checked={showGreenKnight}/>
                 <label for="showGreenKnight">Green Knight</label>
+                <input id="showBoon" type="checkbox" bind:checked={showBoon}/>
+                <label for="showBoon">Boon</label>
                 <input id="showOther" type="checkbox" bind:checked={showOther}/>
                 <label for="showOther">Other</label>
             </div>

@@ -23,7 +23,6 @@
 
     function fixSpell(spell: SpellInfo) { // for compatibility with old/ShadowDarklings char-sheet
         if (spell.duration) return spell // all new spells have a duration
-        console.log(spell)
 
         const reference = findSpell(spell.name)
         if (!reference) {

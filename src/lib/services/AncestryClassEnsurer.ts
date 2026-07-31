@@ -125,6 +125,9 @@ function addClassSpells(pc: PlayerCharacter) {
         case "Kyzian Archer":
             classSpells.push("Hawk Eye")
             break
+        case "Monk of Yag-Kesh":
+            classSpells.push("Sun On The Water")
+            break
         case "Pit Fighter":
             classSpells.push("Flourish", "Relentless")
             break

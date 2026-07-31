@@ -2551,13 +2551,58 @@ export const SPELLS: SpellInfo[] = [
         desc: "Double your movement speed for 3 rounds.",
         duration: {type: "Round", amt: 3},
     },
+    {
+        name: "Cloaking",
+        range: "Far",
+        class: "Ras-Godai",
+        tier: 0,
+        uses: {type: "Day", max: 1},
+        desc: "Choose a creature of LV 9 or less you can see; it must pass a DC 15 WIS check or it can't see or hear you.",
+        duration: {type: "Round", roll: {diceType: "d4", numDice: 1}},
+    },
+    {
+        name: "Lullaby",
+        range: "Near",
+        class: "Ras-Godai",
+        tier: 0,
+        uses: {type: "Day", max: 1},
+        desc: "Choose a living creature of LV 5 or less you can see within near; it must pass a DC 15 CON check or fall asleep.",
+        duration: {type: "Instant"},
+    },
+    {
+        name: "Paralyze",
+        range: "Near",
+        class: "Ras-Godai",
+        tier: 0,
+        uses: {type: "Day", max: 1},
+        desc: "Paralyze a target of LV 9 or less when you damage it with a weapon.",
+        duration: {type: "Round", roll: {diceType: "d4", numDice: 1}},
+    },
+    {
+        name: "Wallwalking",
+        range: "Self",
+        class: "Ras-Godai",
+        tier: 0,
+        uses: {type: "Day", max: 1},
+        desc: "You can walk on sheer surfaces such as walls.",
+        duration: {type: "Round", roll: {diceType: "d4", numDice: 1}},
+    },
+    {
+        name: "Waterwalking",
+        range: "Self",
+        class: "Ras-Godai",
+        tier: 0,
+        uses: {type: "Day", max: 1},
+        desc: "You can walk on water as if it were solid.",
+        duration: {type: "Round", roll: {diceType: "d4", numDice: 1}},
+    },
     // #################################################################################################################
     // ------------------------------------------------Boon "Spells"----------------------------------------------------
     // #################################################################################################################
     {
         name: "Rage",
         range: "Self",
-        class: "Warlock",
+        class: "Boon",
         tier: 0,
         uses: {type: "Day", max: 1},
         desc: "gain advantage on melee attacks.",
@@ -2566,7 +2611,7 @@ export const SPELLS: SpellInfo[] = [
     {
         name: "Transform: Dire Wolf",
         range: "Self",
-        class: "Warlock",
+        class: "Boon",
         tier: 0,
         uses: {type: "Day", max: 1},
         desc: "You can transform into a dire wolf.",
@@ -2575,7 +2620,7 @@ export const SPELLS: SpellInfo[] = [
     {
         name: "Rewind",
         range: "Self",
-        class: "Warlock",
+        class: "Boon",
         tier: 0,
         uses: {type: "Day", max: 1},
         desc: "force the GM to reroll a single roll.",
@@ -2584,7 +2629,7 @@ export const SPELLS: SpellInfo[] = [
     {
         name: "Outwit",
         range: "Self",
-        class: "Warlock",
+        class: "Boon",
         tier: 0,
         uses: {type: "Day", max: 1},
         desc: "add your WIS bonus to any roll.",
@@ -2593,7 +2638,7 @@ export const SPELLS: SpellInfo[] = [
     {
         name: "Double team",
         range: "Self",
-        class: "Warlock",
+        class: "Boon",
         tier: 0,
         uses: {type: "Day", max: 5},
         desc: "Create an illusory duplicate of yourself for up to 5 rds/day.",
@@ -2602,7 +2647,7 @@ export const SPELLS: SpellInfo[] = [
     {
         name: "Transform: Cuoatl",
         range: "Self",
-        class: "Warlock",
+        class: "Boon",
         tier: 0,
         uses: {type: "Day", max: 1},
         desc: "turn into a cuoatl.",
@@ -2611,7 +2656,7 @@ export const SPELLS: SpellInfo[] = [
     {
         name: "Transform: Slime",
         range: "Self",
-        class: "Warlock",
+        class: "Boon",
         tier: 0,
         uses: {type: "Day", max: 1},
         desc: "turn into a crawling puddle of slime.",
@@ -2620,7 +2665,7 @@ export const SPELLS: SpellInfo[] = [
     {
         name: "Prayer",
         range: "Self",
-        class: "Warlock",
+        class: "Boon",
         tier: 0,
         uses: {type: "Day", max: 1},
         desc: "use your action to pray and be restored to full HP.",
@@ -2629,7 +2674,7 @@ export const SPELLS: SpellInfo[] = [
     {
         name: "Brutality",
         range: "Self",
-        class: "Warlock",
+        class: "Boon",
         tier: 0,
         uses: {type: "Day", max: 1},
         desc: "double all damage you deal.",
@@ -2638,7 +2683,7 @@ export const SPELLS: SpellInfo[] = [
     {
         name: "Mind read",
         range: "Close",
-        class: "Warlock",
+        class: "Boon",
         tier: 0,
         uses: {type: "Day", max: 1},
         desc: "read the mind of a creature you touch.",
@@ -2647,7 +2692,7 @@ export const SPELLS: SpellInfo[] = [
     {
         name: "Hypnotize",
         range: "Self",
-        class: "Warlock",
+        class: "Boon",
         tier: 0,
         uses: {type: "Day", max: 1},
         desc: "hypnotize a LV 5 or less creature.",
@@ -2656,7 +2701,7 @@ export const SPELLS: SpellInfo[] = [
     {
         name: "Teleportation",
         range: "Far",
-        class: "Warlock",
+        class: "Boon",
         tier: 0,
         uses: {type: "Day", max: 1},
         desc: "teleport to a far location you see as your move.",
@@ -2665,7 +2710,7 @@ export const SPELLS: SpellInfo[] = [
     {
         name: "Terrify",
         range: "Close",
-        class: "Warlock",
+        class: "Boon",
         tier: 0,
         uses: {type: "Day", max: 1},
         desc: "force a close being to check morale, even if immune.",

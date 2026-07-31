@@ -429,6 +429,7 @@ export const WEAPONS: WeaponInfo[] = [
         cost: {gp: 0, sp: 0, cp: 0},
         canBeEquipped: true,
         slots: {freeCarry: 0, perSlot: 1, slotsUsed: 0},
+        properties: ["Magic"],
         range: ["Close"],
         weaponType: "Melee",
         damage: {
