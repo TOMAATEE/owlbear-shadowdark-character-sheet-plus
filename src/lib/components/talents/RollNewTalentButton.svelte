@@ -3,7 +3,7 @@
     import {addBonusToPlayer, pc} from "../../model/PlayerCharacter"
     import {CLASS_TALENTS} from "../../compendium/talentCompendium"
     import {rollDice} from "../../utils"
-    import {STATS} from "../../constants"
+    import {CLASSES, STATS} from "../../constants"
     import type {
         Bonus,
         ModifyBonus,
@@ -255,7 +255,7 @@
             {#each ranges as r, i}
                 <tr class="border-b border-black" class:bg-yellow-300={highlight === i}>
                     <td>{r.min === r.max ? r.min : `${r.min} - ${r.max}`}</td>
-                    <td>{(table === $pc.class ? CLASS_TALENTS : BOONS)[table][i]?.name}</td>
+                    <td>{(CLASSES.includes(table) ? CLASS_TALENTS : BOONS)[table][i]?.name}</td>
                 </tr>
             {/each}
         {/if}

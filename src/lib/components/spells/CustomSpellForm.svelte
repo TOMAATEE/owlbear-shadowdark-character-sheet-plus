@@ -1,6 +1,6 @@
 <script lang="ts">
     import {STATS, RANGE_TYPES, DICE_TYPES, TIME_UNITS, CLASSES} from "../../constants"
-    import type {DiceType, SpellInfo, SpellTier} from "../../types"
+    import type {DiceType, SpellClass, SpellInfo, SpellTier} from "../../types"
     import {pc} from "../../model/PlayerCharacter"
     import {createEventDispatcher} from "svelte"
 
@@ -18,7 +18,7 @@
     let spellDurationT: "Instant" | "Focus" | "Time" = "Instant"
     let spellDurationType = spellToEdit?.duration?.type ?? "Round"
     let spellDurationSubType = spellToEdit?.duration?.subType ?? "InGame"
-    let spellClass = spellToEdit?.class ?? "Wizard"
+    let spellClass = spellToEdit?.class ?? "Wizard" as SpellClass
     let spellRange = spellToEdit?.range ?? "Self"
     let spellRollDiceType = spellToEdit?.duration?.roll?.diceType ?? "d8"
     let spellAmt = spellToEdit?.duration?.amt ?? 1

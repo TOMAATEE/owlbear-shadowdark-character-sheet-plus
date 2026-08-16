@@ -2351,11 +2351,15 @@ for (const key in CLASS_TALENTS) {
             choices: [
                 {
                     name: "Choose a talent",
+                    desc: "Choose a talent",
                     type: "generic",
+                    bonusSource: "Talent",
                 },
                 {
                     name: "+2 points to distribute to stats",
+                    desc: "+2 points to distribute to stats",
                     type: "generic",
+                    bonusSource: "Talent",
                 },
             ]
         })
