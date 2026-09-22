@@ -145,6 +145,7 @@ export type PlayerCharacter = {
     gold: number
     silver: number
     copper: number
+    moneyExchange: boolean
     languages: Language[]
     customLanguages: string[]
     xp: number

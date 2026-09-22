@@ -92,6 +92,7 @@
     }
 
     function exchange(from: "silver" | "copper", to: "gold" | "silver") {
+        if (!$pc.moneyExchange) return
         if ($pc[from] > 9) {
             $pc[to] += Math.floor($pc[from] / 10)
             $pc[from] %= 10
@@ -108,6 +109,11 @@
 
     function exchangeCToS() {
         exchange("copper", "silver")
+    }
+
+    function exchangeAll() {
+        exchangeCToS()
+        exchangeSToG()
     }
 
     async function onRightClick(type: "Delete" | "Sell", gear: Gear, event: MouseEvent) {
@@ -186,6 +192,14 @@
                 class="w-16"
                 on:change={exchangeCToS}
         />
+    </div>
+    <div class="flex items-center gap-1">
+        <input
+                id="exchange"
+                type="checkbox"
+                bind:checked={$pc.moneyExchange}
+        />
+        <label for="exchange">Exchange</label>
     </div>
 </div>
 

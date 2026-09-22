@@ -61,6 +61,7 @@ export function defaultPC(): PlayerCharacter {
         gold: 0,
         silver: 0,
         copper: 0,
+        moneyExchange: false,
         languages: ["Common"],
         customLanguages: [],
         xp: 0,
