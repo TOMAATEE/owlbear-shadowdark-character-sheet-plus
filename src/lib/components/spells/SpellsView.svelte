@@ -10,6 +10,7 @@
     import type {SpellInfo} from "../../types"
     import RollMishapButton from "./RollMishapButton.svelte"
     import {MISHAPS} from "../../compendium/mishapCompendium.js"
+    import type {PlayerCharacter} from "../../types.d.ts";
 
     $: spells = $pc.spells.map(
         (spell) => {
@@ -38,8 +39,8 @@
         return idx !== -1 && $pc.spells[idx].disabled
     }
 
-    function isDisabled(s: SpellInfo) {
-        return hasFailedSpellcast(s) || (s.uses && s.uses.used >= s.uses.max)
+    function isDisabled(pc: PlayerCharacter, s: SpellInfo) {
+        return hasFailedSpellcast(s) || (s.uses && s.uses.used >= calculateSpellMax(pc, s))
     }
 </script>
 
@@ -69,12 +70,12 @@
                                 title="spellcasting failed"
                                 type="checkbox"
                                 class="w-6 h-6"
-                                checked={isDisabled(spell)}
+                                checked={isDisabled($pc, spell)}
                                 on:click={() => toggleFailed(spell)}
                         />
                         <RollButton
                                 spell={spell}
-                                disabled={isDisabled(spell)}
+                                disabled={isDisabled($pc, spell)}
                                 modifier={mod}
                                 numDice={calculateSpellDiceAmount($pc, spell)}
                                 diceType={spell.roll?.diceType ?? "d20"}

@@ -21,6 +21,7 @@
         WeaponType,
         RollBonusTo,
     } from "../../types"
+    import {findAny} from "../../compendium";
 
     const dispatch = createEventDispatcher()
     export let bonuses: Bonus[] = undefined
@@ -44,6 +45,7 @@
     let type: Bonus["type"]
     let bonusTo: BonusTo
     let bonusAmount: number = 1
+    let bonusIncreaseRatePerLevel: number = 0
     let mdType: BonusMetaData["type"] | ""
     let diceType: DiceType = "d8"
     let selectedWeapon: string
@@ -51,6 +53,8 @@
     let selectedSpell: string
     let selectedStat: Stat | ""
     let weaponType: WeaponType | ""
+    let learnedSpell: boolean
+    let ownedItem: boolean
 
     $: if (bonusTo) {
         selectedWeapon = ""
@@ -80,7 +84,7 @@
                 b = {name, desc, type, bonusSource: "Custom"}
                 break
             case "modifyAmt":
-                b = {name, desc, type, bonusTo, bonusAmount, bonusSource: "Custom"}
+                b = {name, desc, type, bonusTo, bonusAmount, bonusIncreaseRatePerLevel, bonusSource: "Custom"}
                 break
             case "advantage":
             case "disadvantage": {
@@ -129,10 +133,10 @@
     <label for="type">What kind of bonus is it?</label>
     <select id="type" bind:value={type}>
         <option value="generic">Generic</option>
-        <option value="modifyAmt"> Numerical Modifier</option>
-        <option value="advantage"> Advantage</option>
-        <option value="disadvantage"> Disadvantage</option>
-        <option value="diceType"> Dice Type</option>
+        <option value="modifyAmt">Numerical Modifier</option>
+        <option value="advantage">Advantage</option>
+        <option value="disadvantage">Disadvantage</option>
+        <option value="diceType">Dice Type</option>
     </select>
     {#if type === "diceType" || type === "advantage" || type === "disadvantage"}
         <label for="bto">Bonus To:</label>
@@ -148,8 +152,6 @@
                 <option>{bto}</option>
             {/each}
         </select>
-    {/if}
-    {#if type === "modifyAmt"}
         <label for="modifyAmt">By how much?</label>
         <input
                 id="modifyAmt"
@@ -157,7 +159,16 @@
                 inputmode="numeric"
                 bind:value={bonusAmount}
         />
-    {:else if type === "diceType"}
+        <label for="bonusIncreaseRatePerLevel">Additional amount per level</label>
+        <input
+                id="bonusIncreaseRatePerLevel"
+                type="number"
+                inputmode="numeric"
+                bind:value={bonusIncreaseRatePerLevel}
+                step="0.5"
+        />
+    {/if}
+    {#if type === "diceType"}
         <label for="diceType">Dice Type</label>
         <select id="diceType" bind:value={diceType}>
             {#each DICE_TYPES as d}
@@ -165,38 +176,55 @@
             {/each}
         </select>
     {/if}
-    {#if bonuses?.length >= 0}
+    {#if type !== "generic" && ["armorClass", "spellMax", "attackRoll", "spellcastRoll", "damageRoll"].includes(bonusTo)}
         <label for="metaDataType">
-            Does this bonus target a specific item, spell, or stat?
+            Does this bonus target a specific item or spell?
         </label>
         <select id="metaDataType" bind:value={mdType}>
             <option value="">No</option>
+            <option value="weaponType">Weapon Type</option>
             <option value="weapon">Equipped Weapon</option>
             <option value="armor">Equipped Armor</option>
             <option value="spell">Spell</option>
-            <option value="stat">Stat</option>
-            <option value="weaponType">Weapon Type</option>
         </select>
     {/if}
 
     {#if mdType === "weapon"}
-        <label for="weapon">Which weapon?</label>
+        <div class="flex justify-between gap-1">
+            <label for="weapon">Which weapon?</label>
+            <div>
+                <input type="checkbox" id="owned" bind:checked={ownedItem}/>
+                <label for="owned">owned</label>
+            </div>
+        </div>
         <select id="weapon" bind:value={selectedWeapon}>
-            {#each allWeapons as w}
+            {#each ownedItem ? $pc.gear.map((g) => findAny(g.name)).filter((i) => i.type === "Weapon") : allWeapons as w}
                 <option>{w.name}</option>
             {/each}
         </select>
     {:else if mdType === "armor"}
-        <label for="armor">Which armor?</label>
+        <div class="flex justify-between gap-1">
+            <label for="armor">Which armor?</label>
+            <div>
+                <input type="checkbox" id="owned" bind:checked={ownedItem}/>
+                <label for="owned">owned</label>
+            </div>
+        </div>
         <select id="armor" bind:value={selectedArmor}>
-            {#each allArmors as a}
+            {#each ownedItem ? $pc.gear.map((g) => findAny(g.name)).filter((i) => i.type === "Armor") : allArmors as a}
                 <option>{a.name}</option>
             {/each}
         </select>
     {:else if mdType === "spell"}
-        <label for="spell">Which spell?</label>
+        <div class="flex justify-between gap-1">
+            <label for="spell">Which spell?</label>
+            <div>
+                <input type="checkbox" id="learned" bind:checked={learnedSpell}/>
+                <label for="learned">learned</label>
+            </div>
+        </div>
         <select id="spell" bind:value={selectedSpell}>
-            {#each allSpells as s}
+            {#each learnedSpell ? $pc.spells : allSpells as s}
                 <option>{s.name}</option>
             {/each}
         </select>
@@ -212,9 +240,8 @@
     {:else if mdType === "weaponType"}
         <label for="weaponType">Which weapon type?</label>
         <select id="weaponType" bind:value={weaponType}>
-            {#each ["Melee", "Ranged"] as s}
-                <option>{s}</option>
-            {/each}
+            <option>Melee</option>
+            <option>Ranged</option>
         </select>
     {/if}
 

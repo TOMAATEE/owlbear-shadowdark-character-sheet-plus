@@ -578,12 +578,13 @@ export function calculateBonusAmount(pc: PlayerCharacter, b: ModifyBonus): numbe
         result = Math.max(result, calculateModifierForPlayerStat(pc, b.metadata.stat))
     }
     const levelRateBonus = Math.floor(pc.level * (b.bonusIncreaseRatePerLevel ?? 0))
-    return result + levelRateBonus
+    const levelBonus = b.bonusIncreaseAtLevels?.filter(l => l <= pc.level).length ?? 0
+    return result + levelRateBonus + levelBonus
 }
 
-export function calculateSpellMax(pc: PlayerCharacter, spell: SpellInfo) {
+export function calculateSpellMax(pc: PlayerCharacter, spell: SpellInfo): number {
     if (!spell.uses) return
-    let base = spell.uses.max
+    let base = spell.uses.max > 0 ? spell.uses.max : pc.level
     if (spell.uses.metadata && spell.uses.metadata.type === "max") {
         base = Math.max(base, calculateModifierForPlayerStat(pc, spell.uses.metadata.stat))
     }

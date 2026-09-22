@@ -6,6 +6,7 @@
     import {CLASSES, STATS} from "../../constants"
     import type {
         Bonus,
+        Class,
         ModifyBonus,
         SpellBonusMetaData,
         Stat,
@@ -36,18 +37,18 @@
         rolled = true
 
         if (table === "Black Lotus") {
-            highlight = rollDice("d12", 1)
+            highlight = rollDice("d12")
             if (highlight === 1) {
                 let notDone = true
                 while (notDone) {
-                    lotus1_1 = rollDice("d12", 1)
+                    lotus1_1 = rollDice("d12")
                     notDone = (lotus1_1 === 1
                         || ([3, 6].includes(lotus1_1) && $pc.bonuses.includes(BLACK_LOTUS[lotus1_1 - 1] as Bonus)) //impossible duplicates
                     )
                 }
                 notDone = true
                 while (notDone) {
-                    lotus1_2 = rollDice("d12", 1)
+                    lotus1_2 = rollDice("d12")
                     notDone = (lotus1_2 === 1
                         || ([3, 6].includes(lotus1_2) && (lotus1_1 === lotus1_2 || $pc.bonuses.includes(BLACK_LOTUS[lotus1_2 - 1] as Bonus))) //impossible duplicates
                     )
@@ -216,9 +217,9 @@
         statDistributionRemaining += 1
     }
 
-    let table: string = $pc.class
+    let table: Class | "Black Lotus" = $pc.class
     function setTable(e: Event) {
-        table = (e.target as HTMLSelectElement).value
+        table = ((e.target as HTMLSelectElement).value) as Class
     }
 </script>
 

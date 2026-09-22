@@ -29,6 +29,7 @@
     import BackgroundView from "./lib/components/BackgroundView.svelte"
     import DeityView from "./lib/components/DeityView.svelte";
     import LuckTokenView from "./lib/components/LuckTokenView.svelte";
+    import DiceButton from "./lib/components/DiceButton.svelte";
 
     const {isGM} = OBRHelper
 
@@ -105,6 +106,7 @@
                                 {/if}
                                 <OptionsButton bind:files/>
                                 <NotesButton/>
+                                <DiceButton/>
                                 {#if OBR.isAvailable}
                                     <NotificationsButton/>
                                 {/if}

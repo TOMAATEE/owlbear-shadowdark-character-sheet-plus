@@ -1,7 +1,7 @@
 <script lang="ts">
     import Modal from "../Modal.svelte"
     import {pc, unlearnSpellForPlayer} from "../../model/PlayerCharacter"
-    import {rollDice, rollDiceA, sum, toPlusString} from "../../utils"
+    import {rollDice, rollDiceArray, sum, toPlusString} from "../../utils"
     import {MISHAPS} from "../../compendium/mishapCompendium"
     import {SPELL_TIERS} from "../../constants"
     import type {Mishap, MishapClass, SpellTier} from "../../types"
@@ -26,17 +26,17 @@
 
     function rollMishap() {
         reset()
-        const roll =  rollDice("d12")
+        const roll = rollDice("d12")
         rolled = true
         highlight = roll - 1
         if (roll === 1) {
             let one = 1
             let two = 1
             while (one === 1) {
-                one =  rollDice("d12")
+                one = rollDice("d12")
             }
             while (two === 1) {
-                two =  rollDice("d12")
+                two = rollDice("d12")
             }
             nat1highlights = [one - 1, two - 1]
         }
@@ -100,7 +100,7 @@
             let diceAmount = mishap.roll.numDice
             if (diceAmount === -1) diceAmount = tier
 
-            const effect = rollDiceA(mishap.roll.diceType, diceAmount)
+            const effect = rollDiceArray(mishap.roll.diceType, diceAmount)
             total = sum(effect)
             const unit = mishap.roll.type + (["Damage", "Heal", "Amount"].includes(mishap.roll.type) || total === 1 ? "" : "s")
             return `${mishap.name}: ${toPlusString(effect, false)} = ${total} ${unit}`

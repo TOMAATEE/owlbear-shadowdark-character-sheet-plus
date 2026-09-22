@@ -2552,6 +2552,19 @@ export const SPELLS: SpellInfo[] = [
         duration: {type: "Round", amt: 3},
     },
     {
+        name: "Still The Heart",
+        range: "Far",
+        class: "Monk of Yag-Kesh",
+        tier: 0,
+        uses: {type: "Day", max: 0},
+        desc: "You can stop your metabolism for a total number of rounds per day equal to your level.\n" +
+            "You gain the following benefits for the duration:\n" +
+            "• You do not need to breathe.\n" +
+            "• Delay the onset of any poisons until this effect ends.\n" +
+            "• If you drop to 0 HP, you do not fall unconscious or begin dying until this effect ends.",
+        duration: {type: "Round", amt: 3},
+    },
+    {
         name: "Cloaking",
         range: "Far",
         class: "Ras-Godai",

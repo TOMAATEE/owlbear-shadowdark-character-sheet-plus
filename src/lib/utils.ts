@@ -11,17 +11,25 @@ export function sum(numbers: number[]): number {
 }
 
 export function rollDice(diceType: DiceType, numDice = 1): number {
+    return rollCustomDice(ValueForDiceType[diceType], numDice)
+}
+
+export function rollDiceArray(diceType: DiceType, numDice = 1): number[] {
+    return rollCustomDiceArray(ValueForDiceType[diceType], numDice)
+}
+
+export function rollCustomDice(diceType: number, numDice = 1): number {
     let result = 0
     for (let i = 0; i < numDice; i++) {
-        result += Math.floor(Math.random() * ValueForDiceType[diceType]) + 1
+        result += Math.floor(Math.random() * diceType) + 1
     }
     return result
 }
 
-export function rollDiceA(diceType: DiceType, numDice = 1): number[] {
+export function rollCustomDiceArray(diceType: number, numDice = 1): number[] {
     const result: number[] = []
     for (let i = 0; i < numDice; i++) {
-        result.push(rollDice(diceType))
+        result.push(rollCustomDice(diceType))
     }
     return result
 }

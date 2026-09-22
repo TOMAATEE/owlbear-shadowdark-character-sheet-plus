@@ -6,7 +6,6 @@
     } from "../model/PlayerCharacter"
     import RollButton from "./RollButton.svelte"
     import type {Class} from "../types"
-    import {clamp} from "../utils"
 
     function getClassHpDice(c: Class) {
         switch (c) {
@@ -52,24 +51,20 @@
 
     function decrMaxHp() {
         $pc.maxHitPoints = Math.max(1, $pc.maxHitPoints - 1)
-        if ($pc.hitPoints > $pc.maxHitPoints) {
-            $pc.hitPoints = $pc.maxHitPoints
+        let max = calculateTotalHitPointsForPlayer($pc)
+        if ($pc.hitPoints > max) {
+            $pc.hitPoints = max
         }
     }
 
     function longRest() {
-        $pc.hitPoints = $pc.maxHitPoints
+        $pc.hitPoints = calculateTotalHitPointsForPlayer($pc)
         $pc.spells = $pc.spells.map(s => ({
             ...s,
             uses: s.uses ? { ...s.uses, used: 0 } : s.uses,
             disabled: false
         }))
     }
-
-    function clampHp() {
-        $pc.hitPoints = clamp($pc.hitPoints, 0, $pc.maxHitPoints)
-    }
-    $: clampHp()
 </script>
 
 <div class="items-center flex {calculateModifierForHpRoll($pc) !== 0 ? `gap-4` : `gap-7`}">
@@ -87,6 +82,7 @@
         inputmode="numeric"
         class="pirata text-5xl text-center"
         min="0"
+        max={calculateTotalHitPointsForPlayer($pc)}
         bind:value={$pc.hitPoints}
 />
 

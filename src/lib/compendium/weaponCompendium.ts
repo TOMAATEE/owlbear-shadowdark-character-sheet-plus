@@ -430,6 +430,36 @@ export const WEAPONS: WeaponInfo[] = [
         canBeEquipped: true,
         slots: {freeCarry: 0, perSlot: 1, slotsUsed: 0},
         properties: ["Magic"],
+        playerBonuses: [
+            {
+                name: "Fist of the Moon God atk",
+                desc: "Your strikes are +0 magic weapons that deal d8 damage.\n" +
+                    "They become +1 at 2nd level, +2 at 4th level, and +3 at 8th level",
+                type: "modifyAmt",
+                bonusAmount: 0,
+                bonusIncreaseAtLevels: [2, 4, 8],
+                bonusTo: "attackRoll",
+                bonusSource: "Gear",
+                metadata: {
+                    type: "weapon",
+                    weapon: "Fist of the Moon God"
+                }
+            },
+            {
+                name: "Fist of the Moon God dmg",
+                desc: "Your strikes are +0 magic weapons that deal d8 damage.\n" +
+                    "They become +1 at 2nd level, +2 at 4th level, and +3 at 8th level",
+                type: "modifyAmt",
+                bonusAmount: 0,
+                bonusIncreaseAtLevels: [2, 4, 8],
+                bonusTo: "damageRoll",
+                bonusSource: "Gear",
+                metadata: {
+                    type: "weapon",
+                    weapon: "Fist of the Moon God"
+                }
+            }
+        ],
         range: ["Close"],
         weaponType: "Melee",
         damage: {

@@ -221,6 +221,7 @@ export type ModifyBonus = Merge<
         bonusTo: BonusTo
         bonusAmount: number
         bonusIncreaseRatePerLevel?: number // bonus amount increases at this rate per level (rounded down)
+        bonusIncreaseAtLevels?: number[] // bonus amount increases by 1 at those levels, multiple mentions for higher increase e.g. [2, 2, 4] = +2 at lvl 2, +3 at lvl 4
     }
 >
 export type SetToBonus = Merge<

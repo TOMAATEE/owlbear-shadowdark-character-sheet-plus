@@ -126,7 +126,7 @@ function addClassSpells(pc: PlayerCharacter) {
             classSpells.push("Hawk Eye")
             break
         case "Monk of Yag-Kesh":
-            classSpells.push("Sun On The Water")
+            classSpells.push("Sun On The Water", "Still The Heart")
             break
         case "Pit Fighter":
             classSpells.push("Flourish", "Relentless")
@@ -153,18 +153,8 @@ function addClassSpells(pc: PlayerCharacter) {
 }
 
 function clearAncestryBonuses(pc: PlayerCharacter) {
-    pc.bonuses = pc.bonuses.filter(
-        (b) => ![
-                "Adaptable",
-                "Ambitious",
-                "Farsight",
-                "Keen senses",
-                "Knack",
-                "Mighty Attack ancestry",
-                "Mighty Damage ancestry",
-                "Stout",
-            ].includes(b.name)
-    )
+    pc.bonuses = pc.bonuses.filter((b) => b.bonusSource !== "Ancestry")
+
     pc.spells = pc.spells.filter(
         (s) =>  ![
                 "Stealthy"
@@ -173,50 +163,7 @@ function clearAncestryBonuses(pc: PlayerCharacter) {
 }
 
 function clearClassBonuses(pc: PlayerCharacter) {
-    pc.bonuses = pc.bonuses.filter(
-        (b) =>
-            ![
-                "Thievery",
-                "Backstab",
-                "Learning Spells",
-                "Hauler",
-                "Herbalism",
-                "Wayfinder",
-                "Bardic Arts",
-                "Magic Dabbler",
-                "Presence",
-                "Prolific",
-                "Demonic Possession Increase",
-                "Patron",
-                "Implacable",
-                "Last Stand",
-                "Assassin",
-                "Seafarer",
-                "Old Gods",
-                "Shield Wall",
-                "Destined",
-                "Basilisk Blood",
-                "Stone Skin",
-                "Scavenger",
-                "Trailblazer",
-                "Trusty Gear",
-                "Tale Spinner",
-                "Taunt",
-                "Kyzian Quiver",
-                "Eye Of Yag-Kesh",
-                "Fist Of The Moon God",
-                "Still The Heart",
-                "Death Sense",
-                "River of Death",
-                "Chivalric Oath",
-                "Inspiring Presence",
-                "Knowaguy",
-                "Lucksmith",
-                "Surprising Guts",
-                "Hideous Biology",
-                "Pseudopod",
-            ].includes(b.name) && !b.name.includes("Thievery:")
-    )
+    pc.bonuses = pc.bonuses.filter((b) => b.bonusSource !== "Class")
 }
 
 function clearClassGear(pc: PlayerCharacter) {
@@ -730,23 +677,6 @@ function addClassBonuses(bonuses: Bonus[], c: Class) {
                         name,
                         bonusSource: "Class",
                         desc: "While unarmored, add your Wisdom modifier (if positive) to your AC",
-                        type: "generic",
-                    },
-                    {
-                        name: "Fist Of The Moon God",
-                        bonusSource: "Class",
-                        desc: "Your strikes are +0 magic weapons that deal d8 damage.\n" +
-                            "They become +1 at 2nd level, +2 at 4th level, and +3 at 8th level",
-                        type: "generic",
-                    },
-                    {
-                        name: "Still The Heart",
-                        bonusSource: "Class",
-                        desc: "You can stop your metabolism for a total number of rounds per day equal to your level.\n" +
-                            "You gain the following benefits for the duration:\n" +
-                            "• You do not need to breathe.\n" +
-                            "• Delay the onset of any poisons until this effect ends.\n" +
-                            "• If you drop to 0 HP, you do not fall unconscious or begin dying until this effect ends.",
                         type: "generic",
                     },
                 )

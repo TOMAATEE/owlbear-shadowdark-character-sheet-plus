@@ -1,6 +1,6 @@
 <script lang="ts">
     import type {DiceType, SpellInfo} from "../types"
-    import {addSign, rollDiceA, sum, toPlusString} from "../utils"
+    import {addSign, rollDiceArray, sum, toPlusString} from "../utils"
     import Menu from "./Menu/Menu.svelte"
     import MenuOption from "./Menu/MenuOption.svelte"
     import {notify} from "../services/Notifier"
@@ -47,7 +47,7 @@
         let msg: string
         let result: number
         if (numDice >= 1) {
-            const n = rollDiceA(diceType, numDice)
+            const n = rollDiceArray(diceType, numDice)
             result = sum(n)
             msg = `rolled ${numDice}${diceType}: ${toPlusString(n)} + ${modifier} = ${result + modifier}`
         } else {
@@ -59,8 +59,8 @@
     }
 
     function rollWithAdvantage() {
-        const outcome1 = rollDiceA(diceType, numDice)
-        const outcome2 = rollDiceA(diceType, numDice)
+        const outcome1 = rollDiceArray(diceType, numDice)
+        const outcome2 = rollDiceArray(diceType, numDice)
         const result = Math.max(sum(outcome1), sum(outcome2))
         let msg = `rolled ${numDice}${diceType}: ${toPlusString(outcome1)} vs. ${toPlusString(outcome2)}\n ${result} + ${modifier} = ${result + modifier}`
         msg = evaluateSuccess(result, msg)
@@ -69,8 +69,8 @@
     }
 
     function rollWithDisadvantage() {
-        const outcome1 = rollDiceA(diceType, numDice)
-        const outcome2 = rollDiceA(diceType, numDice)
+        const outcome1 = rollDiceArray(diceType, numDice)
+        const outcome2 = rollDiceArray(diceType, numDice)
         const result = Math.min(sum(outcome1), sum(outcome2))
         let msg = `rolled ${numDice}${diceType}: ${toPlusString(outcome1)} vs. ${toPlusString(outcome2)}\n ${result} + ${modifier} = ${result + modifier}`
         msg = evaluateSuccess(result, msg)
@@ -79,7 +79,7 @@
     }
 
     function rollSecretly() {
-        const outcome = rollDiceA(diceType, numDice)
+        const outcome = rollDiceArray(diceType, numDice)
         const result = sum(outcome)
         let msg = `rolled ${numDice}${diceType}: ${toPlusString(outcome)} + ${modifier} = ${sum(outcome) + modifier}`
         msg = evaluateSuccess(result, msg)
@@ -95,11 +95,11 @@
             } else if (result + modifier >= required) {
                 msg += "\nSUCCESS!"
                 if (spell.duration.roll) {
-                    const duration = rollDiceA(spell.duration.roll.diceType, spell.duration.roll.numDice)
+                    const duration = rollDiceArray(spell.duration.roll.diceType, spell.duration.roll.numDice)
                     msg += `\nDuration: ${toPlusString(duration, false)} = ${sum(duration)} ${spell.duration.type}${(sum(duration) > 1) ? "s" : ""}`
                 }
                 if (spell.effect) {
-                    const amount = rollDiceA(spell.effect.diceType, spell.effect.numDice)
+                    const amount = rollDiceArray(spell.effect.diceType, spell.effect.numDice)
                     msg += `\n${spell.effect.type}: ${toPlusString(amount, false)} = ${sum(amount)}`
                 }
             } else {
@@ -145,6 +145,8 @@
                     {addSign(modifier)}
                 {:else if display === "dice"}
                     {numDice}{diceType}{#if modifier !== 0}{addSign(modifier)}{/if}
+                {:else}
+                    {display}
                 {/if}
             </div>
         </slot>
